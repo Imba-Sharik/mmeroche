@@ -11,6 +11,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-display);
   --font-ui: var(--font-ui);
+  --font-accent: var(--font-accent);
 
   /* Page tokens */
   --color-page-bg: var(--page-bg);
@@ -18,6 +19,9 @@
   --color-page-divider: var(--page-divider);
 
   /* Brand tokens (Figma) */
+  --color-cream: var(--cream);
+  --color-wine: var(--wine);
+  --color-noir: var(--noir);
   --color-ink: var(--ink);
   --color-ink-dim: var(--ink-dim);
   --color-ink-muted: var(--ink-muted);
@@ -56,71 +60,48 @@
   --grid-gap: 20px;
   --hero-inset: 20px;
 
-  /* TODO: заменить на реальные токены из Figma (Mmeroche) — пока нейтральная шкала */
-  --ink: #1c1c1c;
-  --ink-dim: #484848;
-  --ink-muted: #707070;
-  --ink-faint: #b5b5b5;
-  --line: #d3d3d3;
-  --surface: #ffffff;
-  --surface-muted: #ececec;
+  /* Палитра макета (Figma Mmeroche): кремовый текст, бордовый акцент, чёрный фон.
+     Лендинг существует только в тёмном виде — `.dark` повторяет те же значения. */
+  --cream: #f2f1e0;
+  --wine: #761313;
+  --noir: #010101;
 
-  --page-bg: #f6f6f6;
-  --page-text: #1c1c1c;
-  --page-divider: #b5b5b5;
+  --ink: #f2f1e0;
+  --ink-dim: rgb(242 241 224 / 0.7);
+  --ink-muted: rgb(242 241 224 / 0.5);
+  --ink-faint: rgb(242 241 224 / 0.3);
+  --line: rgb(242 241 224 / 0.15);
+  --surface: #0a0a0a;
+  --surface-muted: #141414;
 
-  --background: #f6f6f6;
-  --foreground: #1c1c1c;
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --page-bg: #010101;
+  --page-text: #f2f1e0;
+  --page-divider: rgb(242 241 224 / 0.15);
+
+  --background: #010101;
+  --foreground: #f2f1e0;
+  --card: #0a0a0a;
+  --card-foreground: #f2f1e0;
+  --popover: #0a0a0a;
+  --popover-foreground: #f2f1e0;
+  --primary: #761313;
+  --primary-foreground: #f2f1e0;
+  --secondary: #141414;
+  --secondary-foreground: #f2f1e0;
+  --muted: #141414;
+  --muted-foreground: rgb(242 241 224 / 0.5);
+  --accent: #761313;
+  --accent-foreground: #f2f1e0;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --radius: 0.625rem;
+  --border: rgb(242 241 224 / 0.15);
+  --input: rgb(242 241 224 / 0.15);
+  --ring: rgb(242 241 224 / 0.3);
+  --radius: 5px;
 }
 
+/* Светлой темы в макете нет: `.dark` ничего не переопределяет, палитра живёт в :root.
+   Класс всё равно вешается next-themes — оставляем блок как точку расширения. */
 .dark {
-  --ink: #f6f6f6;
-  --ink-dim: #d3d3d3;
-  --ink-muted: #b5b5b5;
-  --ink-faint: #707070;
-  --line: #2b2b2b;
-  --surface: #1c1c1c;
-  --surface-muted: #2b2b2b;
-
-  --page-bg: #0a0a0a;
-  --page-text: #ffffff;
-  --page-divider: #2b2b2b;
-
-  --background: #0a0a0a;
-  --foreground: #ffffff;
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
 }
 
 @layer base {
@@ -128,6 +109,24 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-page-bg text-page-text;
+    @apply bg-page-bg font-ui text-page-text;
   }
+}
+
+@utility text-mono-xs {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+@utility text-mono-sm {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+@utility text-mono-base {
+  font-family: var(--font-ui);
+  font-size: 18px;
+  line-height: 1.4;
 }

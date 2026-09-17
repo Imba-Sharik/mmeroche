@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { display, ui } from "@/shared/fonts";
+import { display, ui, accent } from "@/shared/fonts";
 import { ThemeProvider, SmoothScroll } from "@/shared/ui";
 import { SiteHeader } from "@/widgets/SiteHeader";
 import { SiteFooter } from "@/widgets/SiteFooter";
@@ -35,10 +35,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" suppressHydrationWarning>
-      <body className={`${display.variable} ${ui.variable} antialiased overflow-x-clip`}>
+      <body
+        className={`${display.variable} ${ui.variable} ${accent.variable} antialiased overflow-x-clip`}
+      >
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="dark"
           enableSystem={false}
           themes={["light", "dark"]}
         >
