@@ -1,6 +1,7 @@
 # Mmeroche
 
-Лендинг на Next.js 16 (App Router) + Tailwind CSS v4, архитектура FSD.
+Лендинг ресторана «Madame Roche» на Next.js 16 (App Router) + Tailwind CSS v4,
+архитектура FSD. Тема только тёмная.
 
 ## Запуск
 

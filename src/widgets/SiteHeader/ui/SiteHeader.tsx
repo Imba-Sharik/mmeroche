@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Music2 } from "lucide-react";
 import { CONTACTS, NAV_ITEMS } from "@/shared/config";
+import { Button } from "@/shared/ui";
 
 /** Шапка — Figma node 114:2397 (Header/inner), 1920×96, поля 80px */
 export function SiteHeader() {
@@ -9,7 +10,7 @@ export function SiteHeader() {
       <div className="relative mx-auto flex w-full max-w-480 items-center justify-between px-5 pt-5 pb-6 lg:px-20 lg:pb-10">
         {/* Дымка под шапкой — Figma fill node 114:2397 */}
         <Image
-          src="/images/header-bg.webp"
+          src="/images/common/header-bg.webp"
           alt=""
           aria-hidden
           fill
@@ -44,12 +45,7 @@ export function SiteHeader() {
           >
             <Music2 className="size-4" strokeWidth={1.5} />
           </button>
-          <button
-            type="button"
-            className="text-mono-sm flex h-9 items-center rounded-[5px] bg-wine px-5 text-cream transition-opacity hover:opacity-90"
-          >
-            Забронировать стол
-          </button>
+          <Button size="sm">Забронировать стол</Button>
         </div>
       </div>
     </header>

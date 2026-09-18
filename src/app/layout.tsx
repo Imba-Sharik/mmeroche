@@ -36,9 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" suppressHydrationWarning>
-      <body
-        className={`${display.variable} ${ui.variable} ${accent.variable} antialiased overflow-x-clip`}
-      >
+      <body className={`${display.variable} ${ui.variable} ${accent.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

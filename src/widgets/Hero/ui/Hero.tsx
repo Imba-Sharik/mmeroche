@@ -19,7 +19,7 @@ export function Hero() {
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 overflow-hidden mix-blend-luminosity">
           <Image
-            src="/images/hero-scrim.webp"
+            src="/images/hero/scrim.webp"
             alt=""
             fill
             priority
@@ -50,7 +50,7 @@ export function Hero() {
             MADAME
           </h1>
           <Image
-            src="/images/roche.svg"
+            src="/images/hero/roche.svg"
             alt="Roche"
             width={349}
             height={236}

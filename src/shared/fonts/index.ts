@@ -9,6 +9,7 @@ import { Noto_Serif_SC, PT_Mono, Playfair_Display } from "next/font/google";
 export const display = Playfair_Display({
   subsets: ["latin", "cyrillic"],
   weight: ["400", "500"],
+  style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
   adjustFontFallback: false,
@@ -26,7 +27,7 @@ export const ui = PT_Mono({
 /** Акцент — вертикальные иероглифы в Hero и разделителях секций */
 export const accent = Noto_Serif_SC({
   subsets: ["latin"],
-  weight: ["300", "400"],
+  weight: ["300", "400", "900"],
   variable: "--font-accent",
   display: "swap",
   adjustFontFallback: false,
