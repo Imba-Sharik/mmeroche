@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { CONTACTS, PHONE_HREF } from "@/shared/config";
 import { ButtonLink, Section, SectionHeading, SectionKicker } from "@/shared/ui";
+import { ContactsMap } from "./ContactsMap";
 
 /** Секция «Найти особняк» — Figma node 114:2576, 1920×1327 */
 export function Contacts() {
@@ -97,31 +98,9 @@ export function Contacts() {
         </div>
 
         {/* Карта — Figma node 114:2598 */}
-        <a
-          href={CONTACTS.routeUrl}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="relative block aspect-576/370 w-full overflow-hidden rounded-[8px] lg:w-xl"
-        >
-          <Image
-            src="/images/contacts/map.webp"
-            alt="Карта: Кожевническая улица, 16 строение 4"
-            fill
-            sizes="(max-width: 1024px) 100vw, 576px"
-            className="object-cover"
-          />
-          <span className="absolute top-[45%] left-[39.5%] flex flex-col items-center gap-1.5">
-            <Image
-              src="/images/contacts/map-pin.svg"
-              alt=""
-              aria-hidden
-              width={22}
-              height={22}
-              unoptimized
-            />
-            <span className="font-sans text-[14px] text-cream">{CONTACTS.brand}</span>
-          </span>
-        </a>
+        <div className="relative aspect-576/370 w-full overflow-hidden rounded-[8px] lg:w-xl">
+          <ContactsMap />
+        </div>
       </div>
     </Section>
   );
