@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { CONTACTS } from "@/shared/config";
-import { HeroFog } from "./HeroFog";
+import { FogCanvas } from "@/shared/ui";
 import { HeroReveal } from "./HeroReveal";
 import { ScrollCue } from "./ScrollCue";
 
@@ -39,8 +39,8 @@ export function Hero() {
           <div className="absolute top-[29.3%] left-1/2 h-[48.8%] w-[26.7vw] max-w-[512px] -translate-x-1/2 rounded-full bg-wine opacity-30 blur-[60px]" />
         </div>
 
-        {/* Туман поверх фона — Figma node 114:2608 */}
-        <HeroFog />
+        {/* Туман поверх фона — Figma node 114:2608 («59 1») */}
+        <FogCanvas layers={[{ src: "/images/hero/fog.webp" }]} />
       </div>
 
       {/* Центральный блок: иероглифы → адрес → лого */}

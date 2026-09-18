@@ -73,34 +73,6 @@ const PHOTOS = [
   },
 ];
 
-/** Дым поверх снимков — Figma nodes 114:2502—114:2504 */
-const SMOKE = [
-  {
-    src: "/images/interior/smoke-c.webp",
-    left: "-20.36%",
-    top: "12.22%",
-    width: "143.75%",
-    opacity: 0.4,
-    rotate: "0deg",
-  },
-  {
-    src: "/images/interior/smoke-a.webp",
-    left: "-4.32%",
-    top: "68.2%",
-    width: "119.9%",
-    opacity: 0.3,
-    rotate: "180deg",
-  },
-  {
-    src: "/images/interior/smoke-b.webp",
-    left: "-6.61%",
-    top: "-14.82%",
-    width: "110.38%",
-    opacity: 0.3,
-    rotate: "-177.11deg",
-  },
-];
-
 export function InteriorGallery() {
   return (
     <div className="relative aspect-1920/3692 w-full overflow-hidden">
@@ -152,26 +124,6 @@ export function InteriorGallery() {
         sizes="40vw"
         className="absolute top-[72.33%] left-[40.29%] w-[38.8%] -translate-x-1/2 -translate-y-1/2 rotate-[-3.82deg] rounded-[8px]"
       />
-
-      {SMOKE.map((smoke, index) => (
-        <Image
-          key={`${smoke.src}-${index}`}
-          src={smoke.src}
-          alt=""
-          aria-hidden
-          width={2000}
-          height={1390}
-          sizes="150vw"
-          className="pointer-events-none absolute max-w-none mix-blend-screen"
-          style={{
-            left: smoke.left,
-            top: smoke.top,
-            width: smoke.width,
-            opacity: smoke.opacity,
-            rotate: smoke.rotate,
-          }}
-        />
-      ))}
     </div>
   );
 }
