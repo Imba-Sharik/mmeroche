@@ -1,6 +1,6 @@
 export { Button, ButtonLink } from "./button";
-export { FogCanvas } from "./fog-canvas";
-export type { FogLayer } from "./fog-canvas";
-export { Section, SectionKicker, SectionHeading, SectionTitle } from "./section";
+export { Section, Container, SectionHeading, SectionIntro } from "./section";
+export { WineGlow } from "./wine-glow";
+export { Reveal } from "./reveal";
 export { ThemeProvider } from "./theme-provider";
 export { SmoothScroll, getLenis } from "./smooth-scroll";

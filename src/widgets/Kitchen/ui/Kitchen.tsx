@@ -1,73 +1,54 @@
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { Button, Section, SectionHeading, SectionKicker } from "@/shared/ui";
-import { KitchenGallery } from "./KitchenGallery";
+import { Button, Container, Section, SectionHeading, WineGlow } from "@/shared/ui";
+import { KitchenGrid } from "./KitchenGrid";
 
-/** Секция «Кухня» — Figma node 114:2427, 1920×1036 */
+/** Секция «Кухня» — Figma node 222:2023, 1920×1080 */
 export function Kitchen() {
   return (
-    <Section id="kitchen" className="relative flex flex-col items-center pt-35">
-      {/* Карточка-оберег висит над секцией, наезжая на «Легенду» — Figma node 114:2446 */}
-      <Image
-        src="/images/kitchen/card.webp"
-        alt=""
-        aria-hidden
-        width={380}
-        height={250}
-        sizes="10vw"
-        className="absolute -top-2 left-[51%] w-[5.4%] min-w-18 -translate-x-1/2 -translate-y-1/2 rotate-[24.27deg]"
-      />
+    <Section id="kitchen" className="pt-65 pb-36">
+      {/* Свечение за текстовой колонкой — Figma node 222:2024 */}
+      <WineGlow x="14.688%" y={308} />
 
-      <div className="relative flex w-full max-w-130 flex-col items-center gap-7">
-        {/* Бордовое свечение за заголовком — Figma node 114:2430 */}
-        <div
-          aria-hidden
-          className="absolute top-9.75 left-[29.8%] size-52.5 bg-wine opacity-54 blur-[90px]"
-        />
+      {/*
+        Сетка блюд шире экрана, её приходится обрезать. Режем на этой обёртке,
+        а не на секции: по макету бордовое свечение заходит на соседние блоки,
+        и `overflow` на секции срезал бы его ровной линией.
+      */}
+      <div className="relative overflow-hidden">
+        <Container className="flex flex-col gap-12 lg:flex-row lg:items-start">
+          <div className="flex flex-col gap-10 lg:w-127.5 lg:shrink-0">
+            <SectionHeading className="text-cream">кухня</SectionHeading>
 
-        <SectionKicker index="02">МЕНЮ И БАР</SectionKicker>
+            <div className="flex flex-col gap-8">
+              <div className="text-mono-base flex flex-col gap-4.5 text-cream">
+                <p>
+                  Меню строится на необычных контрастах, игре текстур и огне как способе
+                  приготовления и отражении характера дома.
+                </p>
+                <p>
+                  Madame Roche привыкла знать обо всем, что появляется в её доме, — еда не
+                  исключение. Здесь предпочитают продукты от фермеров, самостоятельно делают масло и
+                  сметану и пекут ремесленный хлеб
+                </p>
+              </div>
 
-        <div className="relative flex w-full flex-col items-center gap-6">
-          <SectionHeading className="text-center text-cream">Кухня</SectionHeading>
-
-          <p className="text-mono-base text-center text-cream">
-            В основе меню — авторский comfort food, качественные локальные продукты, сезонные
-            ингредиенты и собственная выпечка.
-          </p>
-
-          {/* TODO: навесить переходы, когда появятся страницы меню и бара */}
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Button>
-              Меню кухни
-              <ArrowRight className="size-4" strokeWidth={1.5} />
-            </Button>
-            <Button variant="outline">
-              Бар
-              <ArrowRight className="size-4" strokeWidth={1.5} />
-            </Button>
+              {/* TODO: навесить переходы, когда появятся страницы меню и бара */}
+              <div className="flex flex-wrap items-center gap-4">
+                <Button className="w-40">
+                  Меню кухни
+                  <ArrowRight className="size-4" strokeWidth={1.5} />
+                </Button>
+                <Button variant="outline" className="w-40">
+                  Барная карта
+                  <ArrowRight className="size-4" strokeWidth={1.5} />
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Коллаж из бумаг — Figma node 114:2428, нижним краем заходит в следующую секцию */}
-      <div className="relative mt-17 -mb-30 w-[34.6%] min-w-75 rotate-[-4.86deg]">
-        <Image
-          src="/images/kitchen/collage.webp"
-          alt="Заметка мадам с рецептами"
-          width={1254}
-          height={1254}
-          sizes="(max-width: 1024px) 80vw, 664px"
-          className="h-auto w-full"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-linear-to-b from-transparent from-50% to-black/80"
-        />
-      </div>
-
-      {/* Лента блюд — Figma node 114:2448 */}
-      <div className="-mx-5 mt-30 self-stretch lg:-mx-(--container-inset)">
-        <KitchenGallery />
+          {/* Сетка блюд уходит за правый край экрана — Figma node 222:2039 */}
+          <KitchenGrid />
+        </Container>
       </div>
     </Section>
   );

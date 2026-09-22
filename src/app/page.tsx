@@ -1,22 +1,24 @@
 import { Hero } from "@/widgets/Hero";
+import { Divider } from "@/widgets/Divider";
 import { Legend } from "@/widgets/Legend";
 import { Kitchen } from "@/widgets/Kitchen";
-import { Spaces } from "@/widgets/Spaces";
+import { Expect } from "@/widgets/Expect";
 import { Interior } from "@/widgets/Interior";
-import { Story } from "@/widgets/Story";
 import { Events } from "@/widgets/Events";
 import { Contacts } from "@/widgets/Contacts";
 
-/** Порядок секций взят из макета: Figma node 114:2368 (main, 1920×14415) */
+/** Порядок секций взят из макета: Figma node 222:1967 (main_2, 1920×8879) */
 export default function HomePage() {
   return (
     <>
       <Hero />
+      <Divider variant="tickets" />
       <Legend />
+      <Divider variant="stamp" />
       <Kitchen />
-      <Spaces />
+      <Divider variant="menu" />
+      <Expect />
       <Interior />
-      <Story />
       <Events />
       <Contacts />
     </>

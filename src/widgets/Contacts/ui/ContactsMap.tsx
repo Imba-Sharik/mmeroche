@@ -84,7 +84,7 @@ export function ContactsMap() {
         src="/images/contacts/map.webp"
         alt="Карта: Кожевническая улица, 16 строение 4"
         fill
-        sizes="(max-width: 1024px) 100vw, 576px"
+        sizes="(max-width: 1024px) 100vw, 828px"
         className="object-cover"
       />
     );

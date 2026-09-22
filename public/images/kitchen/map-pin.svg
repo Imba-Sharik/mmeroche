@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="20" height="23" viewBox="0 0 20 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="map-pin">
+<ellipse id="Ellipse 1" opacity="0.5" cx="9.99414" cy="21" rx="6" ry="1" fill="url(#paint0_radial_0_4)"/>
+<path id="Vector" fill-rule="evenodd" clip-rule="evenodd" d="M16.6595 8.33341C16.6595 12.4942 12.0437 16.8276 10.4937 18.1659C10.3493 18.2745 10.1735 18.3332 9.99284 18.3332C9.81217 18.3332 9.6364 18.2745 9.49201 18.1659C7.94201 16.8276 3.32617 12.4942 3.32617 8.33341C3.32617 6.5653 4.02855 4.86961 5.27879 3.61937C6.52904 2.36913 8.22473 1.66675 9.99284 1.66675C11.7609 1.66675 13.4566 2.36913 14.7069 3.61937C15.9571 4.86961 16.6595 6.5653 16.6595 8.33341ZM9.99284 11.6667C11.8338 11.6667 13.3262 10.1744 13.3262 8.33341C13.3262 6.49247 11.8338 5.00008 9.99284 5.00008C8.15189 5.00008 6.65951 6.49247 6.65951 8.33341C6.65951 10.1744 8.15189 11.6667 9.99284 11.6667Z" fill="#761313" stroke="#761313" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_4" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(9.99414 21) scale(6 1)">
+<stop/>
+<stop offset="1" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

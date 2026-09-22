@@ -10,6 +10,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-display);
+  --font-note: var(--font-note);
   --font-ui: var(--font-ui);
   --font-accent: var(--font-accent);
 
@@ -21,6 +22,7 @@
   /* Brand tokens (Figma) */
   --color-cream: var(--cream);
   --color-wine: var(--wine);
+  --color-wine-light: var(--wine-light);
   --color-noir: var(--noir);
   --color-ink: var(--ink);
   --color-ink-dim: var(--ink-dim);
@@ -55,15 +57,18 @@
 }
 
 :root {
-  /* Сетка: макет 1920, поля 50, гэп 20 — держать в паре с shared/config/grid.ts */
-  --container-inset: 50px;
-  --grid-gap: 20px;
-  --hero-inset: 20px;
+  /* Сетка: макет 1920, контейнер 1464 (поля 228), гэп 32 —
+     держать в паре с shared/config/grid.ts */
+  --container-max: 1464px;
+  --container-inset: 20px;
+  --grid-gap: 32px;
 
   /* Палитра макета (Figma Mmeroche): кремовый текст, бордовый акцент, чёрный фон.
      Лендинг существует только в тёмном виде — `.dark` повторяет те же значения. */
   --cream: #f2f1e0;
   --wine: #761313;
+  /* Secondary из макета — кнопка «Построить маршрут» */
+  --wine-light: #9f1b1b;
   --noir: #010101;
 
   --ink: #f2f1e0;
@@ -96,7 +101,7 @@
   --border: rgb(242 241 224 / 0.15);
   --input: rgb(242 241 224 / 0.15);
   --ring: rgb(242 241 224 / 0.3);
-  --radius: 5px;
+  --radius: 8px;
 }
 
 /* Светлой темы в макете нет: `.dark` ничего не переопределяет, палитра живёт в :root.
@@ -111,6 +116,19 @@
   body {
     @apply bg-page-bg font-ui text-page-text;
   }
+}
+
+/* Контейнер макета: 1464px контента, по 20px полей на узких экранах */
+@utility container-grid {
+  margin-inline: auto;
+  width: calc(100% - var(--container-inset) * 2);
+  max-width: var(--container-max);
+}
+
+@utility text-mono-2xs {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  line-height: 1.2;
 }
 
 @utility text-mono-xs {
@@ -129,4 +147,35 @@
   font-family: var(--font-ui);
   font-size: 18px;
   line-height: 1.4;
+}
+
+@utility text-mono-md {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+/* Дисплейные размеры макета: 72 / 55 / 32 / 24 при 1920, leading 0.9 */
+@utility text-display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 3.75vw, 72px);
+  line-height: 0.9;
+}
+
+@utility text-display-lg {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 2.87vw, 55px);
+  line-height: 0.9;
+}
+
+@utility text-display-md {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 1.67vw, 32px);
+  line-height: 0.9;
+}
+
+@utility text-display-sm {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 1.25vw, 24px);
+  line-height: 0.9;
 }

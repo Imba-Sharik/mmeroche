@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { display, ui, accent } from "@/shared/fonts";
+import { display, note, ui, accent } from "@/shared/fonts";
 import { getSiteUrl } from "@/shared/config";
 import { ThemeProvider, SmoothScroll } from "@/shared/ui";
 import { SiteHeader } from "@/widgets/SiteHeader";
@@ -36,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" suppressHydrationWarning>
-      <body className={`${display.variable} ${ui.variable} ${accent.variable} antialiased`}>
+      <body className={`${display.variable} ${note.variable} ${ui.variable} ${accent.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

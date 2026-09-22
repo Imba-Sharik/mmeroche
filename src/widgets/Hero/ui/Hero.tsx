@@ -1,85 +1,77 @@
 import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
 import { CONTACTS } from "@/shared/config";
-import { FogCanvas } from "@/shared/ui";
+import { Button } from "@/shared/ui";
 import { HeroReveal } from "./HeroReveal";
 import { ScrollCue } from "./ScrollCue";
 
-/** Виньетка макета: затемнение + уходы в чёрный по всем четырём краям (Figma node 114:2372) */
-const SCRIM_GRADIENTS = [
-  "linear-gradient(90deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.5) 100%)",
-  "linear-gradient(0deg, rgb(1,1,1) 0%, rgba(1,1,1,0) 17.201%)",
-  "linear-gradient(0deg, rgba(1,1,1,0) 81.376%, rgb(1,1,1) 100%)",
-  "linear-gradient(90deg, rgb(1,1,1) 0%, rgba(1,1,1,0) 40.652%)",
-  "linear-gradient(90deg, rgba(1,1,1,0) 59.348%, rgb(1,1,1) 100%)",
-].join(", ");
-
-/** Первый экран — Figma node 114:2371, 1920×1080 */
+/** Первый экран — Figma node 222:1968, 1920×1080 */
 export function Hero() {
   return (
-    <section className="relative h-svh min-h-[600px] w-full overflow-hidden bg-noir">
-      {/*
-        Фон с туманом держим в своём контексте наложения (`isolate`): иначе
-        mix-blend-screen тумана смешивается в границах соседних элементов,
-        у которых GSAP временно ставит filter — и в кадре видно прямоугольник.
-      */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 isolate">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 overflow-hidden mix-blend-luminosity">
-            <Image
-              src="/images/hero/scrim.webp"
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-[55%_50%]"
-            />
-          </div>
-          <div className="absolute inset-0" style={{ backgroundImage: SCRIM_GRADIENTS }} />
-          {/* Бордовое свечение за лого — Figma node 114:2373 */}
-          <div className="absolute top-[29.3%] left-1/2 h-[48.8%] w-[26.7vw] max-w-[512px] -translate-x-1/2 rounded-full bg-wine opacity-30 blur-[60px]" />
-        </div>
-
-        {/* Туман поверх фона — Figma node 114:2608 («59 1») */}
-        <FogCanvas layers={[{ src: "/images/hero/fog.webp" }]} />
+    <section className="relative flex h-svh min-h-150 w-full flex-col overflow-hidden bg-noir">
+      {/* Снимок зала под затемнением — Figma node 222:1969 (Hero/scrim) */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <Image
+          src="/images/hero/scrim.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[55%_50%]"
+        />
+        <div className="absolute inset-0 bg-noir/30" />
+        <div className="absolute inset-0 bg-linear-to-b from-transparent from-45% to-noir" />
       </div>
 
-      {/* Центральный блок: иероглифы → адрес → лого */}
       <HeroReveal>
-        <div className="absolute top-[35%] left-1/2 flex w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center px-5">
-          <p className="js-hero-reveal font-accent text-center text-[13px] leading-[28px] font-light tracking-[2.6px] text-ink-dim">
-            秘
-            <br />
-            密
-            <br />之<br />地
-          </p>
+        {/*
+          Колонка макета: лого → слоган → адрес → кнопки. В макете стопка стоит
+          на 42px выше середины экрана — отсюда нижний отступ вдвое больше.
+        */}
+        <div className="relative flex flex-1 flex-col items-center justify-center px-5 pt-24 pb-21">
+          {/* Лого: в Figma нода повёрнута на −5°, размер до поворота — 386.673×261.022 */}
+          <Image
+            src="/images/hero/roche.svg"
+            alt="Roche"
+            width={387}
+            height={261}
+            priority
+            unoptimized
+            className="js-hero-reveal h-auto w-[52%] max-w-97 -rotate-5"
+          />
 
-          <p className="js-hero-reveal text-mono-base mt-[11%] text-center text-ink-dim">
+          {/* Слоган заходит под хвост лого — Figma node 222:2005 */}
+          <h1 className="js-hero-reveal text-display-lg -mt-[3.5%] text-center text-cream lg:-mt-10">
+            {CONTACTS.tagline.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
+          </h1>
+
+          <a
+            href={CONTACTS.routeUrl}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="js-hero-reveal text-mono-md mt-6 inline-flex items-center gap-1.5 p-2.5 text-center text-cream transition-colors hover:text-wine"
+          >
             {CONTACTS.address}
-          </p>
+            <ArrowUpRight className="size-5 shrink-0" strokeWidth={1.2} />
+          </a>
 
-          {/* TODO: MADAME набран временным Playfair — с приходом «a RomanusTitul»
-            свериться с макетом, положение Roche считается от ширины этой строки */}
-          <div className="js-hero-reveal relative mt-[6.6%] inline-block">
-            <h1 className="font-sans text-[clamp(56px,10vw,192px)] leading-[0.51] text-cream">
-              MADAME
-            </h1>
-            <Image
-              src="/images/hero/roche.svg"
-              alt="Roche"
-              width={349}
-              height={236}
-              priority
-              unoptimized
-              className="absolute top-[43%] left-[19.2%] w-[61.5%] -rotate-5"
-            />
+          <div className="js-hero-reveal mt-8 flex flex-wrap items-center justify-center gap-4">
+            {/* TODO: навесить переход, когда появится страница меню */}
+            <Button variant="cream" size="lg" className="w-52.5">
+              Посмотреть меню
+            </Button>
+            {/* TODO: открывать форму брони, когда появится features/booking */}
+            <Button size="lg" className="w-52.5">
+              Забронировать стол
+            </Button>
           </div>
         </div>
 
-        <p className="js-hero-reveal font-accent absolute bottom-[14.4%] left-1/2 -translate-x-1/2 text-[13px] leading-none font-light tracking-[5.2px] text-wine">
-          创 意 料 理
-        </p>
-
-        <div className="js-hero-reveal absolute bottom-[5.5%] left-1/2 -translate-x-1/2">
+        <div className="js-hero-reveal relative flex justify-center pb-12">
           <ScrollCue />
         </div>
       </HeroReveal>

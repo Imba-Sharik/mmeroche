@@ -3,7 +3,7 @@
 import { ArrowDown } from "lucide-react";
 import { getLenis } from "@/shared/ui";
 
-/** Кнопка «ЛИСТАТЬ» — Figma node 114:2393 */
+/** Кнопка «ЛИСТАТЬ» — Figma node 222:2007 */
 export function ScrollCue() {
   const scrollToNext = () => {
     const target = document.getElementById("legend");

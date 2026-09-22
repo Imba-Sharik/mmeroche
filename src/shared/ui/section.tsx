@@ -6,32 +6,18 @@ interface SectionProps {
   id?: string;
 }
 
-/** Контейнер макета: поля --container-inset (50px по макету), на мобиле — 20px */
+/** Секция страницы: якорь для навигации и точка отсчёта для декора */
 export function Section({ children, className, id }: SectionProps) {
   return (
-    <section id={id} className={cn("px-5 lg:px-(--container-inset)", className)}>
+    <section id={id} className={cn("relative", className)}>
       {children}
     </section>
   );
 }
 
-interface SectionKickerProps {
-  /** Порядковый номер секции по макету: «01», «02», … */
-  index: string;
-  children: React.ReactNode;
-  className?: string;
-}
-
-/** Надзаголовок секции: «01 · О ДОМЕ» + бордовая черта — Figma node 114:2415 */
-export function SectionKicker({ index, children, className }: SectionKickerProps) {
-  return (
-    <div className={cn("flex flex-col items-center gap-4", className)}>
-      <p className="text-mono-xs text-ink-dim">
-        {index} · {children}
-      </p>
-      <span aria-hidden className="h-px w-12 bg-wine" />
-    </div>
-  );
+/** Контейнер макета: 1464px по центру (поля 228 при 1920), на узких — 20px */
+export function Container({ children, className }: Omit<SectionProps, "id">) {
+  return <div className={cn("container-grid relative", className)}>{children}</div>;
 }
 
 interface SectionHeadingProps {
@@ -39,29 +25,29 @@ interface SectionHeadingProps {
   className?: string;
 }
 
-/** Крупный заголовок секции — 72px по макету (Figma node 114:2419) */
+/** Крупный заголовок секции — 72px по макету (Figma node 222:2016) */
 export function SectionHeading({ children, className }: SectionHeadingProps) {
-  return (
-    <h2
-      className={cn("font-sans text-[clamp(40px,3.75vw,72px)] leading-[0.9] uppercase", className)}
-    >
-      {children}
-    </h2>
-  );
+  return <h2 className={cn("text-display-xl", className)}>{children}</h2>;
 }
 
-interface SectionTitleProps {
+interface SectionIntroProps {
+  title: React.ReactNode;
   children: React.ReactNode;
-  /** Правый слот: табы, счётчик, кнопка */
-  aside?: React.ReactNode;
+  id?: string;
   className?: string;
 }
 
-export function SectionTitle({ children, aside, className }: SectionTitleProps) {
+/**
+ * Заголовок с лидом по центру — Figma node 222:2077 («чего ожидать»),
+ * тот же блок в «Интерьере» (222:2103): колонка 520px, гэп 24.
+ */
+export function SectionIntro({ title, children, id, className }: SectionIntroProps) {
   return (
-    <div className={cn("flex flex-wrap items-center justify-between gap-5", className)}>
-      <h2 className="font-sans text-3xl leading-none uppercase lg:text-[48px]">{children}</h2>
-      {aside}
+    <div className={cn("relative mx-auto flex max-w-130 flex-col gap-6 text-center text-cream", className)}>
+      <h2 id={id} className="text-display-xl">
+        {title}
+      </h2>
+      <p className="text-mono-base">{children}</p>
     </div>
   );
 }
