@@ -34,7 +34,9 @@ export function Events() {
         <Reveal>
           <h2 className="text-display-xl w-full text-cream">Мероприятия и банкеты</h2>
 
-          <p className="text-mono-base w-full max-w-143.5 text-dop">
+          {/* Лид прижат влево: контейнер центрирует детей, а по макету он стоит
+              по левому краю заголовка — Figma node 222:2114 */}
+          <p className="text-mono-base w-full max-w-143.5 self-start text-dop">
             Авторская кухня и барная культура позволяют проводить здесь события любого масштаба — от
             камерных ужинов до закрытых корпоративных мероприятий.
           </p>

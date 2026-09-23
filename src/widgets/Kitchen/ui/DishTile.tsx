@@ -14,7 +14,7 @@ export function DishTile({ dish }: { dish: Dish }) {
   return (
     <div
       tabIndex={0}
-      className={`group relative aspect-460/320 rounded-xl outline-none perspective-distant focus-visible:ring-1 focus-visible:ring-ink-muted ${dish.order}`}
+      className="group relative aspect-460/320 rounded-xl outline-none perspective-distant focus-visible:ring-1 focus-visible:ring-ink-muted"
     >
       <div className="relative size-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] transform-3d group-focus-within:transform-[rotateY(180deg)] group-hover:transform-[rotateY(180deg)] motion-reduce:transition-none">
         <div className="absolute inset-0 overflow-hidden rounded-xl backface-hidden">

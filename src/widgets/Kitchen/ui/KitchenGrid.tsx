@@ -17,16 +17,6 @@ export function KitchenGrid() {
     const media = gsap.matchMedia();
 
     media.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
-      /**
-       * Лента едет ровно до того места, где начинается текст: левый край ленты
-       * встаёт по левому краю текстовой колонки и дальше не идёт.
-       * Собственное смещение вычитаем — `getBoundingClientRect` считает уже с ним.
-       */
-      /*
-       * Ищем колонку по классу, а не через :
-       * рядом стоит обёртка  с , у неё нет бокса,
-       * и  отдаёт нули — лента уезжала в край экрана.
-       */
       /*
        * Колонку ищем по классу, а не через `previousElementSibling`: рядом
        * стоит обёртка `Reveal` с `display: contents`. Бокса у неё нет, и
@@ -34,11 +24,24 @@ export function KitchenGrid() {
        */
       const textCol = section.querySelector(".js-kitchen-title");
 
+      /**
+       * Ход ленты — больший из двух: доехать левым краем до начала текста и
+       * показать все клетки. На шести клетках побеждает первое, на десяти —
+       * второе, иначе последние четыре так и не появятся.
+       *
+       * Собственное смещение вычитаем: `getBoundingClientRect` считает уже с ним.
+       */
       const distance = () => {
         if (!textCol) return 0;
+
         const x = Number(gsap.getProperty(track, "x")) || 0;
-        const trackLeft = track.getBoundingClientRect().left - x;
-        return Math.max(0, trackLeft - textCol.getBoundingClientRect().left);
+        const rect = track.getBoundingClientRect();
+        const textLeft = textCol.getBoundingClientRect().left;
+
+        const toText = rect.left - x - textLeft;
+        const toEnd = rect.right - x - (window.innerWidth - textLeft);
+
+        return Math.max(0, toText, toEnd);
       };
 
       /**
@@ -72,7 +75,7 @@ export function KitchenGrid() {
     // z-10: по задумке лента проезжает поверх текстовой колонки, а не под ней
     <div
       ref={trackRef}
-      className="relative z-10 grid gap-8 sm:grid-cols-2 lg:w-361 lg:shrink-0 lg:grid-cols-3"
+      className="relative z-10 grid gap-8 sm:grid-cols-2 lg:w-607 lg:shrink-0 lg:grid-cols-5"
     >
       <Reveal>
         {DISHES.map((dish) => (
