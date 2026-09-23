@@ -9,15 +9,17 @@ import { EXPECT_CARDS } from "../model/cards";
  */
 export function Expect() {
   return (
-    <Section id="spaces" className="pt-64 pb-38">
+    <Section id="spaces" className="py-50">
       {/* Свечение за заголовком — Figma node 222:2060 */}
-      <WineGlow x="50%" y={303} />
+      <WineGlow x="49.479%" y={271} />
 
-      <Container className="flex flex-col gap-20">
-        <SectionIntro title="чего ожидать">
-          В Madame Roche воссоздали эксцентричную и притягательную атмосферу загадочного
-          гонконгского особняка для избранных
-        </SectionIntro>
+      <Container className="flex flex-col gap-18">
+        <Reveal>
+          <SectionIntro title="чего ожидать">
+            В Madame Roche воссоздали эксцентричную и притягательную атмосферу загадочного
+            гонконгского особняка для избранных
+          </SectionIntro>
+        </Reveal>
 
         <div className="relative grid gap-8 md:grid-cols-3">
           {/* Маска над второй карточкой — Figma node 222:2080 */}
@@ -28,12 +30,16 @@ export function Expect() {
             width={130}
             height={155}
             sizes="15vw"
-            className="absolute top-[-70.8px] left-[64.51%] z-10 hidden h-auto w-[8.88%] rotate-[11.4deg] md:block"
+            className="absolute top-[-63.7px] left-[64.756%] z-10 hidden h-auto w-[8.882%] rotate-[11.4deg] md:block"
           />
 
+          {/*
+            `h-full` у карточки и `mt-auto` у ссылки: в макете карточки одной
+            высоты и «Подробнее» стоят на одной линии, хотя тексты разной длины.
+          */}
           <Reveal>
             {EXPECT_CARDS.map((card) => (
-              <article key={card.id} className="flex flex-col items-center gap-6">
+              <article key={card.id} className="flex h-full flex-col items-center gap-6">
                 <div className="relative aspect-466/300 w-full overflow-hidden rounded-[16px]">
                   <Image
                     src={card.image}
@@ -44,14 +50,15 @@ export function Expect() {
                   />
                 </div>
 
-                <div className="flex flex-col items-center gap-4 px-12 text-center text-cream">
-                  <h3 className="text-display-md">{card.title}</h3>
-                  <p className="text-mono-sm">{card.text}</p>
+                <div className="flex flex-col items-center gap-4 px-6 text-center text-cream lg:px-12">
+                  {/* В макете заголовок в одну строку и чуть шире колонки текста */}
+                  <h3 className="text-display-md lg:whitespace-nowrap">{card.title}</h3>
+                  <p className="text-mono-sm text-dop">{card.text}</p>
                 </div>
 
                 <a
                   href={card.href}
-                  className="text-mono-sm flex items-center gap-1 p-2.5 text-cream transition-colors hover:text-wine"
+                  className="text-mono-sm mt-auto flex items-center gap-1 p-2.5 text-cream transition-colors hover:text-wine"
                 >
                   Подробнее
                   <ArrowUpRight className="size-4 shrink-0" strokeWidth={1.2} />

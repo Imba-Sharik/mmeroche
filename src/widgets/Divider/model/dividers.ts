@@ -75,14 +75,14 @@ export const DIVIDERS = {
   },
   /** Ворох меню и записок — Figma node 241:1139 */
   menu: {
-    height: 463,
-    line: "49.89%",
+    height: 231,
+    line: "50.216%",
     relics: [
       {
         src: "/images/common/divider-3.webp",
-        width: 442,
-        height: 462,
-        left: "38.48%",
+        width: 221,
+        height: 231,
+        left: "44.271%",
         top: "0%",
         rotate: 0,
       },

@@ -39,7 +39,7 @@ interface SectionIntroProps {
 
 /**
  * Заголовок с лидом по центру — Figma node 222:2077 («чего ожидать»),
- * тот же блок в «Интерьере» (222:2103): колонка 520px, гэп 24.
+ * тот же блок в «Интерьере» (222:2103): колонка 520px, гэп 24, лид цветом .
  */
 export function SectionIntro({ title, children, id, className }: SectionIntroProps) {
   return (
@@ -47,7 +47,7 @@ export function SectionIntro({ title, children, id, className }: SectionIntroPro
       <h2 id={id} className="text-display-xl">
         {title}
       </h2>
-      <p className="text-mono-base">{children}</p>
+      <p className="text-mono-base text-dop">{children}</p>
     </div>
   );
 }

@@ -8,7 +8,10 @@ import { ScrollCue } from "./ScrollCue";
 /** Первый экран — Figma node 222:1968, 1920×1080 */
 export function Hero() {
   return (
-    <section className="relative flex h-svh min-h-150 w-full flex-col overflow-hidden bg-noir">
+    <section
+      id="hero"
+      className="relative flex h-svh min-h-150 w-full flex-col overflow-hidden bg-noir"
+    >
       {/* Снимок зала под затемнением — Figma node 222:1969 (Hero/scrim) */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <Image
@@ -25,23 +28,33 @@ export function Hero() {
 
       <HeroReveal>
         {/*
-          Колонка макета: лого → слоган → адрес → кнопки. В макете стопка стоит
-          на 42px выше середины экрана — отсюда нижний отступ вдвое больше.
+          Колонка макета: лого → слоган → адрес → кнопки. Стопка стоит не по
+          центру экрана, а выше: верхний отступ 80px «опускает» её ровно на
+          макетные 250px от верха секции.
         */}
-        <div className="relative flex flex-1 flex-col items-center justify-center px-5 pt-24 pb-21">
-          {/* Лого: в Figma нода повёрнута на −5°, размер до поворота — 386.673×261.022 */}
-          <Image
-            src="/images/hero/roche.svg"
-            alt="Roche"
-            width={387}
-            height={261}
-            priority
-            unoptimized
-            className="js-hero-reveal h-auto w-[52%] max-w-97 -rotate-5"
-          />
+        <div className="relative flex flex-1 flex-col items-center justify-center px-5 pt-20">
+          {/*
+            Лого: в Figma нода повёрнута на −5°, размер до поворота —
+            386.673×261.022. Обёртка нужна шапке: от неё она считает, куда и
+            во сколько раз ужать своё лого при прокрутке. Поворот держим на
+            картинке, чтобы у обёртки была честная невращённая рамка, а
+            прозрачность делят между собой два хозяина: проявление первого
+            экрана — на картинке, растворение при скролле — на обёртке.
+          */}
+          <span className="js-hero-logo block w-[52%] max-w-97">
+            <Image
+              src="/images/hero/roche.svg"
+              alt="Roche"
+              width={387}
+              height={261}
+              priority
+              unoptimized
+              className="js-hero-reveal h-auto w-full -rotate-5"
+            />
+          </span>
 
           {/* Слоган заходит под хвост лого — Figma node 222:2005 */}
-          <h1 className="js-hero-reveal text-display-lg -mt-[3.5%] text-center text-cream lg:-mt-10">
+          <h1 className="js-hero-reveal text-display-xl -mt-[5%] text-center leading-none text-cream lg:-mt-12">
             {CONTACTS.tagline.map((line) => (
               <span key={line} className="block">
                 {line}
@@ -53,7 +66,7 @@ export function Hero() {
             href={CONTACTS.routeUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="js-hero-reveal text-mono-md mt-6 inline-flex items-center gap-1.5 p-2.5 text-center text-cream transition-colors hover:text-wine"
+            className="js-hero-reveal text-mono-md mt-8 inline-flex items-center gap-1.5 p-2.5 text-center text-cream transition-colors hover:text-wine"
           >
             {CONTACTS.address}
             <ArrowUpRight className="size-5 shrink-0" strokeWidth={1.2} />
@@ -71,7 +84,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="js-hero-reveal relative flex justify-center pb-12">
+        <div className="js-hero-reveal relative flex justify-center pb-30">
           <ScrollCue />
         </div>
       </HeroReveal>

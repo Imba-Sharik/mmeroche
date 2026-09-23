@@ -29,7 +29,7 @@ export interface InteriorPhoto {
 export const INTERIOR_PHOTOS: InteriorPhoto[] = [
   {
     src: "/images/interior/hall.webp",
-    alt: "Главный зал с деревянным потолком",
+    alt: "Зал с круглыми зеркалами и люстрами",
     left: "11.549%",
     top: "0%",
     width: "41.12%",
@@ -45,7 +45,7 @@ export const INTERIOR_PHOTOS: InteriorPhoto[] = [
   },
   {
     src: "/images/interior/mural.webp",
-    alt: "Роспись с птицами",
+    alt: "Картина с лицом на стене",
     left: "16.302%",
     top: "30.997%",
     width: "14.844%",
@@ -53,7 +53,7 @@ export const INTERIOR_PHOTOS: InteriorPhoto[] = [
   },
   {
     src: "/images/interior/mask.webp",
-    alt: "Расписная маска на полке",
+    alt: "Натюрморт с черепами",
     left: "62.344%",
     top: "9.358%",
     width: "14.427%",
@@ -94,7 +94,7 @@ export const INTERIOR_PHOTOS: InteriorPhoto[] = [
   },
   {
     src: "/images/interior/terrace.webp",
-    alt: "Летняя терраса под зонтами",
+    alt: "Зал со скульптурами у окна",
     left: "52.669%",
     top: "78.388%",
     width: "36.016%",

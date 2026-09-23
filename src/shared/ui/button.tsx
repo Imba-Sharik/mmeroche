@@ -16,7 +16,7 @@ const button = cva(
         route: "bg-wine-light text-cream",
         /** Главная кнопка первого экрана: кремовая заливка, бордовый текст */
         cream: "bg-cream text-wine",
-        outline: "border-[0.5px] border-ink-dim text-cream",
+        outline: "border-[0.5px] border-ink-muted text-cream",
         ghost: "text-cream",
       },
       size: {

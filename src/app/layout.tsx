@@ -46,8 +46,13 @@ export default function RootLayout({
           <SmoothScroll />
           {/* Шапка живёт над контентом — страница уезжает под ней */}
           <SiteHeader />
-          <div className="relative mx-auto flex min-h-screen w-full max-w-480 flex-col">
-            <div className="flex flex-1 flex-col">{children}</div>
+          {/*
+            Без flex: ScrollTrigger пинит секцию через `position: fixed` и
+            вставляет распорку в поток. Во flex-контейнере она не резервировала
+            высоту, и следующий блок наползал на запиненную «Кухню».
+          */}
+          <div className="relative mx-auto min-h-screen w-full max-w-480">
+            {children}
             <SiteFooter />
           </div>
           <Toaster position="bottom-center" />

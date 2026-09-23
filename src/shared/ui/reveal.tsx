@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { gsap, useGsapLayout } from "@/shared/lib";
 
-/** Тайминг с референса fromanother.love: выход из размытия с разбегом */
+/** Тайминг с референса fromanother.love */
 const REVEAL = { duration: 1.4, ease: "power3.out" } as const;
 
 interface RevealProps {
@@ -13,9 +13,12 @@ interface RevealProps {
 }
 
 /**
- * Проявление блоков на входе в экран: прямые дети выходят из размытия по
- * очереди. Обёртка с `display: contents` не создаёт бокс — раскладка родителя
- * (сетка, флекс) не меняется, поэтому вешать можно прямо внутри грида.
+ * Проявление блоков на входе в экран: прямые дети по очереди наливаются
+ * прозрачностью. Ни подъёма, ни размытия — по просьбе клиента блок именно
+ * проявляется, а не выезжает.
+ *
+ * Обёртка с `display: contents` не создаёт бокс — раскладка родителя (сетка,
+ * флекс) не меняется, поэтому вешать можно прямо внутри грида.
  */
 export function Reveal({ children, stagger = 0.05 }: RevealProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -33,8 +36,6 @@ export function Reveal({ children, stagger = 0.05 }: RevealProps) {
     media.add("(prefers-reduced-motion: no-preference)", () => {
       gsap.from(targets, {
         autoAlpha: 0,
-        yPercent: 6,
-        filter: "blur(10px)",
         stagger,
         ...REVEAL,
         scrollTrigger: { trigger, start: "top bottom-=33.33%", once: true },

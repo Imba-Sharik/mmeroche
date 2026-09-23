@@ -13,15 +13,15 @@ const twMerge = extendTailwindMerge({
       "font-size": [
         {
           text: [
-            "mono-2xs",
             "mono-xs",
             "mono-sm",
             "mono-base",
             "mono-md",
+            "display-xs",
             "display-sm",
             "display-md",
-            "display-lg",
             "display-xl",
+            "display-2xl",
           ],
         },
       ],
