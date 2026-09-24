@@ -4,13 +4,19 @@ import { Button } from "@/shared/ui";
 import { cn } from "@/shared/lib/utils";
 import type { Dish } from "../model/dishes";
 
-/** Уходы плашки происхождения в фон карточки — Figma node 222:2043 */
-const ORIGIN_GRADIENTS = [
-  "linear-gradient(270deg, rgb(19,19,19) 0%, rgba(19,19,19,0) 100%)",
-  "linear-gradient(270deg, rgba(19,19,19,0) 0%, rgb(19,19,19) 100%)",
-  "linear-gradient(180deg, rgba(19,19,19,0) 0%, rgb(19,19,19) 100%)",
-  "linear-gradient(180deg, rgb(19,19,19) 0%, rgba(19,19,19,0) 100%)",
-].join(", ");
+/**
+ * Карта происхождения растворяется к краям плашки — Figma node 222:2043.
+ *
+ * В макете это четыре градиента к `#131313` поверх карты. Повторять их нельзя:
+ * они заливают свой прямоугольник, а карточка под ними в этом углу ближе к
+ * `#101010` — по периметру плашки вылезала кромка. Поэтому вместо заливки
+ * гасим саму карту маской: фон карточки остаётся нетронутым, шва нет.
+ *
+ * Непрозрачность 7% подобрана под макет: там карта идёт в полную силу, но
+ * градиенты перекрывают плашку процентов на 94, и в центре остаётся как раз
+ * столько.
+ */
+const ORIGIN_MASK = "radial-gradient(ellipse at center, #000 25%, transparent 85%)";
 
 interface DishPanelProps {
   dish: Dish;
@@ -42,9 +48,9 @@ export function DishPanel({ dish, className }: DishPanelProps) {
           alt=""
           fill
           sizes="160px"
-          className="object-contain opacity-10"
+          className="object-cover opacity-[0.07]"
+          style={{ maskImage: ORIGIN_MASK, WebkitMaskImage: ORIGIN_MASK }}
         />
-        <div className="absolute inset-0" style={{ backgroundImage: ORIGIN_GRADIENTS }} />
         <Image
           src="/images/kitchen/map-pin.svg"
           alt=""

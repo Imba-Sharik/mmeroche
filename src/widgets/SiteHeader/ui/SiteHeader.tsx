@@ -17,6 +17,23 @@ const TILT = -5;
 const SWAP = 0.12;
 
 /**
+ * Прогрессивное размытие фона: в Figma у шапки эффект
+ * «Background blur (progressive)» — 20 сверху, 0 снизу. В CSS такого нет,
+ * поэтому набираем его стопкой слоёв: каждый следующий размывает сильнее и
+ * подрезан маской ближе к верху, а `backdrop-filter` берёт уже размытый
+ * результат предыдущих — размытие копится кверху и сходит на нет к низу.
+ *
+ * Радиусы складываются по квадратам, вверху выходит около 8px: примерно
+ * столько же даёт «20» Фигмы, у неё своя шкала.
+ */
+const BLUR_STEPS = [
+  { blur: 3, fade: "100%" },
+  { blur: 3, fade: "70%" },
+  { blur: 4, fade: "45%" },
+  { blur: 6, fade: "22%" },
+];
+
+/**
  * Шапка — Figma nodes 222:1985 (над первым экраном) и 203:1202 (после него).
  *
  * Шапка спускается сразу, на загрузке, и дальше висит наверху.
@@ -111,15 +128,27 @@ export function SiteHeader() {
   return (
     <header ref={ref} className="pointer-events-none fixed inset-x-0 top-0 z-50">
       <div className="relative mx-auto flex w-full max-w-480 items-center justify-between px-5 pt-5 pb-10 lg:px-57">
-        {/* Дымка под шапкой — заливка ноды 222:1985 */}
-        <Image
-          src="/images/common/header-bg.webp"
-          alt=""
-          aria-hidden
-          fill
-          priority
-          className="pointer-events-none object-cover"
-        />
+        {/*
+          Фон шапки: сперва прогрессивное размытие (см. `BLUR_STEPS`), поверх —
+          линейный градиент чёрного. В Figma это заливка ноды, `#000000` сверху
+          с непрозрачностью 39% и в ноль книзу; раньше тут лежала растровая
+          копия того же градиента.
+        */}
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          {BLUR_STEPS.map((step, index) => (
+            <div
+              key={index}
+              className="absolute inset-0"
+              style={{
+                backdropFilter: `blur(${step.blur}px)`,
+                WebkitBackdropFilter: `blur(${step.blur}px)`,
+                maskImage: `linear-gradient(to bottom, #000, transparent ${step.fade})`,
+                WebkitMaskImage: `linear-gradient(to bottom, #000, transparent ${step.fade})`,
+              }}
+            />
+          ))}
+          <div className="absolute inset-0 bg-linear-to-b from-black/39 to-transparent" />
+        </div>
 
         <nav className="text-mono-sm pointer-events-auto relative hidden items-center gap-7 text-cream lg:flex">
           {NAV_ITEMS.map((item) => (
