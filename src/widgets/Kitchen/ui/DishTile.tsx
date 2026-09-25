@@ -220,7 +220,7 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
       <div
         ref={tileRef}
         tabIndex={0}
-        className="group relative aspect-328/400 snap-start rounded-xl lg:aspect-460/320 outline-none perspective-distant focus-visible:ring-1 focus-visible:ring-ink-muted"
+        className="group relative h-full snap-start rounded-xl lg:h-auto lg:aspect-460/320 outline-none perspective-distant focus-visible:ring-1 focus-visible:ring-ink-muted"
       >
         <div
           className={cn(
@@ -243,7 +243,7 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
       tabIndex={0}
       onPointerEnter={trackPointer}
       onPointerLeave={trackPointer}
-      className="group relative aspect-328/400 snap-start rounded-xl lg:aspect-460/320 outline-none focus-visible:ring-1 focus-visible:ring-ink-muted"
+      className="group relative h-full snap-start rounded-xl lg:h-auto lg:aspect-460/320 outline-none focus-visible:ring-1 focus-visible:ring-ink-muted"
     >
       {/*
         Режем `clip-path` со скруглением, а не `overflow-hidden` + `rounded`:
