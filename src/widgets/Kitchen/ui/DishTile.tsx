@@ -253,7 +253,14 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
         Обрезка на внутреннем слое, а не на клетке, — иначе срезало бы
         кольцо фокуса.
       */}
-      <div className="absolute inset-0 isolate [clip-path:inset(0_round_var(--radius-xl))]">
+      {/*
+        `overflow-clip` рядом с `clip-path`: `clip-path` режет только картинку,
+        а для прокрутки вылезшее содержимое остаётся. Увеличенное фото и
+        карточка на пиксель шире клетки раздували ленту, и на мобильном она
+        начинала прокручиваться по вертикали внутри себя. Скругление по-прежнему
+        даёт `clip-path`, `overflow-clip` режет прямоугольником.
+      */}
+      <div className="absolute inset-0 isolate overflow-clip [clip-path:inset(0_round_var(--radius-xl))]">
         {/*
           Раскрылась карточка — фото под ней убираем совсем. Chrome сглаживает
           край слоя карточки и после анимации, и в этих пикселях по периметру

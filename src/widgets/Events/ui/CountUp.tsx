@@ -7,7 +7,11 @@ import { cn } from "@/shared/lib/utils";
 interface CountUpProps {
   /** Конечное значение как в макете, с ведущими нулями: «03», «1100» */
   value: string;
-  /** Задержка старта, секунды — чтобы соседние карточки шли вразбег */
+  /**
+   * Задержка старта, секунды — чтобы соседние карточки шли вразбег. Только
+   * от `sm`, где карточки в ряд: на мобильном они столбиком, и каждая
+   * стартует сама, когда доехала до экрана.
+   */
   delay?: number;
   className?: string;
 }
@@ -40,12 +44,13 @@ export function CountUp({ value, delay = 0, className }: CountUpProps) {
       gsap.to(state, {
         n: target,
         duration: 2,
-        delay,
+        delay: window.matchMedia("(min-width: 640px)").matches ? delay : 0,
         ease: "power3.out",
         onUpdate: () => {
           counter.textContent = format(state.n);
         },
-        scrollTrigger: { trigger: counter, start: "top bottom-=33.33%", once: true },
+        // Как обычно у счётчиков: стартует, как только число показалось на экране
+        scrollTrigger: { trigger: counter, start: "top 85%", once: true },
       });
 
       return () => {

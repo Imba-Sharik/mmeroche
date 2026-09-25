@@ -75,7 +75,8 @@ export function MobileMenu() {
               width={95}
               height={64}
               unoptimized
-              className="h-16 w-auto"
+              // Наклон тот же, что у лого в шапке на мобильном (`tilt` в SiteHeader)
+              className="h-16 w-auto -rotate-8 sm:-rotate-5"
             />
             <Dialog.Close aria-label="Закрыть меню" className={SQUARE_BUTTON}>
               <X className="size-4" strokeWidth={1.5} />

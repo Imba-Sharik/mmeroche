@@ -34,7 +34,18 @@ export function SmoothScroll() {
     // Позиции триггеров считались до перехвата скролла — пересчитываем
     ScrollTrigger.refresh();
 
+    /*
+     * И ещё раз, когда догрузились шрифты: дисплейный меняет высоту заголовков,
+     * всё ниже по странице съезжает, и триггеры срабатывали не там — на
+     * мобильном это заметно по счётчикам в «Мероприятиях».
+     */
+    let alive = true;
+    document.fonts.ready.then(() => {
+      if (alive) ScrollTrigger.refresh();
+    });
+
     return () => {
+      alive = false;
       gsap.ticker.remove(raf);
       gsap.ticker.lagSmoothing(500, 33);
       instance.off("scroll", onScroll);

@@ -10,6 +10,8 @@ interface RevealProps {
   children: React.ReactNode;
   /** Разбег между соседями, секунды */
   stagger?: number;
+  /** Задержка старта, секунды — когда блок должен появиться после соседей */
+  delay?: number;
 }
 
 /**
@@ -20,7 +22,7 @@ interface RevealProps {
  * Обёртка с `display: contents` не создаёт бокс — раскладка родителя (сетка,
  * флекс) не меняется, поэтому вешать можно прямо внутри грида.
  */
-export function Reveal({ children, stagger = 0.05 }: RevealProps) {
+export function Reveal({ children, stagger = 0.05, delay = 0 }: RevealProps) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   useGsapLayout(() => {
@@ -37,6 +39,7 @@ export function Reveal({ children, stagger = 0.05 }: RevealProps) {
       gsap.from(targets, {
         autoAlpha: 0,
         stagger,
+        delay,
         ...REVEAL,
         scrollTrigger: { trigger, start: "top bottom-=33.33%", once: true },
       });
