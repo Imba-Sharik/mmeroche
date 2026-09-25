@@ -11,8 +11,8 @@ import { SoundButton } from "./SoundButton";
 /** Спуск шапки: тот же тайминг, что у остальных появлений на сайте */
 const DROP = { duration: 0.7, ease: "power3.out", delay: 0.15 } as const;
 
-/** Наклон лого из макета, одинаковый и в Hero, и в шапке */
-const TILT = -5;
+/** Наклон лого из макета — как у лого Hero: 5° от `sm`, 8° на мобильном (Figma 336:107) */
+const tilt = () => (window.matchMedia("(min-width: 640px)").matches ? -5 : -8);
 
 /** Доля хода, за которую красное лого сменяется кремовым */
 const SWAP = 0.12;
@@ -60,8 +60,8 @@ export function SiteHeader() {
     const range = () =>
       Math.max(1, heroLogo.getBoundingClientRect().bottom + window.scrollY - header.offsetHeight);
 
-    media.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
-      gsap.set(logo, { rotation: TILT, transformOrigin: "50% 50%" });
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.set(logo, { rotation: tilt(), transformOrigin: "50% 50%" });
 
       const apply = (progress: number) => {
         const from = heroLogo.getBoundingClientRect();
@@ -97,7 +97,7 @@ export function SiteHeader() {
     });
 
     /* Без анимаций лого просто появляется в конце того же отрезка */
-    media.add("(min-width: 1024px) and (prefers-reduced-motion: reduce)", () => {
+    media.add("(prefers-reduced-motion: reduce)", () => {
       ScrollTrigger.create({
         trigger: hero,
         start: () => `top top+=-${range()}`,
@@ -142,10 +142,13 @@ export function SiteHeader() {
 
           В макете лого на 50px правее середины; ставим по центру — на других
           ширинах жёсткое смещение всё равно разъедется.
+
+          На мобильном лого переезжает так же, место — по центру между звуком
+          и бургером, 95×64, как в шапке мобильного меню (Figma node 336:505).
         */}
         <div
           ref={slotRef}
-          className="absolute top-3.5 left-1/2 hidden w-27 -translate-x-1/2 lg:block"
+          className="absolute top-4 left-1/2 w-[95px] -translate-x-1/2 lg:top-3.5 lg:w-27"
         >
           <span ref={logoRef} className="block opacity-0">
             <Image

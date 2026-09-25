@@ -34,8 +34,13 @@ export function Kitchen() {
       {/*
         Лента шире экрана — обрезаем её здесь, а не на секции: свечение по макету
         заходит на соседние блоки, а `overflow` на секции срезал бы его линией.
+
+        Именно `clip`, а не `hidden`: блок с `hidden` браузер умеет прокручивать
+        сам. На мобильном тап по клетке у края фокусировал её, и браузер,
+        показывая её, сдвигал вбок всю обёртку — заголовок и кнопки уезжали
+        вместе с лентой.
       */}
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-clip">
         <div className="flex flex-col gap-10 px-4 sm:px-5 lg:flex-row lg:items-start lg:gap-30 lg:pr-0 lg:pl-container">
           <Reveal>
             <div className="js-kitchen-title lg:w-127.5 lg:shrink-0">

@@ -41,7 +41,15 @@ export function Hero() {
             прозрачность делят между собой два хозяина: проявление первого
             экрана — на картинке, растворение при скролле — на обёртке.
           */}
-          <span className="js-hero-logo block w-[73%] max-w-97 sm:w-[52%]">
+          {/*
+            Мобильный — Figma node 336:107: тот же рисунок 208.8×141, но наклон
+            8°, а не 5. Ширина и нахлёст слогана — в долях колонки (328 в
+            макете), а не в пикселях: на 320 шрифт мельчает, и фиксированный
+            нахлёст подтягивал слоган к лого ближе, чем в макете. В макете
+            нахлёст 13px из 328 (низ рамки лого 309, слоган с 296); по просьбе
+            Игоря слоган отодвинут — 5px.
+          */}
+          <span className="js-hero-logo block w-[63.66%] max-w-97 sm:w-[52%]">
             <Image
               src="/images/hero/roche.svg"
               alt="Roche"
@@ -49,12 +57,12 @@ export function Hero() {
               height={261}
               priority
               unoptimized
-              className="js-hero-reveal h-auto w-full -rotate-5"
+              className="js-hero-reveal h-auto w-full -rotate-8 sm:-rotate-5"
             />
           </span>
 
           {/* Слоган заходит под хвост лого — Figma node 222:2005 */}
-          <h1 className="js-hero-reveal text-display-xl -mt-7 text-center leading-none text-cream sm:-mt-[5%] lg:-mt-12">
+          <h1 className="js-hero-reveal text-display-xl -mt-[1.5%] text-center leading-none text-cream sm:-mt-[5%] lg:-mt-12">
             {CONTACTS.tagline.map((line) => (
               <span key={line} className="block">
                 {line}
@@ -63,27 +71,34 @@ export function Hero() {
           </h1>
 
           {/*
-            Адрес в одну строку, как в макете. Уже 360 шрифт идёт за шириной
-            (4.45vw, до макетных 16px): на 320 при 16px строка не влезала.
+            Адрес в одну строку. На мобильном 14px — Figma node 336:143: у PT Mono
+            знак ровно 0.6em, строка со стрелкой и полями ссылки — 265px.
           */}
           <a
             href={CONTACTS.routeUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="js-hero-reveal mt-6 inline-flex items-center gap-1.5 px-0 py-2.5 font-ui text-[length:min(4.45vw,16px)] leading-[1.2] whitespace-nowrap sm:px-2.5 text-center text-cream transition-colors hover:text-wine"
+            className="js-hero-reveal text-mono-sm mt-6 inline-flex items-center gap-1.5 p-2.5 whitespace-nowrap sm:text-mono-md text-center text-cream transition-colors hover:text-wine"
           >
             {CONTACTS.address}
             <ArrowUpRight className="size-5 shrink-0" strokeWidth={1.2} />
           </a>
 
-          {/* На мобильном кнопки во всю ширину, одна под другой — Figma node 336:137 */}
-          <div className="js-hero-reveal mt-6 flex w-full flex-col items-center justify-center gap-4 sm:mt-8 sm:w-auto sm:flex-row sm:flex-wrap">
+          {/* На мобильном кнопки 192×41 одна под другой, текст 14px — Figma node 336:137 */}
+          <div className="js-hero-reveal mt-6 flex flex-col items-center justify-center gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4">
             {/* TODO: навесить переход, когда появится страница меню */}
-            <Button variant="cream" size="lg" className="w-full sm:w-52.5">
+            <Button
+              variant="cream"
+              size="lg"
+              className="text-mono-sm h-10.25 w-48 sm:text-mono-md sm:h-11.5 sm:w-52.5"
+            >
               Посмотреть меню
             </Button>
             {/* TODO: открывать форму брони, когда появится features/booking */}
-            <Button size="lg" className="w-full sm:w-52.5">
+            <Button
+              size="lg"
+              className="text-mono-sm h-10.25 w-48 sm:text-mono-md sm:h-11.5 sm:w-52.5"
+            >
               Забронировать стол
             </Button>
           </div>
