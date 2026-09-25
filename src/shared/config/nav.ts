@@ -11,6 +11,19 @@ export const NAV_ITEMS = [
   { id: "contacts", label: "Контакты" },
 ] as const;
 
+/**
+ * Пункты мобильного меню — Figma node 336:451. Их больше, чем на десктопе,
+ * и названы они по секциям, а не по смыслу: «интерьер» есть только здесь.
+ */
+export const MOBILE_NAV_ITEMS = [
+  { id: "legend", label: "легенда" },
+  { id: "kitchen", label: "кухня" },
+  { id: "spaces", label: "чего ожидать" },
+  { id: "interior", label: "интерьер" },
+  { id: "events", label: "мероприятия" },
+  { id: "contacts", label: "контакты" },
+] as const;
+
 /** Контакты заведения — Figma nodes 222:1994, 222:2140, 222:2159 */
 export const CONTACTS = {
   brand: "MADAME ROCHE",

@@ -139,3 +139,123 @@ export const INTERIOR_GLOW = { x: "44.297%", y: "37.746%", size: 387, after: 10 
 
 /** Пропорция холста коллажа */
 export const INTERIOR_CANVAS = "1920/1830";
+
+/**
+ * Мобильный коллаж — Figma node 336:246, холст 360×2240 (от y 270 секции
+ * до конца последнего кадра). Раскладка своя, не ужатая десктопная: восемь
+ * кадров идут столбиком и уступами, вырезки поверх.
+ *
+ * Кадры — рендеры нод ×2 (`m-*.webp`): у них та же рваная рамка, прозрачная
+ * снаружи. Рендер на 3–5px с каждой стороны больше рамки ноды — `left`/`top`
+ * и ширина уже с этой поправкой. Вырезки — те же файлы, что на десктопе,
+ * координаты — кадра до поворота. Порядок — слои снизу вверх, как в Figma.
+ */
+export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
+  {
+    src: "/images/interior/m-1.webp",
+    alt: "Зал с хрустальными люстрами",
+    left: "3.125%",
+    top: "0.1%",
+    width: "93.75%",
+    ratio: "337.5/249.5",
+  },
+  {
+    src: "/images/interior/m-3.webp",
+    alt: "Зал с драпировкой и круглыми зеркалами",
+    left: "3.333%",
+    top: "40%",
+    width: "93.333%",
+    ratio: "336/248",
+  },
+  {
+    src: "/images/interior/m-2.webp",
+    alt: "Черепа на полке",
+    left: "49.514%",
+    top: "15.324%",
+    width: "47.083%",
+    ratio: "1/1",
+  },
+  {
+    src: "/images/interior/m-5.webp",
+    alt: "Зал с высокими окнами",
+    left: "3.056%",
+    top: "59.598%",
+    width: "93.889%",
+    ratio: "338/250",
+  },
+  {
+    src: "/images/interior/m-8.webp",
+    alt: "Стол у окна и деревянная скульптура",
+    left: "3.056%",
+    top: "88.616%",
+    width: "93.889%",
+    ratio: "338/250",
+  },
+  {
+    src: "/images/interior/polaroid.webp",
+    alt: "",
+    left: "39.158%",
+    top: "14.377%",
+    width: "19.508%",
+    ratio: "70.227/88.27",
+    rotate: 13.55,
+  },
+  {
+    src: "/images/interior/papers.webp",
+    alt: "",
+    left: "7.681%",
+    top: "24.855%",
+    width: "80.016%",
+    ratio: "1/1",
+    rotate: -8.5,
+    opacity: 0.9,
+  },
+  {
+    src: "/images/interior/skull.webp",
+    alt: "",
+    left: "-0.189%",
+    top: "7.551%",
+    width: "20.173%",
+    ratio: "72.623/108.935",
+    rotate: -9.29,
+  },
+  {
+    src: "/images/interior/m-4.webp",
+    alt: "Резная маска на стене",
+    left: "50.208%",
+    top: "52.087%",
+    width: "40.694%",
+    ratio: "1/1",
+  },
+  {
+    src: "/images/interior/m-6.webp",
+    alt: "Резная дверь",
+    left: "3.472%",
+    top: "71.719%",
+    width: "46.389%",
+    ratio: "1/1",
+  },
+  {
+    src: "/images/interior/m-7.webp",
+    alt: "Балдахин с кистями",
+    left: "50.139%",
+    top: "80.201%",
+    width: "46.389%",
+    ratio: "1/1",
+  },
+  {
+    src: "/images/interior/mask-stripes.webp",
+    alt: "",
+    left: "35.511%",
+    top: "76.158%",
+    width: "16.003%",
+    ratio: "57.609/83.873",
+    rotate: 11.59,
+  },
+];
+
+/** Свечение под записками на мобильном — Figma node 336:264; идёт следом за `polaroid` */
+export const INTERIOR_MOBILE_GLOW = { x: "50%", y: "31.295%", size: 336, after: 6 };
+
+/** Пропорция мобильного холста */
+export const INTERIOR_MOBILE_CANVAS = "360/2240";

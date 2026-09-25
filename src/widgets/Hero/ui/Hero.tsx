@@ -5,7 +5,7 @@ import { Button } from "@/shared/ui";
 import { HeroReveal } from "./HeroReveal";
 import { ScrollCue } from "./ScrollCue";
 
-/** Первый экран — Figma node 222:1968, 1920×1080 */
+/** Первый экран — Figma node 222:1968, 1920×1080; мобильный — 336:105, 360×800 */
 export function Hero() {
   return (
     <section
@@ -32,7 +32,7 @@ export function Hero() {
           центру экрана, а выше: верхний отступ 80px «опускает» её ровно на
           макетные 250px от верха секции.
         */}
-        <div className="relative flex flex-1 flex-col items-center justify-center px-5 pt-20">
+        <div className="relative flex flex-1 flex-col items-center justify-center px-4 pt-20 sm:px-5">
           {/*
             Лого: в Figma нода повёрнута на −5°, размер до поворота —
             386.673×261.022. Обёртка нужна шапке: от неё она считает, куда и
@@ -41,7 +41,7 @@ export function Hero() {
             прозрачность делят между собой два хозяина: проявление первого
             экрана — на картинке, растворение при скролле — на обёртке.
           */}
-          <span className="js-hero-logo block w-[52%] max-w-97">
+          <span className="js-hero-logo block w-[73%] max-w-97 sm:w-[52%]">
             <Image
               src="/images/hero/roche.svg"
               alt="Roche"
@@ -54,7 +54,7 @@ export function Hero() {
           </span>
 
           {/* Слоган заходит под хвост лого — Figma node 222:2005 */}
-          <h1 className="js-hero-reveal text-display-xl -mt-[5%] text-center leading-none text-cream lg:-mt-12">
+          <h1 className="js-hero-reveal text-display-xl -mt-7 text-center leading-none text-cream sm:-mt-[5%] lg:-mt-12">
             {CONTACTS.tagline.map((line) => (
               <span key={line} className="block">
                 {line}
@@ -62,29 +62,34 @@ export function Hero() {
             ))}
           </h1>
 
+          {/*
+            Адрес в одну строку, как в макете. Уже 360 шрифт идёт за шириной
+            (4.45vw, до макетных 16px): на 320 при 16px строка не влезала.
+          */}
           <a
             href={CONTACTS.routeUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="js-hero-reveal text-mono-md mt-8 inline-flex items-center gap-1.5 p-2.5 text-center text-cream transition-colors hover:text-wine"
+            className="js-hero-reveal mt-6 inline-flex items-center gap-1.5 px-0 py-2.5 font-ui text-[length:min(4.45vw,16px)] leading-[1.2] whitespace-nowrap sm:px-2.5 text-center text-cream transition-colors hover:text-wine"
           >
             {CONTACTS.address}
             <ArrowUpRight className="size-5 shrink-0" strokeWidth={1.2} />
           </a>
 
-          <div className="js-hero-reveal mt-8 flex flex-wrap items-center justify-center gap-4">
+          {/* На мобильном кнопки во всю ширину, одна под другой — Figma node 336:137 */}
+          <div className="js-hero-reveal mt-6 flex w-full flex-col items-center justify-center gap-4 sm:mt-8 sm:w-auto sm:flex-row sm:flex-wrap">
             {/* TODO: навесить переход, когда появится страница меню */}
-            <Button variant="cream" size="lg" className="w-52.5">
+            <Button variant="cream" size="lg" className="w-full sm:w-52.5">
               Посмотреть меню
             </Button>
             {/* TODO: открывать форму брони, когда появится features/booking */}
-            <Button size="lg" className="w-52.5">
+            <Button size="lg" className="w-full sm:w-52.5">
               Забронировать стол
             </Button>
           </div>
         </div>
 
-        <div className="js-hero-reveal relative flex justify-center pb-30">
+        <div className="js-hero-reveal relative flex justify-center pb-15 lg:pb-30">
           <ScrollCue />
         </div>
       </HeroReveal>

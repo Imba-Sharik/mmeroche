@@ -51,9 +51,19 @@ export default function RootLayout({
             вставляет распорку в поток. Во flex-контейнере она не резервировала
             высоту, и следующий блок наползал на запиненную «Кухню».
           */}
-          <div className="relative mx-auto min-h-screen w-full max-w-480">
-            {children}
-            <SiteFooter />
+          {/*
+            Обрезка по горизонтали — на всю ширину экрана, а не на колонке
+            1920: бордовые свечения — квадраты 376px по центру в долях ширины,
+            на телефоне они вылезали за правый край и страница ездила вбок.
+            Именно `clip`, а не `hidden`: он не делает обёртку прокручиваемой,
+            и пин «Кухни» (`position: fixed`) продолжает работать. По вертикали
+            свечения по-прежнему заходят на соседние секции.
+          */}
+          <div className="overflow-x-clip">
+            <div className="relative mx-auto min-h-screen w-full max-w-480">
+              {children}
+              <SiteFooter />
+            </div>
           </div>
           <Toaster position="bottom-center" />
         </ThemeProvider>

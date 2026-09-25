@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { useRef, type PointerEvent, type RefObject } from "react";
 import { gsap, SplitText, useGsapLayout } from "@/shared/lib";
 import { cn } from "@/shared/lib/utils";
@@ -192,9 +193,21 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
           width={31}
           height={31}
           unoptimized
-          className="absolute top-[57.9%] left-[42.3%] w-[6.7%] rotate-5 transition-opacity duration-300 group-hover:opacity-0"
+          className="absolute top-[57.9%] left-[42.3%] hidden w-[6.7%] rotate-5 transition-opacity duration-300 group-hover:opacity-0 lg:block"
         />
       )}
+
+      {/*
+        На телефоне наведения нет, и курсор-подсказку заменяет подпись внизу
+        кадра — Figma node 336:374: затемнение книзу, лёгкое размытие.
+      */}
+      <div
+        aria-hidden
+        className="text-mono-sm absolute inset-x-0 bottom-0 flex items-center justify-center gap-1.5 bg-linear-to-t from-black to-transparent px-2.5 py-4 text-cream backdrop-blur-[2px] lg:hidden"
+      >
+        Подробнее
+        <ArrowRight className="size-4" strokeWidth={1.5} />
+      </div>
     </>
   );
 
@@ -207,7 +220,7 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
       <div
         ref={tileRef}
         tabIndex={0}
-        className="group relative aspect-460/320 rounded-xl outline-none perspective-distant focus-visible:ring-1 focus-visible:ring-ink-muted"
+        className="group relative aspect-328/400 snap-start rounded-xl lg:aspect-460/320 outline-none perspective-distant focus-visible:ring-1 focus-visible:ring-ink-muted"
       >
         <div
           className={cn(
@@ -230,7 +243,7 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
       tabIndex={0}
       onPointerEnter={trackPointer}
       onPointerLeave={trackPointer}
-      className="group relative aspect-460/320 rounded-xl outline-none focus-visible:ring-1 focus-visible:ring-ink-muted"
+      className="group relative aspect-328/400 snap-start rounded-xl lg:aspect-460/320 outline-none focus-visible:ring-1 focus-visible:ring-ink-muted"
     >
       {/*
         Режем `clip-path` со скруглением, а не `overflow-hidden` + `rounded`:

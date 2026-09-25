@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
 import { Container, Reveal, Section, SectionIntro, WineGlow } from "@/shared/ui";
 import { EXPECT_CARDS } from "../model/cards";
+import { SpaceDialog } from "./SpaceDialog";
 
 /**
  * Секция «Чего ожидать» — Figma node 222:2059, 1920×1237.
@@ -9,7 +9,7 @@ import { EXPECT_CARDS } from "../model/cards";
  */
 export function Expect() {
   return (
-    <Section id="spaces" className="py-50">
+    <Section id="spaces" className="py-25 lg:py-50">
       {/* Свечение за заголовком — Figma node 222:2060 */}
       <WineGlow x="49.479%" y={271} />
 
@@ -50,19 +50,14 @@ export function Expect() {
                   />
                 </div>
 
-                <div className="flex flex-col items-center gap-4 px-6 text-center text-cream lg:px-12">
+                <div className="flex flex-col items-center gap-4 text-center text-cream sm:px-6 lg:px-12">
                   {/* В макете заголовок в одну строку и чуть шире колонки текста */}
                   <h3 className="text-display-md lg:whitespace-nowrap">{card.title}</h3>
                   <p className="text-mono-sm text-dop">{card.text}</p>
                 </div>
 
-                <a
-                  href={card.href}
-                  className="text-mono-sm mt-auto flex items-center gap-1 p-2.5 text-cream transition-colors hover:text-wine"
-                >
-                  Подробнее
-                  <ArrowUpRight className="size-4 shrink-0" strokeWidth={1.2} />
-                </a>
+                {/* «Подробнее» открывает модалку с полным описанием пространства */}
+                <SpaceDialog card={card} />
               </article>
             ))}
           </Reveal>

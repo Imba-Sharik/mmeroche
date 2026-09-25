@@ -9,10 +9,10 @@ const BLOCKS = [
   { label: "ГРАФИК", lines: CONTACTS.hours },
 ] as const;
 
-/** Секция «Найти особняк» — Figma node 222:2134, 1920×774 */
+/** Секция «Найти особняк» — Figma node 222:2134, 1920×774; мобильная — 336:295 */
 export function Contacts() {
   return (
-    <Section id="contacts" className="pt-50">
+    <Section id="contacts" className="pt-25 lg:pt-50">
       {/* Свечение у левого края — Figma node 222:2135, 399×399 */}
       <WineGlow x="14.974%" y={252.5} size={399} />
 
@@ -25,7 +25,12 @@ export function Contacts() {
               {BLOCKS.map((block) => (
                 <div key={block.label} className="flex flex-col gap-2">
                   <p className="text-mono-xs text-dop opacity-50">{block.label}</p>
-                  <p className="text-mono-base whitespace-pre text-cream">
+                  {/*
+                    `pre-wrap`, а не `pre`: переводы строк и двойные пробелы
+                    в графике держим, но длинной строке даём перенестись — на
+                    узком экране адрес распирал страницу вширь.
+                  */}
+                  <p className="text-mono-md leading-[1.4] whitespace-pre-wrap text-cream lg:text-mono-base">
                     {block.lines.join("\n")}
                   </p>
                 </div>
@@ -33,7 +38,7 @@ export function Contacts() {
 
               <div className="flex flex-col gap-2">
                 <p className="text-mono-xs text-dop opacity-50">ТЕЛЕФОН</p>
-                <p className="text-mono-base text-cream">
+                <p className="text-mono-md leading-[1.4] text-cream lg:text-mono-base">
                   <a href={PHONE_HREF} className="transition-colors hover:text-wine">
                     {CONTACTS.phone}
                   </a>
@@ -67,8 +72,8 @@ export function Contacts() {
             </div>
 
             <div className="relative w-full lg:w-207">
-              {/* Карта — Figma node 222:2155, 828×352 */}
-              <div className="relative aspect-828/352 w-full overflow-hidden rounded-lg">
+              {/* Карта — Figma node 222:2155, 828×352; на мобильном 328×352 (336:316) */}
+              <div className="relative aspect-328/352 w-full overflow-hidden rounded-lg lg:aspect-828/352">
                 <ContactsMap />
               </div>
 
@@ -79,6 +84,9 @@ export function Contacts() {
 
                 По макету голова 79px (9.541%) — по просьбе увеличена до 22%
                 ширины карты (~182px) и сдвинута ниже и левее.
+
+                На мобильном карта узкая, и от тех же долей голова выходила ~70px
+                и почти целиком висела над картой — там она крупнее (42%) и ниже.
               */}
               <Image
                 src="/images/contacts/mask.webp"
@@ -87,7 +95,7 @@ export function Contacts() {
                 width={182}
                 height={277}
                 sizes="20vw"
-                className="absolute top-[-20%] left-[-10%] z-10 h-auto w-[22%] rotate-[-12.49deg]"
+                className="absolute top-[-8%] left-[-16%] z-10 h-auto w-[42%] rotate-[-12.49deg] lg:top-[-20%] lg:left-[-10%] lg:w-[22%]"
               />
             </div>
           </div>

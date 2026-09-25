@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Music2 } from "lucide-react";
 import { useRef } from "react";
 import { BOOKING_PHONE_HREF, CONTACTS, NAV_ITEMS } from "@/shared/config";
 import { gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
 import { Button, ButtonLink, ProgressiveBlur } from "@/shared/ui";
+import { MobileMenu } from "./MobileMenu";
+import { SoundButton } from "./SoundButton";
 
 /** Спуск шапки: тот же тайминг, что у остальных появлений на сайте */
 const DROP = { duration: 0.7, ease: "power3.out", delay: 0.15 } as const;
@@ -17,7 +18,10 @@ const TILT = -5;
 const SWAP = 0.12;
 
 /**
- * Шапка — Figma nodes 222:1985 (над первым экраном) и 203:1202 (после него).
+ * Шапка — Figma nodes 222:1985 (над первым экраном) и 203:1202 (после него),
+ * мобильная — 336:471: слева звук, справа бургер, меню открывается на весь
+ * экран (`MobileMenu`). Мобильная раскладка — всё, что уже `lg`: на планшете
+ * десктопной навигации тоже негде встать.
  *
  * Шапка спускается сразу, на загрузке, и дальше висит наверху.
  *
@@ -107,7 +111,7 @@ export function SiteHeader() {
 
   return (
     <header ref={ref} className="pointer-events-none fixed inset-x-0 top-0 z-50">
-      <div className="relative mx-auto flex w-full max-w-480 items-center justify-between px-5 pt-5 pb-10 lg:px-57">
+      <div className="relative mx-auto flex w-full max-w-480 items-center justify-between p-4 lg:px-57 lg:pt-5 lg:pb-10">
         {/*
           Фон шапки: сперва прогрессивное размытие (см. `ProgressiveBlur`), поверх —
           линейный градиент чёрного. В Figma это заливка ноды, `#000000` сверху
@@ -117,6 +121,10 @@ export function SiteHeader() {
         <div aria-hidden className="pointer-events-none absolute inset-0">
           <ProgressiveBlur side="top" className="absolute inset-0" />
           <div className="absolute inset-0 bg-linear-to-b from-black/39 to-transparent" />
+        </div>
+
+        <div className="pointer-events-auto relative lg:hidden">
+          <SoundButton />
         </div>
 
         <nav className="text-mono-sm pointer-events-auto relative hidden items-center gap-7 text-cream lg:flex">
@@ -151,19 +159,16 @@ export function SiteHeader() {
           </span>
         </div>
 
-        <div className="pointer-events-auto relative ml-auto flex items-center gap-4">
-          <ButtonLink href={BOOKING_PHONE_HREF} variant="ghost" size="sm" className="hidden sm:flex">
+        <div className="pointer-events-auto relative lg:hidden">
+          <MobileMenu />
+        </div>
+
+        <div className="pointer-events-auto relative ml-auto hidden items-center gap-4 lg:flex">
+          <ButtonLink href={BOOKING_PHONE_HREF} variant="ghost" size="sm">
             {CONTACTS.bookingPhone}
           </ButtonLink>
 
-          {/* TODO: подключить к фоновому аудио, когда появится features/ambient-sound */}
-          <button
-            type="button"
-            aria-label="Включить звук"
-            className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-ink-muted text-cream transition-colors hover:border-cream"
-          >
-            <Music2 className="size-4" strokeWidth={1.5} />
-          </button>
+          <SoundButton />
 
           {/* TODO: открывать форму брони, когда появится features/booking */}
           <Button size="sm">Забронировать стол</Button>

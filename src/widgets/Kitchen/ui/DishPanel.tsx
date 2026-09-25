@@ -38,18 +38,29 @@ export function DishPanel({ dish, className }: DishPanelProps) {
     >
       {/*
         В макете колонка текста 334px, но там и описание в три строки. Описания
-        из меню — 250–310 знаков, поэтому текст идёт на всю ширину карточки:
-        так выходит 6–7 строк, и они кончаются над плашкой страны.
+        из меню — 250–310 знаков, поэтому текст идёт на всю ширину карточки.
+        Мобильная карточка — Figma node 336:191, 328×400: поля 16/24, заголовок
+        20px с межстрочным 1.2, описание 14px с 1.4.
 
-        Потолок в семь строк — страховка на случай длинного текста. Не
-        `line-clamp`: SplitText режет абзац на блоки-строки, и многоточие
-        с ними не работает, поэтому просто обрезаем по высоте целых строк.
+        Блок текста кончается над кнопкой и плашкой страны (`bottom-28`, 112px
+        — плашка 100 и зазор), а описание внутри прокручивается: на узком
+        телефоне заголовок встаёт в три строки, и текст наезжал на «Хочу».
+        Низ описания затухает, чтобы было видно, что текст продолжается; под
+        затуханием отступ в строку — последнюю можно докрутить до чистого фона.
+        Колесо внутри описания Lenis не перехватывает — `data-lenis-prevent`.
       */}
-      <div className="absolute inset-x-8 top-8 flex flex-col gap-4 text-cream">
-        <h3 className="js-dish-lines text-display-sm leading-none">{dish.title}</h3>
-        <p className="js-dish-lines text-mono-sm max-h-[8.4em] overflow-hidden text-dop">
-          {dish.description}
-        </p>
+      <div className="absolute inset-x-4 top-6 bottom-28 flex flex-col gap-3 text-cream lg:inset-x-8 lg:top-8 lg:gap-4">
+        <h3 className="js-dish-lines text-display-sm shrink-0 leading-[1.2] lg:leading-none">
+          {dish.title}
+        </h3>
+        <div
+          data-lenis-prevent
+          className="min-h-0 overflow-y-auto overscroll-contain [mask-image:linear-gradient(to_bottom,#000_calc(100%-1.5em),transparent)] [scrollbar-width:none]"
+        >
+          <p className="js-dish-lines text-mono-sm pb-[1.5em] leading-[1.4] text-dop lg:leading-[1.2]">
+            {dish.description}
+          </p>
+        </div>
       </div>
 
       {/* TODO: вести на блюдо в меню, когда появится страница */}
@@ -58,15 +69,19 @@ export function DishPanel({ dish, className }: DishPanelProps) {
         `transition-opacity` для наведения, и он догонял каждый кадр GSAP —
         кнопка проявлялась рывками.
       */}
-      <div className="js-dish-cta absolute bottom-8 left-8">
+      <div className="js-dish-cta absolute bottom-6 left-4 lg:bottom-8 lg:left-8">
         <Button variant="outline">
           Хочу
           <ArrowRight className="size-4" strokeWidth={1.5} />
         </Button>
       </div>
 
-      {/* Откуда блюдо — Figma node 241:1114, плашка 154×101 в углу карточки */}
-      <div aria-hidden className="absolute right-0 bottom-0 h-[31.6%] w-[33.5%]">
+      {/*
+        Откуда блюдо — Figma node 241:1114, плашка 154×101 в углу карточки.
+        На мобильном карточка вертикальная, и доли дали бы вытянутую плашку —
+        там она просто 150×100 (Figma node 336:199).
+      */}
+      <div aria-hidden className="absolute right-0 bottom-0 h-25 w-37.5 lg:h-[31.6%] lg:w-[33.5%]">
         <Image
           src={dish.origin.map}
           alt=""

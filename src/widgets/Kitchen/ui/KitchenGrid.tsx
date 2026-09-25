@@ -103,16 +103,24 @@ export function KitchenGrid() {
   }, []);
 
   return (
-    // z-10: по задумке лента проезжает поверх текстовой колонки, а не под ней
-    <div
-      ref={trackRef}
-      className="relative z-10 grid gap-8 sm:grid-cols-2 lg:w-607 lg:shrink-0 lg:grid-cols-5"
-    >
-      <Reveal>
-        {DISHES.map((dish) => (
-          <DishTile key={dish.id} dish={dish} motion={motion} />
-        ))}
-      </Reveal>
+    /*
+      Мобильный — Figma node 336:189: два ряда клеток 328×400 уходят за правый
+      край, листаются свайпом с доводкой к клетке. Пин с прокруткой — только
+      на десктопе. Там эта обёртка — `contents`, и лента снова flex-ребёнок
+      строки рядом с колонкой текста.
+    */
+    <div className="-mx-4 snap-x snap-mandatory scroll-px-4 overflow-x-auto overscroll-x-contain px-4 sm:-mx-5 sm:scroll-px-5 sm:px-5 [scrollbar-width:none] lg:contents">
+      {/* z-10: по задумке лента проезжает поверх текстовой колонки, а не под ней */}
+      <div
+        ref={trackRef}
+        className="relative z-10 grid w-max auto-cols-[min(328px,calc(100vw-2rem))] grid-flow-col grid-rows-2 gap-3 lg:w-607 lg:shrink-0 lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-5 lg:grid-rows-none lg:gap-8"
+      >
+        <Reveal>
+          {DISHES.map((dish) => (
+            <DishTile key={dish.id} dish={dish} motion={motion} />
+          ))}
+        </Reveal>
+      </div>
     </div>
   );
 }

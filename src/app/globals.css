@@ -61,7 +61,8 @@
   /* Сетка: макет 1920, контейнер 1464 (поля 228), гэп 32 —
      держать в паре с shared/config/grid.ts */
   --container-max: 1464px;
-  --container-inset: 20px;
+  /* Поля на узких экранах: 16px — мобильный макет (Figma 336:104), от 640 — 20px */
+  --container-inset: 16px;
   --grid-gap: 32px;
 
   /* Палитра макета (Figma Mmeroche): кремовый текст, бордовый акцент, чёрный фон.
@@ -105,6 +106,12 @@
   --input: rgb(242 241 224 / 0.15);
   --ring: rgb(242 241 224 / 0.3);
   --radius: 8px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --container-inset: 20px;
+  }
 }
 
 /* Светлой темы в макете нет: `.dark` ничего не переопределяет, палитра живёт в :root.
@@ -169,14 +176,20 @@
  */
 @utility text-display-2xl {
   font-family: var(--font-display);
-  font-size: clamp(48px, 3.75vw, 72px);
+  /* 56px — цифры в мобильном макете (Figma 336:280) */
+  font-size: clamp(56px, 3.75vw, 72px);
   line-height: 0.9;
   text-transform: uppercase;
 }
 
 @utility text-display-xl {
   font-family: var(--font-display);
-  font-size: clamp(34px, 2.7vw, 52px);
+  /*
+    32px — заголовки секций в мобильном макете (Figma 336:104, ширина 360).
+    Уже 360 размер идёт за шириной (8.75vw): на 320 при 32px «ТАЙНЫЙ ОСОБНЯК»
+    в Hero не влезал в строку и слоган рассыпался на пять.
+  */
+  font-size: clamp(min(8.75vw, 32px), 2.7vw, 52px);
   line-height: 0.9;
   text-transform: uppercase;
 }

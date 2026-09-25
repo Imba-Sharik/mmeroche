@@ -3,13 +3,41 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
+import { cn } from "@/shared/lib/utils";
 import { WineGlow } from "@/shared/ui";
 import {
   INTERIOR_CANVAS,
   INTERIOR_GLOW,
+  INTERIOR_MOBILE_CANVAS,
+  INTERIOR_MOBILE_GLOW,
+  INTERIOR_MOBILE_PHOTOS,
   INTERIOR_PHOTOS,
   type InteriorPhoto,
 } from "../model/photos";
+
+/**
+ * Две раскладки коллажа: десктопная (холст 1920×1830) и мобильная (360×2240).
+ * `media` — где раскладка видна: проявление запускаем только там, иначе
+ * скрытые кадры вставали бы в общую очередь и задерживали видимые.
+ */
+const LAYOUTS = {
+  desktop: {
+    photos: INTERIOR_PHOTOS,
+    glow: INTERIOR_GLOW,
+    canvas: INTERIOR_CANVAS,
+    media: "(min-width: 1024px)",
+    sizes: "40vw",
+  },
+  mobile: {
+    photos: INTERIOR_MOBILE_PHOTOS,
+    glow: INTERIOR_MOBILE_GLOW,
+    canvas: INTERIOR_MOBILE_CANVAS,
+    media: "(max-width: 1023.98px)",
+    sizes: "100vw",
+  },
+} as const;
+
+type Layout = keyof typeof LAYOUTS;
 
 /** Тайминг появлений с референса fromanother.love, как в `Reveal` */
 const REVEAL = { duration: 1.4, ease: "power3.out" } as const;
@@ -17,7 +45,7 @@ const REVEAL = { duration: 1.4, ease: "power3.out" } as const;
 /** Разбег между кадрами коллажа, секунды */
 const GAP = 0.3;
 
-function CollagePhoto({ photo }: { photo: InteriorPhoto }) {
+function CollagePhoto({ photo, sizes }: { photo: InteriorPhoto; sizes: string }) {
   return (
     <div
       className="js-interior-photo absolute"
@@ -35,7 +63,7 @@ function CollagePhoto({ photo }: { photo: InteriorPhoto }) {
         alt={photo.alt}
         aria-hidden={photo.alt === "" || undefined}
         fill
-        sizes="(max-width: 1024px) 50vw, 40vw"
+        sizes={sizes}
         className="js-interior-img object-cover"
       />
     </div>
@@ -43,7 +71,8 @@ function CollagePhoto({ photo }: { photo: InteriorPhoto }) {
 }
 
 /**
- * Коллаж снимков зала — Figma node 222:2081, холст 1920×1830.
+ * Коллаж снимков зала — Figma node 222:2081 (холст 1920×1830), мобильный —
+ * 336:246 (360×2240), см. `LAYOUTS`.
  *
  * Кадры проявляются по очереди, когда до них доезжает экран: только
  * прозрачность, как у остальных появлений на сайте (`Reveal`), без выезда
@@ -60,7 +89,8 @@ function CollagePhoto({ photo }: { photo: InteriorPhoto }) {
  * Прозрачность крутим на снимке, а не на рамке: у части рамок своя,
  * из макета (`opacity` в `photos.ts`), и твин бы её затёр.
  */
-export function InteriorGallery() {
+export function InteriorGallery({ layout, className }: { layout: Layout; className?: string }) {
+  const { photos, glow, canvas, media: visibleOn, sizes } = LAYOUTS[layout];
   const rootRef = useRef<HTMLDivElement>(null);
 
   useGsapLayout(() => {
@@ -69,7 +99,7 @@ export function InteriorGallery() {
 
     const media = gsap.matchMedia();
 
-    media.add("(prefers-reduced-motion: no-preference)", () => {
+    media.add(`${visibleOn} and (prefers-reduced-motion: no-preference)`, () => {
       const frames = gsap.utils.toArray<HTMLElement>(".js-interior-photo", root);
       const imgOf = (frame: Element) => frame.querySelector(".js-interior-img");
 
@@ -97,22 +127,22 @@ export function InteriorGallery() {
     });
 
     return () => media.revert();
-  }, []);
+  }, [visibleOn]);
 
-  const under = INTERIOR_PHOTOS.slice(0, INTERIOR_GLOW.after);
-  const over = INTERIOR_PHOTOS.slice(INTERIOR_GLOW.after);
+  const under = photos.slice(0, glow.after);
+  const over = photos.slice(glow.after);
 
   return (
-    <div ref={rootRef} className="relative w-full" style={{ aspectRatio: INTERIOR_CANVAS }}>
+    <div ref={rootRef} className={cn("relative w-full", className)} style={{ aspectRatio: canvas }}>
       {under.map((photo) => (
-        <CollagePhoto key={photo.src} photo={photo} />
+        <CollagePhoto key={photo.src} photo={photo} sizes={sizes} />
       ))}
 
-      {/* Свечение под ворохом записок — Figma node 222:2106 */}
-      <WineGlow x={INTERIOR_GLOW.x} y={INTERIOR_GLOW.y} size={INTERIOR_GLOW.size} />
+      {/* Свечение под ворохом записок — Figma nodes 222:2106, 336:264 */}
+      <WineGlow x={glow.x} y={glow.y} size={glow.size} />
 
       {over.map((photo) => (
-        <CollagePhoto key={photo.src} photo={photo} />
+        <CollagePhoto key={photo.src} photo={photo} sizes={sizes} />
       ))}
     </div>
   );

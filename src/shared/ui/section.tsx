@@ -43,11 +43,17 @@ interface SectionIntroProps {
  */
 export function SectionIntro({ title, children, id, className }: SectionIntroProps) {
   return (
-    <div className={cn("relative mx-auto flex max-w-130 flex-col gap-6 text-center text-cream", className)}>
+    <div
+      className={cn(
+        "relative mx-auto flex max-w-130 flex-col gap-5 text-center text-cream lg:gap-6",
+        className,
+      )}
+    >
       <h2 id={id} className="text-display-xl">
         {title}
       </h2>
-      <p className="text-mono-base text-dop">{children}</p>
+      {/* На мобильном лид 16px с межстрочным 1.4 — Figma nodes 336:216, 336:270 */}
+      <p className="text-mono-md leading-[1.4] text-dop lg:text-mono-base">{children}</p>
     </div>
   );
 }

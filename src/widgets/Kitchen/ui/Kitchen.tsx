@@ -27,7 +27,7 @@ const EDGE_BLUR: BlurStep[] = [
  */
 export function Kitchen() {
   return (
-    <Section id="kitchen" className="py-50">
+    <Section id="kitchen" className="py-25 lg:py-50">
       {/* Свечение за текстовой колонкой — Figma node 222:2024 */}
       <WineGlow x="15.208%" y={265} />
 
@@ -36,18 +36,18 @@ export function Kitchen() {
         заходит на соседние блоки, а `overflow` на секции срезал бы его линией.
       */}
       <div className="relative overflow-hidden">
-        <div className="flex flex-col gap-12 px-5 lg:flex-row lg:items-start lg:gap-30 lg:pr-0 lg:pl-container">
+        <div className="flex flex-col gap-10 px-4 sm:px-5 lg:flex-row lg:items-start lg:gap-30 lg:pr-0 lg:pl-container">
           <Reveal>
             <div className="js-kitchen-title lg:w-127.5 lg:shrink-0">
               {/*
                 Отдельный слой под растворение, когда лента наезжает на колонку:
                 прозрачность самой колонки занята проявлением из `Reveal`.
               */}
-              <div className="js-kitchen-fade flex flex-col gap-10">
+              <div className="js-kitchen-fade flex flex-col gap-5 lg:gap-10">
                 <SectionHeading className="text-cream">кухня</SectionHeading>
 
                 <div className="flex flex-col gap-8">
-                  <div className="text-mono-base flex flex-col gap-4.5 text-dop">
+                  <div className="text-mono-md flex flex-col gap-4 leading-[1.4] text-dop lg:text-mono-base lg:gap-4.5">
                     <p>
                       Madame Roche привыкла знать обо всем, что появляется в её доме, — еда не
                       исключение.
@@ -59,12 +59,16 @@ export function Kitchen() {
                   </div>
 
                   {/* TODO: навесить переходы, когда появятся страницы меню и бара */}
-                  <div className="flex flex-wrap items-center gap-4">
-                    <Button className="w-40">
+                  {/* На мобильном кнопки делят ширину поровну — Figma node 336:180 */}
+                  <div className="flex flex-wrap items-center gap-3 lg:gap-4">
+                    <Button className="flex-1 px-3 lg:w-40 lg:flex-none lg:px-5.5">
                       Меню кухни
                       <ArrowRight className="size-4" strokeWidth={1.5} />
                     </Button>
-                    <Button variant="outline" className="w-40">
+                    <Button
+                      variant="outline"
+                      className="flex-1 px-3 lg:w-40 lg:flex-none lg:px-5.5"
+                    >
                       Барная карта
                       <ArrowRight className="size-4" strokeWidth={1.5} />
                     </Button>

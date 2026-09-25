@@ -17,7 +17,7 @@ const PHOTO_GRADIENTS = [
  */
 export function Legend() {
   return (
-    <Section id="legend" className="py-50">
+    <Section id="legend" className="py-25 lg:py-50">
       {/* Свечение слева от текста — Figma node 268:14 */}
       <WineGlow x="17.917%" y={388} />
 
