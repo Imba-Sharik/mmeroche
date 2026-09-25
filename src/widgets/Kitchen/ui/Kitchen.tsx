@@ -1,6 +1,25 @@
 import { ArrowRight } from "lucide-react";
-import { Button, Reveal, Section, SectionHeading, WineGlow } from "@/shared/ui";
+import {
+  Button,
+  ProgressiveBlur,
+  Reveal,
+  Section,
+  SectionHeading,
+  WineGlow,
+  type BlurStep,
+} from "@/shared/ui";
 import { KitchenGrid } from "./KitchenGrid";
+
+/**
+ * Размытие у краёв ленты: клетки не обрываются линией обрезки, а уходят
+ * в расфокус. Сильнее, чем в шапке, — под ним фото, а не тёмный фон.
+ */
+const EDGE_BLUR: BlurStep[] = [
+  { blur: 4, fade: "100%" },
+  { blur: 6, fade: "65%" },
+  { blur: 10, fade: "40%" },
+  { blur: 14, fade: "20%" },
+];
 
 /**
  * Секция «Кухня» — Figma node 222:2023, 1920×1080.
@@ -19,31 +38,37 @@ export function Kitchen() {
       <div className="relative overflow-hidden">
         <div className="flex flex-col gap-12 px-5 lg:flex-row lg:items-start lg:gap-30 lg:pr-0 lg:pl-container">
           <Reveal>
-            <div className="js-kitchen-title flex flex-col gap-10 lg:w-127.5 lg:shrink-0">
-              <SectionHeading className="text-cream">кухня</SectionHeading>
+            <div className="js-kitchen-title lg:w-127.5 lg:shrink-0">
+              {/*
+                Отдельный слой под растворение, когда лента наезжает на колонку:
+                прозрачность самой колонки занята проявлением из `Reveal`.
+              */}
+              <div className="js-kitchen-fade flex flex-col gap-10">
+                <SectionHeading className="text-cream">кухня</SectionHeading>
 
-              <div className="flex flex-col gap-8">
-                <div className="text-mono-base flex flex-col gap-4.5 text-dop">
-                  <p>
-                    Madame Roche привыкла знать обо всем, что появляется в её доме, — еда не
-                    исключение.
-                  </p>
-                  <p>
-                    Здесь предпочитают продукты от фермеров, самостоятельно делают масло и сметану
-                    и пекут ремесленный хлеб
-                  </p>
-                </div>
+                <div className="flex flex-col gap-8">
+                  <div className="text-mono-base flex flex-col gap-4.5 text-dop">
+                    <p>
+                      Madame Roche привыкла знать обо всем, что появляется в её доме, — еда не
+                      исключение.
+                    </p>
+                    <p>
+                      Здесь предпочитают продукты от фермеров, самостоятельно делают масло и сметану
+                      и пекут ремесленный хлеб
+                    </p>
+                  </div>
 
-                {/* TODO: навесить переходы, когда появятся страницы меню и бара */}
-                <div className="flex flex-wrap items-center gap-4">
-                  <Button className="w-40">
-                    Меню кухни
-                    <ArrowRight className="size-4" strokeWidth={1.5} />
-                  </Button>
-                  <Button variant="outline" className="w-40">
-                    Барная карта
-                    <ArrowRight className="size-4" strokeWidth={1.5} />
-                  </Button>
+                  {/* TODO: навесить переходы, когда появятся страницы меню и бара */}
+                  <div className="flex flex-wrap items-center gap-4">
+                    <Button className="w-40">
+                      Меню кухни
+                      <ArrowRight className="size-4" strokeWidth={1.5} />
+                    </Button>
+                    <Button variant="outline" className="w-40">
+                      Барная карта
+                      <ArrowRight className="size-4" strokeWidth={1.5} />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -52,6 +77,18 @@ export function Kitchen() {
           {/* Сетка блюд уходит за правый край экрана — Figma node 222:2039 */}
           <KitchenGrid />
         </div>
+
+        {/* Поверх ленты (у неё z-10), только там, где она едет вбок */}
+        <ProgressiveBlur
+          side="left"
+          steps={EDGE_BLUR}
+          className="absolute inset-y-0 left-0 z-20 hidden w-40 lg:block"
+        />
+        <ProgressiveBlur
+          side="right"
+          steps={EDGE_BLUR}
+          className="absolute inset-y-0 right-0 z-20 hidden w-40 lg:block"
+        />
       </div>
     </Section>
   );

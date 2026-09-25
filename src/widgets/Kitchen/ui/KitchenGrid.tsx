@@ -4,10 +4,15 @@ import { useRef } from "react";
 import { gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
 import { Reveal } from "@/shared/ui";
 import { DishTile } from "./DishTile";
+import { useCardMotion } from "../model/card-motion";
 import { DISHES } from "../model/dishes";
+
+/** Доля ширины текстовой колонки, за которую она гаснет под лентой */
+const FADE_SPAN = 0.8;
 
 export function KitchenGrid() {
   const trackRef = useRef<HTMLDivElement>(null);
+  const motion = useCardMotion();
 
   useGsapLayout(() => {
     const track = trackRef.current;
@@ -23,6 +28,7 @@ export function KitchenGrid() {
        * `getBoundingClientRect()` отдаёт нули — лента уезжала в край экрана.
        */
       const textCol = section.querySelector(".js-kitchen-title");
+      const fadeLayer = section.querySelector(".js-kitchen-fade");
 
       /**
        * Ход ленты — больший из двух: доехать левым краем до начала текста и
@@ -45,6 +51,26 @@ export function KitchenGrid() {
       };
 
       /**
+       * Колонка растворяется, как только лента наехала на её правый край, и
+       * пропадает целиком, когда лента перекрыла её на `FADE_SPAN` ширины.
+       * На весь ход растягивать нельзя — на десяти клетках он длинный, и текст
+       * висел под фото почти до конца. Считаем по живым рамкам на каждом
+       * кадре — так растворение переживает ресайз и откат скролла.
+       */
+      const fadeText = () => {
+        if (!textCol || !fadeLayer) return;
+
+        const x = Number(gsap.getProperty(track, "x")) || 0;
+        const text = textCol.getBoundingClientRect();
+        // Зазор между лентой и колонкой до начала хода
+        const gap = track.getBoundingClientRect().left - x - text.right;
+        const span = Math.min(text.width * FADE_SPAN, distance() - gap);
+        const progress = span > 0 ? gsap.utils.clamp(0, 1, (-x - gap) / span) : 0;
+
+        gsap.set(fadeLayer, { autoAlpha: 1 - progress });
+      };
+
+      /**
        * Секция замирает, как только упёрлась в верх экрана, и держится ровно
        * столько, сколько нужно ленте, чтобы доехать. Пин вешаем на саму секцию:
        * у неё нет предков с `overflow`, иначе `position: fixed` от ScrollTrigger
@@ -53,6 +79,7 @@ export function KitchenGrid() {
       gsap.to(track, {
         x: () => -distance(),
         ease: "none",
+        onUpdate: fadeText,
         scrollTrigger: {
           trigger: section,
           start: "top top",
@@ -63,6 +90,10 @@ export function KitchenGrid() {
           invalidateOnRefresh: true,
         },
       });
+
+      return () => {
+        if (fadeLayer) gsap.set(fadeLayer, { clearProps: "opacity,visibility" });
+      };
     });
 
     return () => {
@@ -79,7 +110,7 @@ export function KitchenGrid() {
     >
       <Reveal>
         {DISHES.map((dish) => (
-          <DishTile key={dish.id} dish={dish} />
+          <DishTile key={dish.id} dish={dish} motion={motion} />
         ))}
       </Reveal>
     </div>

@@ -56,7 +56,10 @@ export function ContactsMap() {
         `;
         map.addChild(new YMapMarker({ coordinates: POINT, zIndex: 10 }, marker));
       })
-      .catch(() => {
+      .catch((error: unknown) => {
+        // Без этого откат на снимок молчит, и на сервере не понять, ключа нет
+        // при сборке или Яндекс отказал домену
+        console.warn("[ContactsMap] карта не загрузилась, показываю снимок:", error);
         if (!cancelled) setFailed(true);
       });
 

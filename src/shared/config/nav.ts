@@ -32,7 +32,9 @@ export const CONTACTS = {
     { label: "Telegram", href: "#" },
     { label: "mmeroche.ru", href: "#" },
   ],
-  legal: "MADAME ROCHE  ·  PART OF PLACEBO/25",
+  /** Подпись в подвале: «MADAME ROCHE · PART OF PLACEBO/25», ссылка только на вторую часть */
+  legal: "MADAME ROCHE",
+  group: { label: "PART OF PLACEBO/25", url: "https://placebo25.com/" },
   requisites: "Реквизиты по запросу",
 } as const;
 

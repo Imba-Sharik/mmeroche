@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ArrowDown } from "lucide-react";
 import { Button, Container, Reveal, Section, WineGlow } from "@/shared/ui";
+import { CountUp } from "./CountUp";
 
 /** Цифры дома — Figma nodes 222:2117, 222:2121, 222:2125 */
 const STATS = [
@@ -42,12 +43,15 @@ export function Events() {
           </p>
 
           <div className="grid w-full gap-8 sm:grid-cols-3">
-            {STATS.map((stat) => (
+            {STATS.map((stat, index) => (
               <div
                 key={stat.value}
                 className="flex flex-col gap-4 rounded-lg border border-ink-muted p-6"
               >
-                <p className="text-display-2xl text-cream">{stat.value}</p>
+                {/* Цифры набираются от нуля, карточки вразбег — см. `CountUp` */}
+                <p className="text-display-2xl text-cream">
+                  <CountUp value={stat.value} delay={index * 0.15} />
+                </p>
                 <p className="text-mono-sm text-dop">{stat.label}</p>
               </div>
             ))}

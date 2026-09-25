@@ -23,23 +23,47 @@ interface DishPanelProps {
   className?: string;
 }
 
-/** Раскрытая карточка блюда — Figma node 222:2042, 460×320 */
+/**
+ * Раскрытая карточка блюда — Figma node 222:2042, 460×320.
+ *
+ * `js-dish-lines` и `js-dish-cta` — хуки для появления текста, см. `DishTile`.
+ */
 export function DishPanel({ dish, className }: DishPanelProps) {
   return (
     <article
       className={cn("relative size-full overflow-hidden rounded-xl", className)}
-      style={{ backgroundImage: "linear-gradient(127.38deg, rgb(27,27,27) 0%, rgb(16,16,16) 100%)" }}
+      style={{
+        backgroundImage: "linear-gradient(127.38deg, rgb(27,27,27) 0%, rgb(16,16,16) 100%)",
+      }}
     >
-      <div className="absolute top-8 left-8 flex max-w-83.5 flex-col gap-4 text-cream">
-        <h3 className="text-display-sm leading-none">{dish.title}</h3>
-        <p className="text-mono-sm text-dop">{dish.description}</p>
+      {/*
+        В макете колонка текста 334px, но там и описание в три строки. Описания
+        из меню — 250–310 знаков, поэтому текст идёт на всю ширину карточки:
+        так выходит 6–7 строк, и они кончаются над плашкой страны.
+
+        Потолок в семь строк — страховка на случай длинного текста. Не
+        `line-clamp`: SplitText режет абзац на блоки-строки, и многоточие
+        с ними не работает, поэтому просто обрезаем по высоте целых строк.
+      */}
+      <div className="absolute inset-x-8 top-8 flex flex-col gap-4 text-cream">
+        <h3 className="js-dish-lines text-display-sm leading-none">{dish.title}</h3>
+        <p className="js-dish-lines text-mono-sm max-h-[8.4em] overflow-hidden text-dop">
+          {dish.description}
+        </p>
       </div>
 
       {/* TODO: вести на блюдо в меню, когда появится страница */}
-      <Button variant="outline" className="absolute bottom-8 left-8">
-        Хочу
-        <ArrowRight className="size-4" strokeWidth={1.5} />
-      </Button>
+      {/*
+        Появление анимируем на обёртке, а не на кнопке: у `Button` свой
+        `transition-opacity` для наведения, и он догонял каждый кадр GSAP —
+        кнопка проявлялась рывками.
+      */}
+      <div className="js-dish-cta absolute bottom-8 left-8">
+        <Button variant="outline">
+          Хочу
+          <ArrowRight className="size-4" strokeWidth={1.5} />
+        </Button>
+      </div>
 
       {/* Откуда блюдо — Figma node 241:1114, плашка 154×101 в углу карточки */}
       <div aria-hidden className="absolute right-0 bottom-0 h-[31.6%] w-[33.5%]">

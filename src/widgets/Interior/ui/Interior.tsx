@@ -13,12 +13,15 @@ export function Interior() {
           Интерьер ресторана, как азиатская шкатулка, вместил в себя культуры и быт всех мировых
           континентов – здесь яванская древесина
         </SectionIntro>
-
-        {/* Коллаж идёт во всю ширину экрана, а не по контейнеру — Figma node 222:2081 */}
-        <div className="mt-27 w-full">
-          <InteriorGallery />
-        </div>
       </Reveal>
+
+      {/*
+        Коллаж идёт во всю ширину экрана, а не по контейнеру — Figma node 222:2081.
+        Вне `Reveal`: кадры проявляются сами, по одному, см. `InteriorGallery`.
+      */}
+      <div className="relative mt-27 w-full">
+        <InteriorGallery />
+      </div>
     </Section>
   );
 }
