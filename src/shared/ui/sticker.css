@@ -68,11 +68,7 @@
   --st-width: calc(var(--st-square) * 100%);
   --st-left: calc((100% - var(--st-width)) / 2);
   --st-fold: 145deg;
-  /*
-   * Полос 12, на сенсорных экранах 6 (`sticker.tsx`). Вся цепочка всегда
-   * одной длины и гнётся на тот же общий угол: ширина полосы и её доля
-   * изгиба — от числа полос.
-   */
+  /* Полос 12 (`sticker.tsx`); ширина полосы и её доля изгиба — от их числа */
   --st-strips: 12;
   --st-strip: calc(3.8% * 12 / var(--st-strips));
   --st-bend-scale: calc(12 / var(--st-strips));
@@ -338,42 +334,53 @@
 }
 
 /*
- * Сенсорные экраны: iPhone не вытягивал анимацию, стикеры дёргались. Кроме
- * вдвое меньшего числа полос, убираем самое дорогое в перерисовке — фильтр
- * затенения на каждой грани и тень на всём стикере, пока он падает (фильтр
- * на предке заставляет перерисовывать всю 3D-цепочку в отдельный слой каждый
- * кадр). Тень возвращается, когда стикер лёг.
+ * Сенсорные экраны. Всё выше гонят `@property`-переменные, а их браузер
+ * анимирует только в главном потоке, кадр за кадром пересчитывая стили
+ * и перерисовывая полсотни граней с `clip-path`. На iPhone в тот же момент
+ * главный поток занят Lenis (`syncTouch`) и проявлением текста — стикер
+ * дёргался, а если поток вставал дольше анимации, выскакивал сразу готовым:
+ * CSS-анимация идёт по часам, пропущенные кадры не догоняются.
+ *
+ * Поэтому здесь 3D-цепочки нет (`sticker.tsx` её не рендерит), падает
+ * плоская копия, и только `transform` + `opacity` — это Safari и Chrome
+ * отдают композитору, и анимация не зависит от занятости страницы.
+ * Прижатие к стене изображаем лёгким сплющиванием в конце.
  */
 @media (hover: none) {
-  .sticker__face .sticker__surface,
-  .sticker__face--back .sticker__surface {
-    filter: none;
+  .sticker[data-armed][data-stuck] {
+    opacity: 1;
+    animation: none;
   }
 
+  /* Тень — после приземления: фильтр над движущимся слоем пересчитывается каждый кадр */
   .sticker[data-stuck]:not([data-settled]) {
     filter: none;
   }
 
-  .sticker[data-stuck] {
-    animation-name: sticker-fade, sticker-drop-lite, sticker-roll, sticker-curl, sticker-tail;
+  .sticker[data-stuck]:not([data-settled]) .sticker__flat,
+  .sticker[data-stuck] .sticker__flat {
+    display: block;
+    will-change: transform, opacity;
+    animation: 0.9s cubic-bezier(0.25, 0.55, 0.2, 1) var(--st-delay, 0s) both sticker-slap;
   }
 }
 
-/* `sticker-drop` без анимации тени — для сенсорных экранов */
-@keyframes sticker-drop-lite {
+@keyframes sticker-slap {
   0% {
-    --st-yaw: -34deg;
-    --st-pitch: 24deg;
+    opacity: 0;
     transform: translate(52%, -142%) rotate(-15deg) scale(1.34);
   }
-  80% {
-    --st-yaw: -5deg;
-    --st-pitch: 4deg;
-    transform: translate(0) rotate(1.2deg) scale(1.02);
+  45% {
+    opacity: 1;
+  }
+  75% {
+    transform: translate(0) rotate(1.2deg) scale(1.03);
+  }
+  88% {
+    transform: translate(0) rotate(0) scale(0.985);
   }
   to {
-    --st-yaw: 0deg;
-    --st-pitch: 0deg;
+    opacity: 1;
     transform: translate(0) rotate(0) scale(1);
   }
 }

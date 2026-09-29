@@ -7,14 +7,6 @@ import "./sticker.css";
 /** Полос в каждой цепочке — столько же, сколько у оригинала на ecopanels.pro */
 const STRIPS = 12;
 
-/**
- * На сенсорных экранах полос вдвое меньше, и вдвое шире (`--st-strips`):
- * каждый кадр анимации браузер перерисовывает все грани с их `clip-path`,
- * и полсотни граней на стикер iPhone не тянул — стикеры клеились рывками.
- * На маленьком стикере вдвое грубее дуга не заметна.
- */
-const STRIPS_TOUCH = 6;
-
 const TOUCH_QUERY = "(hover: none)";
 
 const subscribeTouch = (onChange: () => void) => {
@@ -23,11 +15,17 @@ const subscribeTouch = (onChange: () => void) => {
   return () => query.removeEventListener("change", onChange);
 };
 
-const useStrips = () =>
+/**
+ * На сенсорных экранах 3D-цепочки нет вовсе (см. `sticker.css`): её гонят
+ * `@property`-переменные, а они анимируются только в главном потоке —
+ * на iPhone стикер дёргался, а когда поток был занят, выскакивал сразу
+ * готовым. Там плоская копия падает одним `transform` + `opacity`.
+ */
+const useTouch = () =>
   useSyncExternalStore(
     subscribeTouch,
-    () => (window.matchMedia(TOUCH_QUERY).matches ? STRIPS_TOUCH : STRIPS),
-    () => STRIPS,
+    () => window.matchMedia(TOUCH_QUERY).matches,
+    () => false,
   );
 
 interface StickerProps {
@@ -83,7 +81,7 @@ const chain = (tail: boolean, strips: number, i = 0): React.ReactNode => (
  */
 export function Sticker({ src, ratio, auto = true, delay = 0, className }: StickerProps) {
   const stickerRef = useRef<HTMLSpanElement>(null);
-  const strips = useStrips();
+  const touch = useTouch();
 
   useGsapLayout(() => {
     const sticker = stickerRef.current;
@@ -98,10 +96,12 @@ export function Sticker({ src, ratio, auto = true, delay = 0, className }: Stick
       // `roll` кончается последним; `fade` стартует первым, в том числе
       // при повторном приклеивании в «Интерьере».
       const onStart = (event: AnimationEvent) => {
-        if (event.animationName === "sticker-fade") sticker.removeAttribute("data-settled");
+        if (event.animationName === "sticker-fade" || event.animationName === "sticker-slap") sticker.removeAttribute("data-settled");
       };
       const onEnd = (event: AnimationEvent) => {
-        if (event.animationName === "sticker-roll") sticker.setAttribute("data-settled", "");
+        if (event.animationName === "sticker-roll" || event.animationName === "sticker-slap") {
+          sticker.setAttribute("data-settled", "");
+        }
       };
       sticker.addEventListener("animationstart", onStart);
       sticker.addEventListener("animationend", onEnd);
@@ -138,18 +138,19 @@ export function Sticker({ src, ratio, auto = true, delay = 0, className }: Stick
             "--st-art": `url("${src}")`,
             "--st-square": Math.max(1, 1 / ratio),
             "--st-delay": `${delay}s`,
-            "--st-strips": strips,
           } as React.CSSProperties
         }
       >
         <span className="sticker__flat" />
-        <span className="sticker__container">
-          <span className="sticker__main">
-            <span className="sticker__surface" />
+        {!touch && (
+          <span className="sticker__container">
+            <span className="sticker__main">
+              <span className="sticker__surface" />
+            </span>
+            {chain(false, STRIPS)}
+            {chain(true, STRIPS)}
           </span>
-          {chain(false, strips)}
-          {chain(true, strips)}
-        </span>
+        )}
       </span>
     </span>
   );
