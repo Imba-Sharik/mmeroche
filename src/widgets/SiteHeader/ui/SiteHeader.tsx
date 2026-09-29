@@ -111,7 +111,7 @@ export function SiteHeader() {
 
   return (
     <header ref={ref} className="pointer-events-none fixed inset-x-0 top-0 z-50">
-      <div className="relative mx-auto flex w-full max-w-480 items-center justify-between p-4 lg:px-57 lg:pt-5 lg:pb-10">
+      <div className="relative mx-auto flex w-full max-w-480 items-center justify-between p-4 lg:px-[max(var(--container-inset),calc((100%-var(--container-max))/2))] lg:pt-5 lg:pb-10">
         {/*
           Фон шапки: сперва прогрессивное размытие (см. `ProgressiveBlur`), поверх —
           линейный градиент чёрного. В Figma это заливка ноды, `#000000` сверху
@@ -127,7 +127,11 @@ export function SiteHeader() {
           <SoundButton />
         </div>
 
-        <nav className="text-mono-sm pointer-events-auto relative hidden items-center gap-7 text-cream lg:flex">
+        {/*
+          Шесть пунктов по макету — 571px при 14px и гэпе 28. На 1024–1280 это
+          налезает на лого по центру, поэтому до xl шрифт 12 и гэп поуже.
+        */}
+        <nav className="text-mono-xs pointer-events-auto relative hidden items-center gap-3 text-cream lg:flex xl:text-mono-sm xl:gap-5 2xl:gap-7">
           {NAV_ITEMS.map((item) => (
             <a key={item.id} href={`#${item.id}`} className="transition-colors hover:text-wine">
               {item.label}
