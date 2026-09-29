@@ -352,9 +352,18 @@
     animation: none;
   }
 
-  /* Тень — после приземления: фильтр над движущимся слоем пересчитывается каждый кадр */
+  /*
+   * Тень — на самом кадре и постоянная: растрируется в его слой один раз
+   * и едет вместе с ним. Раньше она включалась на родителе после
+   * приземления, и iPhone пересобирал слой — в конце стикер мигал.
+   */
+  .sticker,
   .sticker[data-stuck]:not([data-settled]) {
     filter: none;
+  }
+
+  .sticker__flat {
+    filter: drop-shadow(0 4px 4px #00000040);
   }
 
   .sticker[data-stuck]:not([data-settled]) .sticker__flat,
