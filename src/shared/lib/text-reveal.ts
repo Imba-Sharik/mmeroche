@@ -6,6 +6,19 @@ import { gsap, SplitText } from "./gsap";
 export const SPLIT_SELECTOR = "[data-split]";
 
 /**
+ * Общие настройки SplitText: не терять неразрывные пробелы (`typograf`).
+ *
+ * По умолчанию (`reduceWhiteSpace`) SplitText схлопывает пробелы регэкспом
+ * `/\s+/`, а под `\s` попадает и неразрывный — предлоги снова повисали на
+ * концах строк. Поэтому схлопывание выключаем и делаем сами, только для
+ * обычных пробелов и переводов строк из разметки.
+ */
+export const SPLIT_KEEP_NBSP = {
+  reduceWhiteSpace: false,
+  prepareText: (text: string) => text.replace(/[ \t\r\n]+/g, " "),
+};
+
+/**
  * Проявление текста как на jeskojets.com: каждая буква (заголовки) или
  * строка (абзацы) выходит из сильного размытия. Тайминги и размытие —
  * их, кривая — `reveal` из `gsap.ts`.
@@ -21,6 +34,7 @@ export function revealText(el: HTMLElement, vars: gsap.TweenVars = {}) {
   const byChars = el.dataset.split === "chars";
 
   return SplitText.create(el, {
+    ...SPLIT_KEEP_NBSP,
     type: byChars ? "words,chars" : "lines",
     autoSplit: true,
     onSplit: (self) =>

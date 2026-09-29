@@ -41,7 +41,8 @@ export const CONTACTS = {
   routeUrl: "https://yandex.ru/maps/?text=Москва, Кожевническая улица, 16с4",
   /** TODO: реальные ссылки на соцсети и домен */
   links: [
-    { label: "Instagram", href: "#" },
+    // Звёздочка отсылает к `metaNotice` — ставим его везде, где есть эта ссылка
+    { label: "Instagram*", href: "#" },
     { label: "Telegram", href: "#" },
     { label: "mmeroche.ru", href: "#" },
   ],
@@ -49,6 +50,12 @@ export const CONTACTS = {
   legal: "MADAME ROCHE",
   group: { label: "PART OF PLACEBO/25", url: "https://placebo25.com/" },
   requisites: "Реквизиты по запросу",
+  /**
+   * Оговорка про Meta — принятая в РФ формулировка при упоминании Instagram
+   * (Meta признана экстремистской, решение Тверского суда от 21.03.2022).
+   */
+  metaNotice:
+    "*Instagram — продукт компании Meta Platforms Inc., деятельность которой признана экстремистской и запрещена на территории РФ",
 } as const;
 
 /** Телефон в формате для tel: */

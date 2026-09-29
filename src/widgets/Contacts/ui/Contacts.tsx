@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { CONTACTS, PHONE_HREF } from "@/shared/config";
-import { ButtonLink, Container, Reveal, Section, WineGlow } from "@/shared/ui";
+import { ButtonLink, Container, CUTOUT_DELAY, Reveal, Section, WineGlow } from "@/shared/ui";
 import { ContactsMap } from "./ContactsMap";
 
 /** Блоки контактов — Figma nodes 222:2140, 222:2143, 222:2146 */
@@ -87,16 +87,20 @@ export function Contacts() {
 
                 На мобильном карта узкая, и от тех же долей голова выходила ~70px
                 и почти целиком висела над картой — там она крупнее (42%) и ниже.
+
+                Проявляется после карты, как все вырезки.
               */}
-              <Image
-                src="/images/contacts/mask.webp"
-                alt=""
-                aria-hidden
-                width={182}
-                height={277}
-                sizes="20vw"
-                className="absolute top-[-8%] left-[-16%] z-10 h-auto w-[42%] rotate-[-12.49deg] lg:top-[-20%] lg:left-[-10%] lg:w-[22%]"
-              />
+              <Reveal delay={CUTOUT_DELAY}>
+                <Image
+                  src="/images/contacts/mask.webp"
+                  alt=""
+                  aria-hidden
+                  width={182}
+                  height={277}
+                  sizes="20vw"
+                  className="absolute top-[-8%] left-[-16%] z-10 h-auto w-[42%] rotate-[-12.49deg] lg:top-[-20%] lg:left-[-10%] lg:w-[22%]"
+                />
+              </Reveal>
             </div>
           </div>
         </Reveal>

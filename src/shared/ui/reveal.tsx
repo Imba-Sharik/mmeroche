@@ -6,6 +6,14 @@ import { gsap, revealText, SPLIT_SELECTOR, useGsapLayout, type SplitText } from 
 /** Тайминг с референса fromanother.love */
 const REVEAL = { duration: 1.4, ease: "power3.out" } as const;
 
+/**
+ * Задержка для вырезок-декора (маски, голова Будды): они проявляются после
+ * фото или карты, на которых лежат, а не вместе с ними — так просил дизайнер
+ * (комментарий в макете у маски «Чего ожидать»). Одна на все, чтобы вырезки
+ * появлялись одинаково: `<Reveal delay={CUTOUT_DELAY}>`.
+ */
+export const CUTOUT_DELAY = 0.6;
+
 interface RevealProps {
   children: React.ReactNode;
   /** Разбег между соседями, секунды */

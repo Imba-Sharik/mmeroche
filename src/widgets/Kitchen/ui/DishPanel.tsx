@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import type { WheelEvent } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/shared/ui";
+import { typograf } from "@/shared/lib";
 import { cn } from "@/shared/lib/utils";
 import type { Dish } from "../model/dishes";
 
@@ -17,6 +21,24 @@ import type { Dish } from "../model/dishes";
  * столько.
  */
 const ORIGIN_MASK = "radial-gradient(ellipse at center, #000 25%, transparent 85%)";
+
+/**
+ * Колесо над описанием: пока текст есть куда крутить — крутится он, а Lenis
+ * событие не видит (он слушает `window`, всплытие гасим). Упёрлись в край —
+ * событие уходит Lenis, и дальше плавно едет страница.
+ *
+ * `data-lenis-prevent` тут не годится: он отдаёт браузеру колесо целиком, и
+ * страница над карточкой вставала — с `overscroll-contain` намертво, без него
+ * рывком нативной прокрутки мимо Lenis.
+ */
+function keepWheelInside(event: WheelEvent<HTMLElement>) {
+  const el = event.currentTarget;
+  const max = el.scrollHeight - el.clientHeight;
+  // Горизонтальный жест и текст без прокрутки — сразу странице
+  if (max <= 0 || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+  const canScroll = event.deltaY > 0 ? el.scrollTop < max - 1 : el.scrollTop > 0;
+  if (canScroll) event.stopPropagation();
+}
 
 interface DishPanelProps {
   dish: Dish;
@@ -47,18 +69,20 @@ export function DishPanel({ dish, className }: DishPanelProps) {
         телефоне заголовок встаёт в три строки, и текст наезжал на «Хочу».
         Низ описания затухает, чтобы было видно, что текст продолжается; под
         затуханием отступ в строку — последнюю можно докрутить до чистого фона.
-        Колесо внутри описания Lenis не перехватывает — `data-lenis-prevent`.
+        Колесо делят описание и страница — `keepWheelInside`; касания над
+        описанием Lenis не ведёт (`data-lenis-prevent-touch`), их листает браузер.
       */}
       <div className="absolute inset-x-4 top-6 bottom-28 flex flex-col gap-3 text-cream lg:inset-x-8 lg:top-8 lg:gap-4">
         <h3 className="js-dish-lines text-display-sm shrink-0 leading-[1.2] lg:leading-none">
-          {dish.title}
+          {typograf(dish.title)}
         </h3>
         <div
-          data-lenis-prevent
+          data-lenis-prevent-touch
+          onWheel={keepWheelInside}
           className="min-h-0 overflow-y-auto overscroll-contain [mask-image:linear-gradient(to_bottom,#000_calc(100%-1.5em),transparent)] [scrollbar-width:none]"
         >
           <p className="js-dish-lines text-mono-sm pb-[1.5em] leading-[1.4] text-dop lg:leading-[1.2]">
-            {dish.description}
+            {typograf(dish.description)}
           </p>
         </div>
       </div>

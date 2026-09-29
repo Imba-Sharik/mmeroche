@@ -1,11 +1,34 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { cn, gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
 import "./sticker.css";
 
 /** Полос в каждой цепочке — столько же, сколько у оригинала на ecopanels.pro */
 const STRIPS = 12;
+
+/**
+ * На сенсорных экранах полос вдвое меньше, и вдвое шире (`--st-strips`):
+ * каждый кадр анимации браузер перерисовывает все грани с их `clip-path`,
+ * и полсотни граней на стикер iPhone не тянул — стикеры клеились рывками.
+ * На маленьком стикере вдвое грубее дуга не заметна.
+ */
+const STRIPS_TOUCH = 6;
+
+const TOUCH_QUERY = "(hover: none)";
+
+const subscribeTouch = (onChange: () => void) => {
+  const query = window.matchMedia(TOUCH_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+
+const useStrips = () =>
+  useSyncExternalStore(
+    subscribeTouch,
+    () => (window.matchMedia(TOUCH_QUERY).matches ? STRIPS_TOUCH : STRIPS),
+    () => STRIPS,
+  );
 
 interface StickerProps {
   src: string;
@@ -35,13 +58,13 @@ const Faces = ({ last }: { last: boolean }) => (
 );
 
 /** Цепочка полос: каждая следующая вложена в предыдущую и гнётся вместе с ней */
-const chain = (tail: boolean, i = 0): React.ReactNode => (
+const chain = (tail: boolean, strips: number, i = 0): React.ReactNode => (
   <span
     className={cn("sticker__hinge", tail && "sticker__hinge--tail")}
     style={{ "--i": i } as React.CSSProperties}
   >
-    <Faces last={i === STRIPS - 1} />
-    {i < STRIPS - 1 && chain(tail, i + 1)}
+    <Faces last={i === strips - 1} />
+    {i < strips - 1 && chain(tail, strips, i + 1)}
   </span>
 );
 
@@ -60,6 +83,7 @@ const chain = (tail: boolean, i = 0): React.ReactNode => (
  */
 export function Sticker({ src, ratio, auto = true, delay = 0, className }: StickerProps) {
   const stickerRef = useRef<HTMLSpanElement>(null);
+  const strips = useStrips();
 
   useGsapLayout(() => {
     const sticker = stickerRef.current;
@@ -114,6 +138,7 @@ export function Sticker({ src, ratio, auto = true, delay = 0, className }: Stick
             "--st-art": `url("${src}")`,
             "--st-square": Math.max(1, 1 / ratio),
             "--st-delay": `${delay}s`,
+            "--st-strips": strips,
           } as React.CSSProperties
         }
       >
@@ -122,8 +147,8 @@ export function Sticker({ src, ratio, auto = true, delay = 0, className }: Stick
           <span className="sticker__main">
             <span className="sticker__surface" />
           </span>
-          {chain(false)}
-          {chain(true)}
+          {chain(false, strips)}
+          {chain(true, strips)}
         </span>
       </span>
     </span>

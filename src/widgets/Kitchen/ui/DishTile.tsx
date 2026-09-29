@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useRef, type PointerEvent, type RefObject } from "react";
-import { gsap, SplitText, useGsapLayout } from "@/shared/lib";
+import { gsap, SPLIT_KEEP_NBSP, SplitText, useGsapLayout } from "@/shared/lib";
 import { cn } from "@/shared/lib/utils";
 import { DishPanel } from "./DishPanel";
 import type { CardMotion } from "../model/card-motion";
@@ -22,21 +22,38 @@ const EASE = "ease-[cubic-bezier(0.16,1,0.3,1)]";
  * карточку каждый кадр — и карту под маской, и текст, — и строки текста
  * ехали рывками. Сдвиги двигает видеокарта, без перерисовки.
  *
+ * У шторки карточка с запасом: на 12px выше клетки и на 2px шире с боков
+ * (`box`), а содержимое сдвинуто обратно (`inner`). Кривая `expo.out` долго
+ * доползает последние пиксели, и всё это время над краем карточки светилась
+ * полоса фото. С запасом эти пиксели карточка проходит уже за краем клетки.
+ * Ход считаем в `cqh` от клетки, а не в процентах: проценты у рамки и у
+ * содержимого берутся от разной высоты, и встречные сдвиги разошлись бы.
+ *
  * `--x`/`--y` — точка, где курсор вошёл в клетку: из неё расходится `iris`.
  * С клавиатуры курсора нет, и круг идёт из центра.
  */
 const MOTION: Record<
   Exclude<CardMotion, "flip">,
-  { photo: string; panel: string; inner?: string }
+  { photo: string; panel: string; box?: string; inner?: string; hide?: string }
 > = {
   curtain: {
     photo: "group-hover:scale-105 group-focus-within:scale-105",
+    box: "-inset-x-0.5 -bottom-0.5 -top-3",
+    /*
+     * Фото гаснет, пока шторка ещё едет, а не после неё: Chrome режет
+     * скругление клетки отдельно на слое фото и на слое карточки, и по
+     * кромке фото просвечивало всю анимацию, сколько запаса ни дай. К 200 мс
+     * `expo.out` закрывает почти всю клетку — угасание открытой полосы сверху
+     * не видно.
+     */
+    hide: "group-hover:opacity-0 group-hover:duration-300 group-hover:delay-200 group-focus-within:opacity-0 group-focus-within:duration-300 group-focus-within:delay-200",
     panel: cn(
-      "overflow-hidden translate-y-full transition-[translate] duration-700 will-change-transform",
+      "overflow-hidden translate-y-[calc(100cqh+16px)] transition-[translate] duration-700 will-change-transform",
       "group-hover:translate-y-0 group-focus-within:translate-y-0",
     ),
     inner: cn(
-      "-translate-y-full transition-[translate] duration-700 will-change-transform",
+      "absolute inset-x-0 top-2.5 bottom-0",
+      "-translate-y-[calc(100cqh+16px)] transition-[translate] duration-700 will-change-transform",
       "group-hover:translate-y-0 group-focus-within:translate-y-0",
     ),
   },
@@ -107,6 +124,7 @@ function useDishText(tileRef: RefObject<HTMLDivElement | null>) {
       let timeline: gsap.core.Timeline | undefined;
 
       const split = SplitText.create(tile.querySelectorAll(".js-dish-lines"), {
+        ...SPLIT_KEEP_NBSP,
         type: "lines",
         mask: "lines",
         autoSplit: true,
@@ -260,14 +278,31 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
         начинала прокручиваться по вертикали внутри себя. Скругление по-прежнему
         даёт `clip-path`, `overflow-clip` режет прямоугольником.
       */}
-      <div className="absolute inset-0 isolate overflow-clip [clip-path:inset(0_round_var(--radius-xl))]">
+      {/*
+        Пустая маска (`mask-image` сплошным градиентом) ничего не прячет, но
+        заставляет Chrome сначала собрать фото и карточку в одну поверхность,
+        а уже её резать скруглением. Без неё скругление из `clip-path` Chrome
+        накладывает на каждый слой по отдельности («fast rounded corners»):
+        на кромке оба слоя полупрозрачны, и фото проступало из-под карточки,
+        пока идёт анимация. Тот же приём — известный фикс «border-radius +
+        overflow + transform» для Safari.
+
+        `container-type: size` — от высоты клетки считается ход шторки (`cqh`).
+      */}
+      <div className="absolute inset-0 isolate overflow-clip [container-type:size] [clip-path:inset(0_round_var(--radius-xl))] [mask-image:linear-gradient(#000,#000)]">
         {/*
           Раскрылась карточка — фото под ней убираем совсем. Chrome сглаживает
           край слоя карточки и после анимации, и в этих пикселях по периметру
           оставалась кромка фото. Возвращается фото мгновенно, без задержки, —
           раньше, чем карточка начнёт закрываться.
         */}
-        <div className="absolute inset-0 transition-opacity duration-0 group-hover:opacity-0 group-hover:delay-700 group-focus-within:opacity-0 group-focus-within:delay-700">
+        <div
+          className={cn(
+            "absolute inset-0 transition-opacity duration-0",
+            MOTION[motion].hide ??
+              "group-hover:opacity-0 group-hover:delay-700 group-focus-within:opacity-0 group-focus-within:delay-700",
+          )}
+        >
           {photo}
         </div>
 
@@ -278,13 +313,18 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
         */}
         <div
           className={cn(
-            "absolute -inset-px motion-reduce:transition-none",
+            "absolute motion-reduce:transition-none",
+            MOTION[motion].box ?? "-inset-px",
             EASE,
             MOTION[motion].panel,
           )}
         >
           <div
-            className={cn("size-full motion-reduce:transition-none", EASE, MOTION[motion].inner)}
+            className={cn(
+              "motion-reduce:transition-none",
+              MOTION[motion].inner ?? "size-full",
+              EASE,
+            )}
           >
             <DishPanel dish={dish} className="rounded-none" />
           </div>

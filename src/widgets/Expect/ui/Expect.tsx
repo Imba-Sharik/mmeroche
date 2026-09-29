@@ -1,10 +1,7 @@
 import Image from "next/image";
-import { Container, Reveal, Section, SectionIntro, WineGlow } from "@/shared/ui";
+import { Container, CUTOUT_DELAY, Reveal, Section, SectionIntro, WineGlow } from "@/shared/ui";
 import { EXPECT_CARDS } from "../model/cards";
 import { SpaceDialog } from "./SpaceDialog";
-
-/** Маска проявляется после фото карточки, секунды */
-const MASK_DELAY = 0.6;
 
 /**
  * Секция «Чего ожидать» — Figma node 222:2059, 1920×1237.
@@ -29,7 +26,7 @@ export function Expect() {
             Маска над второй карточкой — Figma node 222:2080. Появляется после
             фото, а не вместе с ним — так просил дизайнер (комментарий в макете).
           */}
-          <Reveal delay={MASK_DELAY}>
+          <Reveal delay={CUTOUT_DELAY}>
             <Image
               src="/images/expect/mask.webp"
               alt=""
@@ -56,7 +53,7 @@ export function Expect() {
                   маска почти целиком уходила за экран.
                 */}
                 {card.id === "laboratory" && (
-                  <Reveal delay={MASK_DELAY}>
+                  <Reveal delay={CUTOUT_DELAY}>
                     <Image
                       src="/images/expect/mask.webp"
                       alt=""

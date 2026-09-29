@@ -14,8 +14,9 @@
  * свечении из-под записок вылезал чёрный квадрат. У сырых заливок прозрачность
  * настоящая, но нет поворота — его навешиваем сами, а `left`/`top` здесь
  * считаны для кадра **до** поворота (Figma отдаёт рамку после него).
- * Стикеры (`sticker: true`) — только полароид и записки: череп и полосатая
- * маска по просьбе клиента раскрываются шторкой, как кадры.
+ * Стикеры (`sticker: true`) — только полароид и записки. Череп и полосатая
+ * маска (`cutout: true`) проявляются, как все маски на странице: прозрачностью
+ * после кадра под ними (`CUTOUT_DELAY`).
  */
 export interface InteriorPhoto {
   src: string;
@@ -31,6 +32,11 @@ export interface InteriorPhoto {
    * кадр под ней, а не раскрывается шторкой сама.
    */
   sticker?: boolean;
+  /**
+   * Вырезка-декор (маска, череп) — не раскрывается шторкой, а проявляется
+   * прозрачностью после кадра под ней, как маски в других секциях.
+   */
+  cutout?: boolean;
 }
 
 export const INTERIOR_PHOTOS: InteriorPhoto[] = [
@@ -84,6 +90,7 @@ export const INTERIOR_PHOTOS: InteriorPhoto[] = [
   },
   {
     src: "/images/interior/mask-stripes.webp",
+    cutout: true,
     alt: "",
     left: "39.083%",
     top: "91.556%",
@@ -130,6 +137,7 @@ export const INTERIOR_PHOTOS: InteriorPhoto[] = [
   },
   {
     src: "/images/interior/skull.webp",
+    cutout: true,
     alt: "",
     left: "9.947%",
     top: "16.081%",
@@ -226,6 +234,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
   },
   {
     src: "/images/interior/skull.webp",
+    cutout: true,
     alt: "",
     left: "-0.189%",
     top: "7.941%",
@@ -259,6 +268,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
   },
   {
     src: "/images/interior/mask-stripes.webp",
+    cutout: true,
     alt: "",
     left: "35.511%",
     top: "74.927%",

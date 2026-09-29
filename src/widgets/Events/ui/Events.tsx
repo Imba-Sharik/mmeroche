@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ArrowDown } from "lucide-react";
-import { Button, Container, Reveal, Section, WineGlow } from "@/shared/ui";
+import { Button, Container, CUTOUT_DELAY, Reveal, Section, WineGlow } from "@/shared/ui";
 import { CountUp } from "./CountUp";
 
 /** Цифры дома — Figma nodes 222:2117, 222:2121, 222:2125 */
@@ -21,17 +21,19 @@ export function Events() {
         {/*
           Маска поверх цифр — Figma node 222:2133. Доли считаем от контейнера,
           а не от экрана: контейнер упирается в 1464px, и от ширины окна маска
-          уезжала мимо карточек.
+          уезжала мимо карточек. Проявляется после карточек, как все вырезки.
         */}
-        <Image
-          src="/images/events/mask.webp"
-          alt=""
-          aria-hidden
-          width={115}
-          height={163}
-          sizes="15vw"
-          className="absolute top-[216.6px] left-[60.28%] z-10 hidden h-auto w-[7.827%] rotate-[-8.59deg] lg:block"
-        />
+        <Reveal delay={CUTOUT_DELAY}>
+          <Image
+            src="/images/events/mask.webp"
+            alt=""
+            aria-hidden
+            width={115}
+            height={163}
+            sizes="15vw"
+            className="absolute top-[216.6px] left-[60.28%] z-10 hidden h-auto w-[7.827%] rotate-[-8.59deg] lg:block"
+          />
+        </Reveal>
         <Reveal>
           <h2 data-split="chars" className="text-display-xl w-full text-cream">
             Мероприятия и банкеты
@@ -54,15 +56,17 @@ export function Events() {
               карточке, наполовину за краем экрана. Живёт в столбике карточек,
               чтобы держаться за них, а не за верх секции.
             */}
-            <Image
-              src="/images/events/mask.webp"
-              alt=""
-              aria-hidden
-              width={115}
-              height={163}
-              sizes="90px"
-              className="absolute top-39.5 -left-6 z-10 h-auto w-22 rotate-[-8.59deg] sm:hidden"
-            />
+            <Reveal delay={CUTOUT_DELAY}>
+              <Image
+                src="/images/events/mask.webp"
+                alt=""
+                aria-hidden
+                width={115}
+                height={163}
+                sizes="90px"
+                className="absolute top-39.5 -left-6 z-10 h-auto w-22 rotate-[-8.59deg] sm:hidden"
+              />
+            </Reveal>
 
             {STATS.map((stat, index) => (
               <div

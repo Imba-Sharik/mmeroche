@@ -68,9 +68,15 @@
   --st-width: calc(var(--st-square) * 100%);
   --st-left: calc((100% - var(--st-width)) / 2);
   --st-fold: 145deg;
-  --st-strip: 3.8%;
-  --st-taper: 0.78;
+  /*
+   * Полос 12, на сенсорных экранах 6 (`sticker.tsx`). Вся цепочка всегда
+   * одной длины и гнётся на тот же общий угол: ширина полосы и её доля
+   * изгиба — от числа полос.
+   */
   --st-strips: 12;
+  --st-strip: calc(3.8% * 12 / var(--st-strips));
+  --st-bend-scale: calc(12 / var(--st-strips));
+  --st-taper: 0.78;
   position: absolute;
   inset: 0;
   /* Перспектива — в долях стороны кадра, как у оригинала (там она в em) */
@@ -147,7 +153,7 @@
 .sticker__hinge {
   --st-line: var(--st-peel);
   --st-dir: 1;
-  --st-angle: var(--st-bend);
+  --st-angle: calc(var(--st-bend) * var(--st-bend-scale));
   --st-chain-shade: var(--st-shade);
   --st-n: calc(var(--i) + 1);
   --st-weight: calc(1 + var(--st-taper) * (2 * var(--st-n) / (var(--st-strips) + 1) - 1));
@@ -178,7 +184,7 @@
 .sticker__hinge--tail {
   --st-line: var(--st-tail);
   --st-dir: -1;
-  --st-angle: var(--st-tail-bend);
+  --st-angle: calc(var(--st-tail-bend) * var(--st-bend-scale));
   --st-chain-shade: var(--st-tail-shade);
 }
 
@@ -328,5 +334,46 @@
     --st-tail: 96%;
     --st-tail-bend: 0deg;
     --st-tail-shade: 0;
+  }
+}
+
+/*
+ * Сенсорные экраны: iPhone не вытягивал анимацию, стикеры дёргались. Кроме
+ * вдвое меньшего числа полос, убираем самое дорогое в перерисовке — фильтр
+ * затенения на каждой грани и тень на всём стикере, пока он падает (фильтр
+ * на предке заставляет перерисовывать всю 3D-цепочку в отдельный слой каждый
+ * кадр). Тень возвращается, когда стикер лёг.
+ */
+@media (hover: none) {
+  .sticker__face .sticker__surface,
+  .sticker__face--back .sticker__surface {
+    filter: none;
+  }
+
+  .sticker[data-stuck]:not([data-settled]) {
+    filter: none;
+  }
+
+  .sticker[data-stuck] {
+    animation-name: sticker-fade, sticker-drop-lite, sticker-roll, sticker-curl, sticker-tail;
+  }
+}
+
+/* `sticker-drop` без анимации тени — для сенсорных экранов */
+@keyframes sticker-drop-lite {
+  0% {
+    --st-yaw: -34deg;
+    --st-pitch: 24deg;
+    transform: translate(52%, -142%) rotate(-15deg) scale(1.34);
+  }
+  80% {
+    --st-yaw: -5deg;
+    --st-pitch: 4deg;
+    transform: translate(0) rotate(1.2deg) scale(1.02);
+  }
+  to {
+    --st-yaw: 0deg;
+    --st-pitch: 0deg;
+    transform: translate(0) rotate(0) scale(1);
   }
 }

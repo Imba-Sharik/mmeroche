@@ -131,6 +131,7 @@ export function MobileMenu() {
                 </span>
               ))}
             </p>
+            <p className="text-mono-xs -mt-2 text-cream/30">{CONTACTS.metaNotice}</p>
           </div>
         </Dialog.Content>
       </Dialog.Portal>

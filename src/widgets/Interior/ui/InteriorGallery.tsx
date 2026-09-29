@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
 import { cn } from "@/shared/lib/utils";
-import { Sticker, WineGlow } from "@/shared/ui";
+import { CUTOUT_DELAY, Sticker, WineGlow } from "@/shared/ui";
 import {
   INTERIOR_CANVAS,
   INTERIOR_GLOW,
@@ -61,6 +61,9 @@ const LEAVE_TO = ["bottom left", "bottom right", "top right", "top left"] as con
 
 const CLIP = { duration: 1, ease: "power1.out", overwrite: "auto" } as const;
 
+/** Проявление вырезок — тайминг `Reveal`, как у масок в других секциях */
+const FADE = { duration: 1.4, ease: "power3.out", overwrite: "auto" } as const;
+
 /** «122.331/153.762» → 0.795 */
 const parseRatio = (ratio: string) => {
   const [w, h = 1] = ratio.split("/").map(Number);
@@ -72,6 +75,7 @@ function CollagePhoto({ photo, sizes }: { photo: InteriorPhoto; sizes: string })
     <div
       className="js-interior-photo absolute"
       data-sticker={photo.sticker || undefined}
+      data-cutout={photo.cutout || undefined}
       style={{
         left: photo.left,
         top: photo.top,
@@ -126,6 +130,11 @@ function overlap(a: Element, b: Element) {
  * он начал схлопываться, — вернёшься, приклеятся заново. «Под ними» — кадр
  * с наибольшим пересечением рамок. Стикер ни на чём не лежит — клеится
  * сам, через время раскрытия после входа в экран.
+ *
+ * Вырезки-декор (`cutout` — череп, полосатая маска) тоже держатся за кадр под
+ * собой, но проявляются прозрачностью, как маски в других секциях: через
+ * `CUTOUT_DELAY` после того, как кадр начал раскрываться, и гаснут вместе
+ * с его схлопыванием.
  */
 export function InteriorGallery({ layout, className }: { layout: Layout; className?: string }) {
   const { photos, glow, canvas, media: visibleOn, sizes } = LAYOUTS[layout];
@@ -142,25 +151,57 @@ export function InteriorGallery({ layout, className }: { layout: Layout; classNa
         .toArray<HTMLElement>(".js-interior-photo", root)
         // В массиве кадры идут по слоям, а углы чередуем сверху вниз
         .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
-      const frames = all.filter((frame) => !frame.hasAttribute("data-sticker"));
+      const isOverlay = (frame: HTMLElement) =>
+        frame.hasAttribute("data-sticker") || frame.hasAttribute("data-cutout");
+      const frames = all.filter((frame) => !isOverlay(frame));
       const stickers = all.filter((frame) => frame.hasAttribute("data-sticker"));
+      const cutouts = all.filter((frame) => frame.hasAttribute("data-cutout"));
 
-      /** Кто ждёт раскрытия кадра: кадр → стикеры на нём */
-      const riders = new Map<Element, HTMLElement[]>();
-      const stick = (sticker: HTMLElement, on: boolean) =>
-        on ? sticker.setAttribute("data-stuck", "") : sticker.removeAttribute("data-stuck");
-
-      stickers.forEach((frame) => {
-        const sticker = frame.querySelector<HTMLElement>(".sticker");
-        if (!sticker) return;
-
+      /** Кадр, на котором лежит вырезка, — с наибольшим пересечением рамок */
+      const hostOf = (frame: HTMLElement) => {
         let host: HTMLElement | undefined;
         let best = 0;
         frames.forEach((candidate) => {
           const area = overlap(frame, candidate);
           if (area > best) [host, best] = [candidate, area];
         });
+        return host;
+      };
 
+      /** Кто ждёт раскрытия кадра: кадр → стикеры и вырезки на нём */
+      const riders = new Map<Element, HTMLElement[]>();
+      const fades = new Map<Element, Element[]>();
+      const stick = (sticker: HTMLElement, on: boolean) =>
+        on ? sticker.setAttribute("data-stuck", "") : sticker.removeAttribute("data-stuck");
+      const fade = (img: Element, on: boolean) =>
+        on
+          ? gsap.to(img, { autoAlpha: 1, ...FADE, delay: CUTOUT_DELAY })
+          : gsap.to(img, { autoAlpha: 0, ...CLIP });
+
+      cutouts.forEach((frame) => {
+        const img = frame.querySelector(".js-interior-img");
+        if (!img) return;
+        gsap.set(img, { autoAlpha: 0 });
+
+        const host = hostOf(frame);
+        if (host) {
+          fades.set(host, [...(fades.get(host) ?? []), img]);
+          return;
+        }
+
+        ScrollTrigger.create({
+          trigger: frame,
+          start: "clamp(top+=20% bottom)",
+          onEnter: () => fade(img, true),
+          onLeaveBack: () => fade(img, false),
+        });
+      });
+
+      stickers.forEach((frame) => {
+        const sticker = frame.querySelector<HTMLElement>(".sticker");
+        if (!sticker) return;
+
+        const host = hostOf(frame);
         if (host) {
           riders.set(host, [...(riders.get(host) ?? []), sticker]);
           return;
@@ -183,15 +224,19 @@ export function InteriorGallery({ layout, className }: { layout: Layout; classNa
         const from = CORNERS[ENTER_FROM[i % ENTER_FROM.length]];
         const to = CORNERS[LEAVE_TO[i % LEAVE_TO.length]];
         const onTop = riders.get(frame) ?? [];
+        const cutoutsOnTop = fades.get(frame) ?? [];
 
-        const open = () =>
+        const open = () => {
+          cutoutsOnTop.forEach((cutout) => fade(cutout, true));
           gsap.to(img, {
             clipPath: OPEN,
             ...CLIP,
             onComplete: () => onTop.forEach((sticker) => stick(sticker, true)),
           });
+        };
         const close = (clipPath: string) => {
           onTop.forEach((sticker) => stick(sticker, false));
+          cutoutsOnTop.forEach((cutout) => fade(cutout, false));
           gsap.to(img, { clipPath, ...CLIP });
         };
 
