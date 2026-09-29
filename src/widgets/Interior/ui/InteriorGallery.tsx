@@ -61,6 +61,12 @@ const LEAVE_TO = ["bottom left", "bottom right", "top right", "top left"] as con
 
 const CLIP = { duration: 1, ease: "power1.out", overwrite: "auto" } as const;
 
+/**
+ * Когда клеить стикер — доля раскрытия кадра под ним. Ждать конца шторки
+ * поздно: на телефоне стикер падал, когда кадр уже уезжал за экран.
+ */
+const STICK_AT = 0.4;
+
 /** Проявление вырезок — тайминг `Reveal`, как у масок в других секциях */
 const FADE = { duration: 1.4, ease: "power3.out", overwrite: "auto" } as const;
 
@@ -126,7 +132,7 @@ function overlap(a: Element, b: Element) {
  * в картинку, так что `inset` его не срезает — режет только пустое поле.
  *
  * Вырезки поверх кадров (`sticker`) шторкой не раскрываются: они клеятся
- * стикером, когда кадр под ними раскрылся до конца, и прячутся, как только
+ * стикером, когда кадр под ними раскрылся на `STICK_AT`, и прячутся, как только
  * он начал схлопываться, — вернёшься, приклеятся заново. «Под ними» — кадр
  * с наибольшим пересечением рамок. Стикер ни на чём не лежит — клеится
  * сам, через время раскрытия после входа в экран.
@@ -211,7 +217,8 @@ export function InteriorGallery({ layout, className }: { layout: Layout; classNa
         ScrollTrigger.create({
           trigger: frame,
           start: "clamp(top+=20% bottom)",
-          onEnter: () => (pending = gsap.delayedCall(CLIP.duration, () => stick(sticker, true))),
+          onEnter: () =>
+            (pending = gsap.delayedCall(CLIP.duration * STICK_AT, () => stick(sticker, true))),
           onLeaveBack: () => {
             pending?.kill();
             stick(sticker, false);
@@ -226,15 +233,17 @@ export function InteriorGallery({ layout, className }: { layout: Layout; classNa
         const onTop = riders.get(frame) ?? [];
         const cutoutsOnTop = fades.get(frame) ?? [];
 
+        let pending: gsap.core.Tween | undefined;
         const open = () => {
           cutoutsOnTop.forEach((cutout) => fade(cutout, true));
-          gsap.to(img, {
-            clipPath: OPEN,
-            ...CLIP,
-            onComplete: () => onTop.forEach((sticker) => stick(sticker, true)),
-          });
+          gsap.to(img, { clipPath: OPEN, ...CLIP });
+          pending?.kill();
+          pending = gsap.delayedCall(CLIP.duration * STICK_AT, () =>
+            onTop.forEach((sticker) => stick(sticker, true)),
+          );
         };
         const close = (clipPath: string) => {
+          pending?.kill();
           onTop.forEach((sticker) => stick(sticker, false));
           cutoutsOnTop.forEach((cutout) => fade(cutout, false));
           gsap.to(img, { clipPath, ...CLIP });
