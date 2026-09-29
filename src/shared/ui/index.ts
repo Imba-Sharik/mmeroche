@@ -5,3 +5,4 @@ export { Reveal } from "./reveal";
 export { ProgressiveBlur, type BlurStep } from "./progressive-blur";
 export { ThemeProvider } from "./theme-provider";
 export { SmoothScroll, getLenis } from "./smooth-scroll";
+export { Sticker } from "./sticker";

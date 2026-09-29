@@ -27,11 +27,11 @@ export function Legend() {
             <SectionHeading className="text-cream">легенда</SectionHeading>
 
             <div className="text-mono-base mt-10 flex flex-col gap-4.5 text-dop">
-              <p>
+              <p data-split="lines">
                 В приватных разговорах ходят легенды о загадочной мадам Роче, владелице изысканного
                 мужского клуба на Олдрич-стрит в Гонконге.
               </p>
-              <p>
+              <p data-split="lines">
                 Говорят, в какой‑то момент жизни она сменила плотские удовольствия на
                 гастрономические, и в честь этого на карте Замоскворечья появилась новая точка
                 притяжения — трехэтажный ресторан и тайный особняк «Madame Roche»
@@ -39,7 +39,7 @@ export function Legend() {
             </div>
 
             {/* Подпись набрана Playfair Display Italic, а не дисплейным шрифтом секций */}
-            <p className="mt-6 font-note text-base leading-6.5 text-cream/50 italic">
+            <p data-split="lines" className="mt-6 font-note text-base leading-6.5 text-cream/50 italic">
               The guest house of the mysterious Asian woman
               <br />
               in the heart of the Eurasian world

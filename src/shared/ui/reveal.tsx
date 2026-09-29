@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGsapLayout } from "@/shared/lib";
+import { gsap, revealText, SPLIT_SELECTOR, useGsapLayout, type SplitText } from "@/shared/lib";
 
 /** Тайминг с референса fromanother.love */
 const REVEAL = { duration: 1.4, ease: "power3.out" } as const;
@@ -15,9 +15,29 @@ interface RevealProps {
 }
 
 /**
+ * Что проявлять по отдельности. Блок без размеченного текста — целиком.
+ * Блок, внутри которого есть `data-split`, разбираем глубже: сам он стоит,
+ * текст проявляется по буквам или строкам, а соседи текста (кнопки, фото)
+ * проявляются прозрачностью. Иначе прозрачность блока легла бы поверх
+ * проявления букв и съела его. Вложенный `Reveal` пропускаем — он проявляет
+ * своё сам.
+ */
+function collect(elements: Element[]): HTMLElement[] {
+  return elements.flatMap((el) => {
+    if (el.hasAttribute("data-reveal")) return [];
+    if (el.matches(SPLIT_SELECTOR) || !el.querySelector(SPLIT_SELECTOR)) {
+      return [el as HTMLElement];
+    }
+    return collect(Array.from(el.children));
+  });
+}
+
+/**
  * Проявление блоков на входе в экран: прямые дети по очереди наливаются
- * прозрачностью. Ни подъёма, ни размытия — по просьбе клиента блок именно
- * проявляется, а не выезжает.
+ * прозрачностью. Ни подъёма, ни размытия блоков — по просьбе клиента блок
+ * именно проявляется, а не выезжает. Размечённые тексты (`data-split`)
+ * проявляются из размытия по буквам или строкам — как на jeskojets.com,
+ * см. `revealText`.
  *
  * Обёртка с `display: contents` не создаёт бокс — раскладка родителя (сетка,
  * флекс) не меняется, поэтому вешать можно прямо внутри грида.
@@ -36,20 +56,26 @@ export function Reveal({ children, stagger = 0.05, delay = 0 }: RevealProps) {
     const media = gsap.matchMedia();
 
     media.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.from(targets, {
-        autoAlpha: 0,
-        stagger,
-        delay,
-        ...REVEAL,
-        scrollTrigger: { trigger, start: "top bottom-=33.33%", once: true },
+      const splits: SplitText[] = [];
+
+      collect(targets).forEach((el, i) => {
+        const vars = {
+          delay: delay + i * stagger,
+          scrollTrigger: { trigger, start: "top bottom-=33.33%", once: true },
+        };
+
+        if (el.matches(SPLIT_SELECTOR)) splits.push(revealText(el, vars));
+        else gsap.from(el, { autoAlpha: 0, ...REVEAL, ...vars });
       });
+
+      return () => splits.forEach((split) => split.revert());
     });
 
     return () => media.revert();
   }, []);
 
   return (
-    <div ref={rootRef} className="contents">
+    <div ref={rootRef} data-reveal className="contents">
       {children}
     </div>
   );

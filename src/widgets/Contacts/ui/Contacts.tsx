@@ -18,7 +18,7 @@ export function Contacts() {
 
       <Container className="flex flex-col gap-10">
         <Reveal>
-          <h2 className="text-display-xl text-cream">Найти особняк</h2>
+          <h2 data-split="chars" className="text-display-xl text-cream">Найти особняк</h2>
 
           <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex w-full flex-col gap-7 lg:w-105">

@@ -81,8 +81,12 @@ export function Expect() {
 
                 <div className="flex flex-col items-center gap-4 text-center text-cream sm:px-6 lg:px-12">
                   {/* В макете заголовок в одну строку и чуть шире колонки текста */}
-                  <h3 className="text-display-md lg:whitespace-nowrap">{card.title}</h3>
-                  <p className="text-mono-sm text-dop">{card.text}</p>
+                  <h3 data-split="chars" className="text-display-md lg:whitespace-nowrap">
+                    {card.title}
+                  </h3>
+                  <p data-split="lines" className="text-mono-sm text-dop">
+                    {card.text}
+                  </p>
                 </div>
 
                 {/* «Подробнее» открывает модалку с полным описанием пространства */}

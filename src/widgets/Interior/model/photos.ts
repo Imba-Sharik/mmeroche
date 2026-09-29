@@ -14,6 +14,8 @@
  * свечении из-под записок вылезал чёрный квадрат. У сырых заливок прозрачность
  * настоящая, но нет поворота — его навешиваем сами, а `left`/`top` здесь
  * считаны для кадра **до** поворота (Figma отдаёт рамку после него).
+ * Стикеры (`sticker: true`) — только полароид и записки: череп и полосатая
+ * маска по просьбе клиента раскрываются шторкой, как кадры.
  */
 export interface InteriorPhoto {
   src: string;
@@ -24,6 +26,11 @@ export interface InteriorPhoto {
   ratio: string;
   rotate?: number;
   opacity?: number;
+  /**
+   * Вырезка поверх кадров — клеится стикером (`Sticker`), когда раскроется
+   * кадр под ней, а не раскрывается шторкой сама.
+   */
+  sticker?: boolean;
 }
 
 export const INTERIOR_PHOTOS: InteriorPhoto[] = [
@@ -102,6 +109,7 @@ export const INTERIOR_PHOTOS: InteriorPhoto[] = [
   },
   {
     src: "/images/interior/polaroid.webp",
+    sticker: true,
     alt: "",
     left: "59.078%",
     top: "6.886%",
@@ -111,6 +119,7 @@ export const INTERIOR_PHOTOS: InteriorPhoto[] = [
   },
   {
     src: "/images/interior/papers.webp",
+    sticker: true,
     alt: "",
     left: "36.432%",
     top: "29.822%",
@@ -141,8 +150,11 @@ export const INTERIOR_GLOW = { x: "44.297%", y: "37.746%", size: 387, after: 10 
 export const INTERIOR_CANVAS = "1920/1830";
 
 /**
- * Мобильный коллаж — Figma node 336:246, холст 360×2240 (от y 270 секции
- * до конца последнего кадра). Раскладка своя, не ужатая десктопная: восемь
+ * Мобильный коллаж — Figma node 336:246, холст 360×2130 (от y 270 секции
+ * до конца последнего кадра). В сентябре 2026 записки в макете уменьшили
+ * (210 вместо 288, Figma 336:265) и всё, что ниже, подняли на ~106px —
+ * координаты пересчитаны по `get_design_context`: у повёрнутых вырезок
+ * он отдаёт рамку после поворота, её центр совпадает с нашим. Раскладка своя, не ужатая десктопная: восемь
  * кадров идут столбиком и уступами, вырезки поверх.
  *
  * Кадры — рендеры нод ×2 (`m-*.webp`): у них та же рваная рамка, прозрачная
@@ -155,7 +167,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
     src: "/images/interior/m-1.webp",
     alt: "Зал с хрустальными люстрами",
     left: "3.125%",
-    top: "0.1%",
+    top: "0.105%",
     width: "93.75%",
     ratio: "337.5/249.5",
   },
@@ -163,7 +175,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
     src: "/images/interior/m-3.webp",
     alt: "Зал с драпировкой и круглыми зеркалами",
     left: "3.333%",
-    top: "40%",
+    top: "36.901%",
     width: "93.333%",
     ratio: "336/248",
   },
@@ -171,7 +183,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
     src: "/images/interior/m-2.webp",
     alt: "Черепа на полке",
     left: "49.514%",
-    top: "15.324%",
+    top: "16.116%",
     width: "47.083%",
     ratio: "1/1",
   },
@@ -179,7 +191,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
     src: "/images/interior/m-5.webp",
     alt: "Зал с высокими окнами",
     left: "3.056%",
-    top: "59.598%",
+    top: "57.512%",
     width: "93.889%",
     ratio: "338/250",
   },
@@ -187,25 +199,27 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
     src: "/images/interior/m-8.webp",
     alt: "Стол у окна и деревянная скульптура",
     left: "3.056%",
-    top: "88.616%",
+    top: "88.028%",
     width: "93.889%",
     ratio: "338/250",
   },
   {
     src: "/images/interior/polaroid.webp",
+    sticker: true,
     alt: "",
     left: "39.158%",
-    top: "14.377%",
+    top: "15.119%",
     width: "19.508%",
     ratio: "70.227/88.27",
     rotate: 13.55,
   },
   {
     src: "/images/interior/papers.webp",
+    sticker: true,
     alt: "",
-    left: "7.681%",
-    top: "24.855%",
-    width: "80.016%",
+    left: "3.989%",
+    top: "24.662%",
+    width: "58.345%",
     ratio: "1/1",
     rotate: -8.5,
     opacity: 0.9,
@@ -214,7 +228,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
     src: "/images/interior/skull.webp",
     alt: "",
     left: "-0.189%",
-    top: "7.551%",
+    top: "7.941%",
     width: "20.173%",
     ratio: "72.623/108.935",
     rotate: -9.29,
@@ -223,7 +237,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
     src: "/images/interior/m-4.webp",
     alt: "Резная маска на стене",
     left: "50.208%",
-    top: "52.087%",
+    top: "49.613%",
     width: "40.694%",
     ratio: "1/1",
   },
@@ -231,7 +245,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
     src: "/images/interior/m-6.webp",
     alt: "Резная дверь",
     left: "3.472%",
-    top: "71.719%",
+    top: "70.258%",
     width: "46.389%",
     ratio: "1/1",
   },
@@ -239,7 +253,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
     src: "/images/interior/m-7.webp",
     alt: "Балдахин с кистями",
     left: "50.139%",
-    top: "80.201%",
+    top: "79.178%",
     width: "46.389%",
     ratio: "1/1",
   },
@@ -247,7 +261,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
     src: "/images/interior/mask-stripes.webp",
     alt: "",
     left: "35.511%",
-    top: "76.158%",
+    top: "74.927%",
     width: "16.003%",
     ratio: "57.609/83.873",
     rotate: 11.59,
@@ -255,7 +269,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
 ];
 
 /** Свечение под записками на мобильном — Figma node 336:264; идёт следом за `polaroid` */
-export const INTERIOR_MOBILE_GLOW = { x: "50%", y: "31.295%", size: 336, after: 6 };
+export const INTERIOR_MOBILE_GLOW = { x: "34.875%", y: "29.601%", size: 245, after: 6 };
 
 /** Пропорция мобильного холста */
-export const INTERIOR_MOBILE_CANVAS = "360/2240";
+export const INTERIOR_MOBILE_CANVAS = "360/2130";

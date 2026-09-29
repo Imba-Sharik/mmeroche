@@ -27,7 +27,11 @@ interface SectionHeadingProps {
 
 /** Крупный заголовок секции — 72px по макету (Figma node 222:2016) */
 export function SectionHeading({ children, className }: SectionHeadingProps) {
-  return <h2 className={cn("text-display-xl", className)}>{children}</h2>;
+  return (
+    <h2 data-split="chars" className={cn("text-display-xl", className)}>
+      {children}
+    </h2>
+  );
 }
 
 interface SectionIntroProps {
@@ -49,11 +53,13 @@ export function SectionIntro({ title, children, id, className }: SectionIntroPro
         className,
       )}
     >
-      <h2 id={id} className="text-display-xl">
+      <h2 id={id} data-split="chars" className="text-display-xl">
         {title}
       </h2>
       {/* На мобильном лид 16px с межстрочным 1.4 — Figma nodes 336:216, 336:270 */}
-      <p className="text-mono-md leading-[1.4] text-dop lg:text-mono-base">{children}</p>
+      <p data-split="lines" className="text-mono-md leading-[1.4] text-dop lg:text-mono-base">
+        {children}
+      </p>
     </div>
   );
 }

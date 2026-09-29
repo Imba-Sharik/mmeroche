@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
 import { cn } from "@/shared/lib/utils";
-import { WineGlow } from "@/shared/ui";
+import { Sticker, WineGlow } from "@/shared/ui";
 import {
   INTERIOR_CANVAS,
   INTERIOR_GLOW,
@@ -16,7 +16,7 @@ import {
 } from "../model/photos";
 
 /**
- * Две раскладки коллажа: десктопная (холст 1920×1830) и мобильная (360×2240).
+ * Две раскладки коллажа: десктопная (холст 1920×1830) и мобильная (360×2130).
  * `media` — где раскладка видна: проявление запускаем только там, иначе
  * скрытые кадры вставали бы в общую очередь и задерживали видимые.
  */
@@ -39,16 +39,39 @@ const LAYOUTS = {
 
 type Layout = keyof typeof LAYOUTS;
 
-/** Тайминг появлений с референса fromanother.love, как в `Reveal` */
-const REVEAL = { duration: 1.4, ease: "power3.out" } as const;
+/**
+ * Раскрытие кадра из угла — как в «Selected Cases» на hobro.digital.
+ * `inset()` задаёт, сколько срезать с каждой стороны: кадр, схлопнутый
+ * в правый верхний угол, срезан целиком снизу и слева.
+ */
+const CORNERS = {
+  "top right": "inset(0% 0% 100% 100%)",
+  "top left": "inset(0% 100% 100% 0%)",
+  "bottom left": "inset(100% 100% 0% 0%)",
+  "bottom right": "inset(100% 0% 0% 100%)",
+} as const;
 
-/** Разбег между кадрами коллажа, секунды */
-const GAP = 0.3;
+const OPEN = "inset(0% 0% 0% 0%)";
+
+/** Откуда кадр раскрывается — по кругу, от кадра к кадру */
+const ENTER_FROM = ["top right", "top left", "bottom left", "bottom right"] as const;
+
+/** Куда схлопывается, уехав вверх за экран, — в противоположный угол */
+const LEAVE_TO = ["bottom left", "bottom right", "top right", "top left"] as const;
+
+const CLIP = { duration: 1, ease: "power1.out", overwrite: "auto" } as const;
+
+/** «122.331/153.762» → 0.795 */
+const parseRatio = (ratio: string) => {
+  const [w, h = 1] = ratio.split("/").map(Number);
+  return w / h;
+};
 
 function CollagePhoto({ photo, sizes }: { photo: InteriorPhoto; sizes: string }) {
   return (
     <div
       className="js-interior-photo absolute"
+      data-sticker={photo.sticker || undefined}
       style={{
         left: photo.left,
         top: photo.top,
@@ -58,36 +81,51 @@ function CollagePhoto({ photo, sizes }: { photo: InteriorPhoto; sizes: string })
         opacity: photo.opacity,
       }}
     >
-      <Image
-        src={photo.src}
-        alt={photo.alt}
-        aria-hidden={photo.alt === "" || undefined}
-        fill
-        sizes={sizes}
-        className="js-interior-img object-cover"
-      />
+      {photo.sticker ? (
+        <Sticker src={photo.src} ratio={parseRatio(photo.ratio)} auto={false} />
+      ) : (
+        <Image
+          src={photo.src}
+          alt={photo.alt}
+          aria-hidden={photo.alt === "" || undefined}
+          fill
+          sizes={sizes}
+          className="js-interior-img object-cover"
+        />
+      )}
     </div>
   );
 }
 
+/** Площадь пересечения рамок — по ней ищем кадр, на котором лежит стикер */
+function overlap(a: Element, b: Element) {
+  const r1 = a.getBoundingClientRect();
+  const r2 = b.getBoundingClientRect();
+  const w = Math.min(r1.right, r2.right) - Math.max(r1.left, r2.left);
+  const h = Math.min(r1.bottom, r2.bottom) - Math.max(r1.top, r2.top);
+  return w > 0 && h > 0 ? w * h : 0;
+}
+
 /**
  * Коллаж снимков зала — Figma node 222:2081 (холст 1920×1830), мобильный —
- * 336:246 (360×2240), см. `LAYOUTS`.
+ * 336:246 (360×2130), см. `LAYOUTS`.
  *
- * Кадры проявляются по очереди, когда до них доезжает экран: только
- * прозрачность, как у остальных появлений на сайте (`Reveal`), без выезда
- * и масштаба. Коллаж выше экрана, поэтому одной волной на всё нельзя —
- * нижние кадры отыграли бы за кадром. `ScrollTrigger.batch` собирает те,
- * что вошли в экран вместе, и ставит их в общую очередь сверху вниз.
+ * Кадры раскрываются из угла, когда до них доезжает экран, и схлопываются
+ * в противоположный, когда уезжают вверх, — как на hobro.digital (там
+ * «Selected Cases»). Анимация обратима: вернулся к кадру — он раскроется
+ * снова, отмотал выше — схлопнется туда, откуда вышел. Углы идут по кругу
+ * сверху вниз по коллажу, а не по слоям — соседи раскрываются навстречу
+ * друг другу.
  *
- * Очередь общая на весь коллаж, а не на пачку: кадры одного ряда въезжают
- * с разницей в доли секунды, попадают в разные пачки, и у каждой пачки
- * разбег начинался заново — ряд загорался разом. Теперь следующий кадр
- * стартует не раньше чем через `GAP` после предыдущего, из какой бы пачки
- * он ни был.
+ * `clip-path` крутим на снимке, а не на рамке: у рамки бывает свой поворот
+ * и прозрачность из макета (`photos.ts`). Рваный край кадра запечён
+ * в картинку, так что `inset` его не срезает — режет только пустое поле.
  *
- * Прозрачность крутим на снимке, а не на рамке: у части рамок своя,
- * из макета (`opacity` в `photos.ts`), и твин бы её затёр.
+ * Вырезки поверх кадров (`sticker`) шторкой не раскрываются: они клеятся
+ * стикером, когда кадр под ними раскрылся до конца, и прячутся, как только
+ * он начал схлопываться, — вернёшься, приклеятся заново. «Под ними» — кадр
+ * с наибольшим пересечением рамок. Стикер ни на чём не лежит — клеится
+ * сам, через время раскрытия после входа в экран.
  */
 export function InteriorGallery({ layout, className }: { layout: Layout; className?: string }) {
   const { photos, glow, canvas, media: visibleOn, sizes } = LAYOUTS[layout];
@@ -100,29 +138,74 @@ export function InteriorGallery({ layout, className }: { layout: Layout; classNa
     const media = gsap.matchMedia();
 
     media.add(`${visibleOn} and (prefers-reduced-motion: no-preference)`, () => {
-      const frames = gsap.utils.toArray<HTMLElement>(".js-interior-photo", root);
-      const imgOf = (frame: Element) => frame.querySelector(".js-interior-img");
+      const all = gsap.utils
+        .toArray<HTMLElement>(".js-interior-photo", root)
+        // В массиве кадры идут по слоям, а углы чередуем сверху вниз
+        .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+      const frames = all.filter((frame) => !frame.hasAttribute("data-sticker"));
+      const stickers = all.filter((frame) => frame.hasAttribute("data-sticker"));
 
-      gsap.set(frames.map(imgOf), { autoAlpha: 0 });
+      /** Кто ждёт раскрытия кадра: кадр → стикеры на нём */
+      const riders = new Map<Element, HTMLElement[]>();
+      const stick = (sticker: HTMLElement, on: boolean) =>
+        on ? sticker.setAttribute("data-stuck", "") : sticker.removeAttribute("data-stuck");
 
-      /** Когда по часам GSAP может стартовать следующий кадр */
-      let nextStart = 0;
+      stickers.forEach((frame) => {
+        const sticker = frame.querySelector<HTMLElement>(".sticker");
+        if (!sticker) return;
 
-      ScrollTrigger.batch(frames, {
-        start: "top bottom-=15%",
-        once: true,
-        onEnter: (batch) => {
-          // В массиве кадры идут по слоям, а проявляться им — сверху вниз
-          const ordered = [...batch].sort(
-            (a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top,
-          );
-          ordered.forEach((frame) => {
-            const now = gsap.ticker.time;
-            const delay = Math.max(0, nextStart - now);
-            nextStart = now + delay + GAP;
-            gsap.to(imgOf(frame), { autoAlpha: 1, delay, ...REVEAL });
+        let host: HTMLElement | undefined;
+        let best = 0;
+        frames.forEach((candidate) => {
+          const area = overlap(frame, candidate);
+          if (area > best) [host, best] = [candidate, area];
+        });
+
+        if (host) {
+          riders.set(host, [...(riders.get(host) ?? []), sticker]);
+          return;
+        }
+
+        let pending: gsap.core.Tween | undefined;
+        ScrollTrigger.create({
+          trigger: frame,
+          start: "clamp(top+=20% bottom)",
+          onEnter: () => (pending = gsap.delayedCall(CLIP.duration, () => stick(sticker, true))),
+          onLeaveBack: () => {
+            pending?.kill();
+            stick(sticker, false);
+          },
+        });
+      });
+
+      frames.forEach((frame, i) => {
+        const img = frame.querySelector(".js-interior-img");
+        const from = CORNERS[ENTER_FROM[i % ENTER_FROM.length]];
+        const to = CORNERS[LEAVE_TO[i % LEAVE_TO.length]];
+        const onTop = riders.get(frame) ?? [];
+
+        const open = () =>
+          gsap.to(img, {
+            clipPath: OPEN,
+            ...CLIP,
+            onComplete: () => onTop.forEach((sticker) => stick(sticker, true)),
           });
-        },
+        const close = (clipPath: string) => {
+          onTop.forEach((sticker) => stick(sticker, false));
+          gsap.to(img, { clipPath, ...CLIP });
+        };
+
+        gsap.set(img, { clipPath: from });
+
+        ScrollTrigger.create({
+          trigger: frame,
+          start: "clamp(top+=20% bottom)",
+          end: "clamp(bottom+=100% top)",
+          onEnter: open,
+          onEnterBack: open,
+          onLeave: () => close(to),
+          onLeaveBack: () => close(from),
+        });
       });
     });
 

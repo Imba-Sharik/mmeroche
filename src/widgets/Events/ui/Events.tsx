@@ -33,12 +33,17 @@ export function Events() {
           className="absolute top-[216.6px] left-[60.28%] z-10 hidden h-auto w-[7.827%] rotate-[-8.59deg] lg:block"
         />
         <Reveal>
-          <h2 className="text-display-xl w-full text-cream">Мероприятия и банкеты</h2>
+          <h2 data-split="chars" className="text-display-xl w-full text-cream">
+            Мероприятия и банкеты
+          </h2>
 
           {/* Лид прижат влево: контейнер центрирует детей, а по макету он стоит
               по левому краю заголовка — Figma node 222:2114 */}
           {/* На мобильном между заголовком и лидом 20px, а не общие 40 — Figma node 336:273 */}
-          <p className="text-mono-md -mt-5 w-full max-w-143.5 self-start leading-[1.4] text-dop lg:text-mono-base lg:mt-0">
+          <p
+            data-split="lines"
+            className="text-mono-md -mt-5 w-full max-w-143.5 self-start leading-[1.4] text-dop lg:text-mono-base lg:mt-0"
+          >
             Авторская кухня и барная культура позволяют проводить здесь события любого масштаба — от
             камерных ужинов до закрытых корпоративных мероприятий.
           </p>

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { CONTACTS } from "@/shared/config";
 import { Button } from "@/shared/ui";
+import { HeroParallax } from "./HeroParallax";
 import { HeroReveal } from "./HeroReveal";
 import { ScrollCue } from "./ScrollCue";
 
@@ -14,14 +15,17 @@ export function Hero() {
     >
       {/* Снимок зала под затемнением — Figma node 222:1969 (Hero/scrim) */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <Image
-          src="/images/hero/scrim.webp"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-[55%_50%]"
-        />
+        {/* Двигается только снимок: затемнения стоят, чтобы низ секции уходил в чёрный */}
+        <HeroParallax>
+          <Image
+            src="/images/hero/scrim.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[55%_50%]"
+          />
+        </HeroParallax>
         <div className="absolute inset-0 bg-noir/30" />
         <div className="absolute inset-0 bg-linear-to-b from-transparent from-45% to-noir" />
       </div>
@@ -62,7 +66,10 @@ export function Hero() {
           </span>
 
           {/* Слоган заходит под хвост лого — Figma node 222:2005 */}
-          <h1 className="js-hero-reveal text-display-xl -mt-[1.5%] text-center leading-none text-cream sm:-mt-[5%] lg:-mt-12">
+          <h1
+            data-split="chars"
+            className="js-hero-reveal text-display-xl -mt-[1.5%] text-center leading-none text-cream sm:-mt-[5%] lg:-mt-12"
+          >
             {CONTACTS.tagline.map((line) => (
               <span key={line} className="block">
                 {line}

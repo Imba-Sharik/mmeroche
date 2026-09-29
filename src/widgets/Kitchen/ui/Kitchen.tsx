@@ -53,11 +53,11 @@ export function Kitchen() {
 
                 <div className="flex flex-col gap-8">
                   <div className="text-mono-md flex flex-col gap-4 leading-[1.4] text-dop lg:text-mono-base lg:gap-4.5">
-                    <p>
+                    <p data-split="lines">
                       Madame Roche привыкла знать обо всем, что появляется в её доме, — еда не
                       исключение.
                     </p>
-                    <p>
+                    <p data-split="lines">
                       Здесь предпочитают продукты от фермеров, самостоятельно делают масло и сметану
                       и пекут ремесленный хлеб
                     </p>

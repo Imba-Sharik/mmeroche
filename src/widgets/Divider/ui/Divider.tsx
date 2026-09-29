@@ -1,6 +1,5 @@
-import Image from "next/image";
 import { GRID } from "@/shared/config";
-import { Reveal } from "@/shared/ui";
+import { Reveal, Sticker } from "@/shared/ui";
 import { DIVIDERS, type DividerName } from "../model/dividers";
 
 /** Левый край реликвии на мобильном: тот же сдвиг от центра, что в макете 1920, в пикселях */
@@ -40,29 +39,31 @@ export function Divider({ variant }: { variant: DividerName }) {
               "linear-gradient(90deg, rgb(242 241 224 / 0) 0%, var(--cream) 50%, rgb(242 241 224 / 0) 100%)",
           }}
         />
-
-        {relics.map((relic) => (
-          <Image
-            key={relic.src}
-            src={relic.src}
-            alt=""
-            width={relic.width}
-            height={relic.height}
-            sizes="(max-width: 1024px) 120px, 25vw"
-            className="absolute left-(--left) h-auto w-(--w) lg:left-(--left-lg) lg:w-(--w-lg)"
-            style={
-              {
-                "--left": offsetFromCenter(relic.left),
-                "--left-lg": relic.left,
-                "--w": `${relic.width}px`,
-                "--w-lg": `${(relic.width / GRID.designWidth) * 100}%`,
-                top: relic.top,
-                rotate: `${relic.rotate}deg`,
-              } as React.CSSProperties
-            }
-          />
-        ))}
       </Reveal>
+
+      {/*
+        Реликвии — вне Reveal: они не проявляются, а клеятся стикерами
+        (`Sticker`), каждая по своему триггеру.
+      */}
+      {relics.map((relic, i) => (
+        <div
+          key={relic.src}
+          className="absolute left-(--left) w-(--w) lg:left-(--left-lg) lg:w-(--w-lg)"
+          style={
+            {
+              "--left": offsetFromCenter(relic.left),
+              "--left-lg": relic.left,
+              "--w": `${relic.width}px`,
+              "--w-lg": `${(relic.width / GRID.designWidth) * 100}%`,
+              top: relic.top,
+              rotate: `${relic.rotate}deg`,
+              aspectRatio: `${relic.width} / ${relic.height}`,
+            } as React.CSSProperties
+          }
+        >
+          <Sticker src={relic.src} ratio={relic.width / relic.height} delay={i * 0.25} />
+        </div>
+      ))}
     </div>
   );
 }

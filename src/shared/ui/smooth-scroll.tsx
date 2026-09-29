@@ -20,7 +20,18 @@ export function getLenis() {
  */
 export function SmoothScroll() {
   useEffect(() => {
-    const instance = new Lenis({ autoRaf: false });
+    /*
+     * syncTouch: на телефоне прокрутку пальцем тоже ведёт Lenis, а не браузер —
+     * клиент просил мобильный скролл плавнее. Инерция после броска мягче
+     * нативной: lerp пониже — дольше докатывается, показатель поменьше —
+     * бросок не улетает на полстраницы.
+     */
+    const instance = new Lenis({
+      autoRaf: false,
+      syncTouch: true,
+      syncTouchLerp: 0.06,
+      touchInertiaExponent: 1.5,
+    });
     lenis = instance;
 
     const onScroll = () => ScrollTrigger.update();
