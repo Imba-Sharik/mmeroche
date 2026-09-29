@@ -344,7 +344,6 @@
  * Поэтому здесь 3D-цепочки нет (`sticker.tsx` её не рендерит), падает
  * плоская копия, и только `transform` + `opacity` — это Safari и Chrome
  * отдают композитору, и анимация не зависит от занятости страницы.
- * Прижатие к стене изображаем лёгким сплющиванием в конце.
  */
 @media (hover: none) {
   .sticker[data-armed][data-stuck] {
@@ -380,22 +379,24 @@
   }
 }
 
+/*
+ * Без `scale`: слой с масштабом Safari растрирует под наибольший масштаб
+ * анимации, а в конце перерисовывает под обычный — на кадр стикер пропадал
+ * (мигал один из пары на первом разделителе). Поворот и сдвиг растр не меняют.
+ */
 @keyframes sticker-slap {
   0% {
     opacity: 0;
-    transform: translate(52%, -142%) rotate(-15deg) scale(1.34);
+    transform: translate(52%, -142%) rotate(-15deg);
   }
   45% {
     opacity: 1;
   }
-  75% {
-    transform: translate(0) rotate(1.2deg) scale(1.03);
-  }
-  88% {
-    transform: translate(0) rotate(0) scale(0.985);
+  78% {
+    transform: translate(0, 2%) rotate(1.2deg);
   }
   to {
     opacity: 1;
-    transform: translate(0) rotate(0) scale(1);
+    transform: translate(0) rotate(0);
   }
 }
