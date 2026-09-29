@@ -86,6 +86,22 @@ function trackPointer(event: PointerEvent<HTMLDivElement>) {
   tile.style.setProperty("--y", `${event.clientY - rect.top}px`);
 }
 
+/**
+ * Скруглённый прямоугольник маской: два креста из сплошных полос и круг
+ * в каждом углу. Слои маски складываются, так что вместе дают прямоугольник
+ * со скруглёнными углами радиуса `--radius-xl`. Зачем маска — см. разметку.
+ */
+const R = "var(--radius-xl)";
+const CORNER = `radial-gradient(circle ${R} at ${R} ${R}, #000 calc(100% - 0.5px), #0000)`;
+const SOLID = "linear-gradient(#000 0 0)";
+const TILE_MASK = [SOLID, SOLID, CORNER, CORNER, CORNER, CORNER].join(", ");
+const TILE_MASK_SIZE = [
+  `calc(100% - 2 * ${R}) 100%`,
+  `100% calc(100% - 2 * ${R})`,
+  ...Array(4).fill(`calc(2 * ${R}) calc(2 * ${R})`),
+].join(", ");
+const TILE_MASK_POSITION = ["center", "center", "0 0", "100% 0", "0 100%", "100% 100%"].join(", ");
+
 /** Текст ждёт, пока карточка откроется хотя бы наполовину, секунды */
 const TEXT_DELAY = 0.25;
 
@@ -264,32 +280,31 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
       className="group relative h-full snap-start rounded-xl lg:h-auto lg:aspect-460/320 outline-none focus-visible:ring-1 focus-visible:ring-ink-muted"
     >
       {/*
-        Режем `clip-path` со скруглением, а не `overflow-hidden` + `rounded`:
-        пока идёт анимация, фото и карточка живут на своих слоях видеокарты,
-        и Chrome обрезает такие слои по скруглённым углам неточно — в углах
-        вылезал край фото. `clip-path` режет уже собранную картинку.
-        Обрезка на внутреннем слое, а не на клетке, — иначе срезало бы
-        кольцо фокуса.
-      */}
-      {/*
-        `overflow-clip` рядом с `clip-path`: `clip-path` режет только картинку,
-        а для прокрутки вылезшее содержимое остаётся. Увеличенное фото и
-        карточка на пиксель шире клетки раздували ленту, и на мобильном она
-        начинала прокручиваться по вертикали внутри себя. Скругление по-прежнему
-        даёт `clip-path`, `overflow-clip` режет прямоугольником.
-      */}
-      {/*
-        Пустая маска (`mask-image` сплошным градиентом) ничего не прячет, но
-        заставляет Chrome сначала собрать фото и карточку в одну поверхность,
-        а уже её резать скруглением. Без неё скругление из `clip-path` Chrome
-        накладывает на каждый слой по отдельности («fast rounded corners»):
-        на кромке оба слоя полупрозрачны, и фото проступало из-под карточки,
-        пока идёт анимация. Тот же приём — известный фикс «border-radius +
-        overflow + transform» для Safari.
+        Скругление клетки — маской (`TILE_MASK`), а не `clip-path` или
+        `overflow-hidden` + `rounded`. Пока идёт анимация, фото и карточка
+        живут на своих слоях видеокарты, и эти два способа Chrome накладывает
+        на каждый слой по отдельности («fast rounded corners»): на кромке оба
+        слоя полупрозрачны, и фото проступало из-под карточки. Маску Chrome
+        кладёт на уже собранную из слоёв картинку — кромки нет. Пустая маска
+        поверх `clip-path` тоже собирала слои, но ломала скругление снизу.
 
-        `container-type: size` — от высоты клетки считается ход шторки (`cqh`).
+        `overflow-clip`: маска режет только картинку, а для прокрутки вылезшее
+        содержимое остаётся. Увеличенное фото и карточка шире клетки раздували
+        ленту, и на мобильном она прокручивалась по вертикали внутри себя.
+
+        Обрезка на внутреннем слое, а не на клетке, — иначе срезало бы кольцо
+        фокуса. `container-type: size` — от высоты клетки считается ход
+        шторки (`cqh`).
       */}
-      <div className="absolute inset-0 isolate overflow-clip [container-type:size] [clip-path:inset(0_round_var(--radius-xl))] [mask-image:linear-gradient(#000,#000)]">
+      <div
+        className="absolute inset-0 isolate overflow-clip [container-type:size]"
+        style={{
+          maskImage: TILE_MASK,
+          maskSize: TILE_MASK_SIZE,
+          maskPosition: TILE_MASK_POSITION,
+          maskRepeat: "no-repeat",
+        }}
+      >
         {/*
           Раскрылась карточка — фото под ней убираем совсем. Chrome сглаживает
           край слоя карточки и после анимации, и в этих пикселях по периметру
