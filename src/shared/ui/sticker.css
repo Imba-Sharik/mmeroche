@@ -104,12 +104,25 @@
   display: none;
 }
 
-.sticker[data-stuck]:not([data-settled]) .sticker__container {
+.sticker[data-stuck] .sticker__container {
   display: block;
 }
 
+/*
+ * Подмена 3D на плоскую копию — без щели. Копия не выключается через
+ * `display: none`, а лежит под 3D прозрачной: она уже отрисована, и когда
+ * стикер лёг, просто становится видна. 3D прячется на пару кадров позже
+ * (`transition` у `visibility` срабатывает скачком по истечении задержки):
+ * раньше обе части менялись в одном кадре, и стикер на кадр пропадал.
+ * Обратно, при повторном приклеивании, 3D возвращается сразу.
+ */
 .sticker[data-stuck]:not([data-settled]) .sticker__flat {
-  display: none;
+  opacity: 0;
+}
+
+.sticker[data-settled] .sticker__container {
+  visibility: hidden;
+  transition: visibility 0s 0.1s;
 }
 
 .sticker__container {
