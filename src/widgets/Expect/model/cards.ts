@@ -2,7 +2,7 @@
  * Три пространства особняка — карточки секции «Чего ожидать», Figma nodes
  * 222:2062, 222:2067, 222:2072. «Подробнее» открывает модалку с полным
  * описанием (Figma node 334:62), тексты — node 334:71. Фото в модалке то же,
- * что на карточке.
+ * что на карточке. Фото — исходники из Figma, WebP без потерь.
  */
 export interface ExpectCard {
   id: string;
@@ -12,6 +12,8 @@ export interface ExpectCard {
   /** Развёрнутое описание — в модалке, по абзацам */
   details: string[];
   image: string;
+  /** `object-position` фото, если кадр в макете обрезан не по центру */
+  imagePosition?: string;
   alt: string;
 }
 
@@ -61,7 +63,9 @@ export const EXPECT_CARDS: ExpectCard[] = [
         "арт-полотна.",
     ],
     image: "/images/expect/card-2.webp",
-    alt: "Лаборатория: зал с хрустальными люстрами и кирпичной стеной",
+    /** Фото вертикальное, в макете прижато к низу (Figma node 222:2068) */
+    imagePosition: "bottom",
+    alt: "Лаборатория: бар с резными масками и полками бутылок",
   },
   {
     id: "cabaret",

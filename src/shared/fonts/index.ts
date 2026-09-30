@@ -1,4 +1,4 @@
-import { Noto_Serif_SC, PT_Mono, Playfair_Display } from "next/font/google";
+import { Noto_Serif_SC, PT_Mono } from "next/font/google";
 import localFont from "next/font/local";
 
 /**
@@ -19,19 +19,6 @@ export const display = localFont({
   weight: "400",
   style: "normal",
   fallback: ["Playfair Display", "serif"],
-  adjustFontFallback: false,
-});
-
-/**
- * Playfair Display Italic — им в макете набрана только подпись в «Легенде»
- * (Figma node 222:2020), заголовки идут дисплейным.
- */
-export const note = Playfair_Display({
-  subsets: ["latin", "cyrillic"],
-  weight: ["400"],
-  style: ["italic"],
-  variable: "--font-note",
-  display: "swap",
   adjustFontFallback: false,
 });
 

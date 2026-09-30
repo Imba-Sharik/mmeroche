@@ -115,12 +115,11 @@ CSS-переменные в `app/globals.css` (`--container-max`, `--container-i
 
 ### Шрифты
 
-`shared/fonts/index.ts`, четыре семейства:
+`shared/fonts/index.ts`, три семейства:
 
 | Переменная | Шрифт | Где |
 |------------|-------|-----|
 | `--font-display` | MM9 Prose Antique Cyr (`shared/fonts/mm9/*.woff2`) | заголовки секций, цифры, названия блюд |
-| `--font-note` | Playfair Display Italic | только подпись в «Легенде» |
 | `--font-ui` | PT Mono (только 400) | навигация, кнопки, подписи |
 | `--font-accent` | Noto Serif SC | иероглифы 创意料理 в подвале |
 
@@ -137,8 +136,8 @@ CSS-переменные в `app/globals.css` (`--container-max`, `--container-i
 
 Лицензия оплачена клиентом.
 
-Подпись в «Легенде» в макете набрана именно Playfair Display Italic, а не
-дисплейным — у неё своя переменная `--font-note` и утилита `font-note`.
+Подпись в «Легенде» (Playfair Display Italic) убрана по просьбе клиента
+вместе со шрифтом — искать в истории.
 
 Размеры зашиты утилитами в `globals.css`:
 `text-mono-xs` / `sm` / `base` / `md` (12 / 14 / 18 / 16px) и `text-display-xs` /
@@ -199,8 +198,9 @@ Figma: в макете была только Мексика, причём кар
 (он кэширует по пути, ширине и качеству и файл не перечитывает). Иконки берём из
 `lucide-react`, если глиф совпадает с макетом (`ArrowRight`, `ArrowUpRight`,
 `ArrowDown`, `Music2`), иначе — экспортируем SVG: так живут `hero/roche.svg`,
-`kitchen/map-pin.svg` и `kitchen/cursor.svg` (рендерим через `next/image`
-с `unoptimized`).
+`kitchen/map-pin.svg` (рендерим через `next/image`
+с `unoptimized`). Курсор-подсказку на клетке «Кухни» убрали по просьбе
+клиента.
 
 ### Анимации
 

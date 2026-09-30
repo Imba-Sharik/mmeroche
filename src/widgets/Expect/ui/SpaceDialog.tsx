@@ -82,6 +82,7 @@ export function SpaceDialog({ card }: { card: ExpectCard }) {
                 fill
                 sizes="(max-width: 640px) 100vw, 600px"
                 className="object-cover"
+                style={{ objectPosition: card.imagePosition }}
               />
             </div>
 

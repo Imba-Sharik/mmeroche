@@ -37,13 +37,6 @@ export function Legend() {
                 притяжения — трехэтажный ресторан и тайный особняк «Madame Roche»
               </p>
             </div>
-
-            {/* Подпись набрана Playfair Display Italic, а не дисплейным шрифтом секций */}
-            <p data-split="lines" className="mt-6 font-note text-base leading-6.5 text-cream/50 italic">
-              The guest house of the mysterious Asian woman
-              <br />
-              in the heart of the Eurasian world
-            </p>
           </div>
 
           {/* Портрет хозяйки — Figma node 222:2022, 870×625 */}

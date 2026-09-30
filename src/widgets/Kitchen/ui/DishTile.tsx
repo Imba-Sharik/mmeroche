@@ -215,24 +215,7 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
       />
 
       {/*
-        Курсор из макета (Figma node 222:2047) — намёк, что клетку можно
-        раскрыть. В макете он лежит внутри уже раскрытой карточки, у нас
-        карточка закрыта, поэтому подсказка переехала на лицевую сторону.
-      */}
-      {dish.hint && (
-        <Image
-          src="/images/kitchen/cursor.svg"
-          alt=""
-          aria-hidden
-          width={31}
-          height={31}
-          unoptimized
-          className="absolute top-[57.9%] left-[42.3%] hidden w-[6.7%] rotate-5 transition-opacity duration-300 group-hover:opacity-0 lg:block"
-        />
-      )}
-
-      {/*
-        На телефоне наведения нет, и курсор-подсказку заменяет подпись внизу
+        На телефоне наведения нет, и раскрытие подсказывает подпись внизу
         кадра — Figma node 336:374: затемнение книзу, лёгкое размытие.
       */}
       <div

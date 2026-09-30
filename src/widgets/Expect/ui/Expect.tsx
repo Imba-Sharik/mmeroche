@@ -73,6 +73,7 @@ export function Expect() {
                     fill
                     sizes="(max-width: 768px) 100vw, 466px"
                     className="object-cover"
+                    style={{ objectPosition: card.imagePosition }}
                   />
                 </div>
 
