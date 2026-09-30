@@ -115,7 +115,7 @@ export const INTERIOR_PHOTOS: InteriorPhoto[] = [
     ratio: "691.5/395.5",
   },
   {
-    src: "/images/interior/polaroid.webp",
+    src: "/images/interior/polaroid.jpg",
     sticker: true,
     alt: "",
     left: "59.078%",
@@ -165,7 +165,7 @@ export const INTERIOR_CANVAS = "1920/1830";
  * он отдаёт рамку после поворота, её центр совпадает с нашим. Раскладка своя, не ужатая десктопная: восемь
  * кадров идут столбиком и уступами, вырезки поверх.
  *
- * Кадры — рендеры нод ×2 (`m-*.webp`): у них та же рваная рамка, прозрачная
+ * Кадры — рендеры нод ×2 (`m-*.webp`, WebP без потерь): у них та же рваная рамка, прозрачная
  * снаружи. Рендер на 3–5px с каждой стороны больше рамки ноды — `left`/`top`
  * и ширина уже с этой поправкой. Вырезки — те же файлы, что на десктопе,
  * координаты — кадра до поворота. Порядок — слои снизу вверх, как в Figma.
@@ -212,7 +212,7 @@ export const INTERIOR_MOBILE_PHOTOS: InteriorPhoto[] = [
     ratio: "338/250",
   },
   {
-    src: "/images/interior/polaroid.webp",
+    src: "/images/interior/polaroid.jpg",
     sticker: true,
     alt: "",
     left: "39.158%",

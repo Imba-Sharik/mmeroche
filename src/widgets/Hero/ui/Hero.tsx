@@ -18,7 +18,7 @@ export function Hero() {
         {/* Двигается только снимок: затемнения стоят, чтобы низ секции уходил в чёрный */}
         <HeroParallax>
           <Image
-            src="/images/hero/scrim.webp"
+            src="/images/hero/scrim.png"
             alt=""
             fill
             priority

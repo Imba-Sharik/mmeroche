@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
     inlineCss: true,
   },
   images: {
+    /** Отдаём файлы из `public/` как есть: второй проход оптимизатора мылил фото. */
+    unoptimized: true,
     remotePatterns: [{ hostname: "localhost" }],
     /** Без allowlist Next молча роняет `quality={90}` из компонентов до дефолтных 75. */
     qualities: [70, 75, 80, 90],
