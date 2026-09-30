@@ -369,7 +369,16 @@
   .sticker__flat {
     filter: drop-shadow(0 4px 4px #00000040);
     will-change: transform, opacity;
-    backface-visibility: hidden;
+  }
+
+  /*
+   * Каждый стикер — свой постоянный слой. На разделителях они падают парой
+   * вразбег 0.25 с: первый заканчивал, пока второй летел, Safari на этом
+   * пересобирал слои вокруг — и первый мигал.
+   */
+  .sticker-frame {
+    transform: translateZ(0);
+    isolation: isolate;
   }
 
   .sticker[data-stuck]:not([data-settled]) .sticker__flat,

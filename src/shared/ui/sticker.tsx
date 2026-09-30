@@ -96,12 +96,12 @@ export function Sticker({ src, ratio, auto = true, delay = 0, className }: Stick
       // `roll` кончается последним; `fade` стартует первым, в том числе
       // при повторном приклеивании в «Интерьере».
       const onStart = (event: AnimationEvent) => {
-        if (event.animationName === "sticker-fade" || event.animationName === "sticker-slap") sticker.removeAttribute("data-settled");
+        if (event.animationName === "sticker-fade") sticker.removeAttribute("data-settled");
       };
       const onEnd = (event: AnimationEvent) => {
-        if (event.animationName === "sticker-roll" || event.animationName === "sticker-slap") {
-          sticker.setAttribute("data-settled", "");
-        }
+        // На сенсорных `sticker-slap` — там `data-settled` ничего не меняет,
+        // а лишний пересчёт стилей в конце давал мигание
+        if (event.animationName === "sticker-roll") sticker.setAttribute("data-settled", "");
       };
       sticker.addEventListener("animationstart", onStart);
       sticker.addEventListener("animationend", onEnd);
