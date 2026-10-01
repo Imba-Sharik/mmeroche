@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Equal, X } from "lucide-react";
 import { Dialog } from "radix-ui";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CONTACTS, MOBILE_NAV_ITEMS, PHONE_HREF } from "@/shared/config";
 import { typograf } from "@/shared/lib";
 import { Button, getLenis, scrollToSection } from "@/shared/ui";
@@ -28,12 +28,15 @@ function InfoBlock({ label, children }: { label: string; children: React.ReactNo
  * экран: сверху та же строка шапки (звук, кремовое лого, крестик), под ней
  * пункты секций, дальше контакты и бронь.
  *
- * Пункт меню сперва закрывает меню, а уже потом везёт к секции: пока меню
- * открыто, Lenis стоит (иначе крутилась бы страница под ним), и прокрутка
- * до закрытия никуда бы не поехала.
+ * Пункт меню сперва закрывает меню, а везёт к секции, только когда оно
+ * полностью растворилось. Пока меню на экране (и 0.3 с его исчезания),
+ * Radix держит блокировку прокрутки: Lenis уже ехал, а страница стояла —
+ * и после закрытия прыгала на середину пути и доезжала хвост.
  */
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
+  /** Секция, к которой едем, когда меню закроется */
+  const pendingRef = useRef<string | null>(null);
 
   const onOpenChange = (next: boolean) => {
     setOpen(next);
@@ -43,8 +46,8 @@ export function MobileMenu() {
   };
 
   const goTo = (id: string) => {
+    pendingRef.current = id;
     onOpenChange(false);
-    scrollToSection(id);
   };
 
   return (
@@ -56,8 +59,17 @@ export function MobileMenu() {
       <Dialog.Portal>
         <Dialog.Content
           aria-describedby={undefined}
-          // Фокус не возвращаем на бургер: он дёргал бы страницу к шапке, пока едет прокрутка
-          onCloseAutoFocus={(event) => event.preventDefault()}
+          /*
+            Срабатывает, когда меню уже размонтировано — после анимации
+            исчезания. Фокус не возвращаем на бургер: он дёргал бы страницу
+            к шапке. Кадр ждём, чтобы Radix успел снять блокировку прокрутки.
+          */
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            const id = pendingRef.current;
+            pendingRef.current = null;
+            if (id) requestAnimationFrame(() => scrollToSection(id));
+          }}
           data-lenis-prevent
           className="fixed inset-0 z-60 flex flex-col overflow-y-auto overscroll-contain bg-black duration-300 outline-none data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 lg:hidden"
         >
