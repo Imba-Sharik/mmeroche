@@ -126,10 +126,10 @@ export function KitchenGrid() {
 
   return (
     /*
-      Мобильный — Figma node 336:189: два ряда клеток 328×400 уходят за правый
-      край, листаются свайпом с доводкой к клетке. Колонка — 80% ширины экрана
-      (не больше 400px), два ряда с зазором — 80% высоты (`svh` — без прыжков
-      адресной строки). Пропорция клетки поэтому не фиксирована: фото
+      Мобильный — Figma node 336:189, но по просьбе клиента в один ряд и выше:
+      клетки уходят за правый край, листаются свайпом с доводкой к клетке.
+      Колонка — 80% ширины экрана (не больше 400px), ряд — 420px. Пропорция клетки
+      поэтому не фиксирована: фото
       кадрируется `object-cover`, карточка тянется на всю клетку. Пин с прокруткой — только
       на десктопе. Там эта обёртка — `contents`, и лента снова flex-ребёнок
       строки рядом с колонкой текста.
@@ -144,7 +144,7 @@ export function KitchenGrid() {
       {/* z-10: по задумке лента проезжает поверх текстовой колонки, а не под ней */}
       <div
         ref={trackRef}
-        className="relative z-10 grid w-max auto-cols-[min(80vw,400px)] grid-flow-col grid-rows-[repeat(2,calc((80svh_-_0.75rem)/2))] gap-3 lg:w-607 lg:shrink-0 lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-5 lg:grid-rows-none lg:gap-8"
+        className="relative z-10 grid w-max auto-cols-[min(80vw,400px)] grid-flow-col grid-rows-[420px] gap-3 lg:w-607 lg:shrink-0 lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-5 lg:grid-rows-none lg:gap-8"
       >
         <Reveal>
           {DISHES.map((dish) => (

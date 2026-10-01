@@ -82,8 +82,8 @@ export function Events() {
             ))}
           </div>
 
-          {/* TODO: подставить ссылку на файл презентации, когда пришлют */}
-          <Button variant="outline" className="w-full sm:w-auto">
+          {/* Скрыта по просьбе клиента, пока нет файла. TODO: ссылка на презентацию — и убрать `hidden` */}
+          <Button variant="outline" className="hidden w-full sm:w-auto">
             Скачать презентацию
             <ArrowDown className="size-4" strokeWidth={1.5} />
           </Button>
