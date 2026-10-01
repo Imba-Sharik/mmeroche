@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ArrowDown } from "lucide-react";
-import { Button, Container, CUTOUT_DELAY, Reveal, Section, WineGlow } from "@/shared/ui";
+import { ButtonLink, Container, CUTOUT_DELAY, Reveal, Section, WineGlow } from "@/shared/ui";
 import { CountUp } from "./CountUp";
 
 /** Цифры дома — Figma nodes 222:2117, 222:2121, 222:2125 */
@@ -82,11 +82,16 @@ export function Events() {
             ))}
           </div>
 
-          {/* Скрыта по просьбе клиента, пока нет файла. TODO: ссылка на презентацию — и убрать `hidden` */}
-          <Button variant="outline" className="hidden w-full sm:w-auto">
+          {/* Презентация от клиента лежит в `public/` (6.8 МБ: слайды ужаты с 3840 до 2560px, JPEG q85) — качается, а не открывается во вкладке */}
+          <ButtonLink
+            href="/madame-roche-presentation.pdf"
+            download
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
             Скачать презентацию
             <ArrowDown className="size-4" strokeWidth={1.5} />
-          </Button>
+          </ButtonLink>
         </Reveal>
       </Container>
     </Section>
