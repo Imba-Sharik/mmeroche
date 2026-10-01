@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { typograf } from "@/shared/lib";
 import { Container, CUTOUT_DELAY, Reveal, Section, SectionIntro, WineGlow } from "@/shared/ui";
 import { EXPECT_CARDS } from "../model/cards";
 import { SpaceDialog } from "./SpaceDialog";
@@ -83,7 +84,7 @@ export function Expect() {
                     {card.title}
                   </h3>
                   <p data-split="lines" className="text-mono-sm text-dop">
-                    {card.text}
+                    {typograf(card.text)}
                   </p>
                 </div>
 

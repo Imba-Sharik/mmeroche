@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { BOOKING_PHONE_HREF, CONTACTS, NAV_ITEMS } from "@/shared/config";
 import { gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
-import { Button, ButtonLink, ProgressiveBlur } from "@/shared/ui";
+import { Button, ButtonLink, ProgressiveBlur, scrollToSection } from "@/shared/ui";
 import { MobileMenu } from "./MobileMenu";
 import { SoundButton } from "./SoundButton";
 
@@ -133,7 +133,15 @@ export function SiteHeader() {
         */}
         <nav className="text-mono-xs pointer-events-auto relative hidden items-center gap-3 text-cream lg:flex xl:text-mono-sm xl:gap-5 2xl:gap-7">
           {NAV_ITEMS.map((item) => (
-            <a key={item.id} href={`#${item.id}`} className="transition-colors hover:text-wine">
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              onClick={(event) => {
+                event.preventDefault();
+                scrollToSection(item.id);
+              }}
+              className="transition-colors hover:text-wine"
+            >
               {item.label}
             </a>
           ))}

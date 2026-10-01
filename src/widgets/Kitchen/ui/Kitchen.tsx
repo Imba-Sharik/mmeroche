@@ -70,9 +70,10 @@ export function Kitchen() {
                       Меню кухни
                       <ArrowRight className="size-4" strokeWidth={1.5} />
                     </Button>
+                    {/* Поля уже, чем у соседней: текст длиннее, а ширина та же 160 — Figma node 222:2034 */}
                     <Button
                       variant="outline"
-                      className="flex-1 px-3 lg:w-40 lg:flex-none lg:px-5.5"
+                      className="flex-1 px-3 lg:w-40 lg:flex-none lg:px-[16.5px]"
                     >
                       Барная карта
                       <ArrowRight className="size-4" strokeWidth={1.5} />

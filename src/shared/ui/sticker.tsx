@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useSyncExternalStore } from "react";
-import { cn, gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
+import { cn, gsap, ScrollTrigger, skipsAnimation, useGsapLayout } from "@/shared/lib";
 import "./sticker.css";
 
 /** Полос в каждой цепочке — столько же, сколько у оригинала на ecopanels.pro */
@@ -67,6 +67,20 @@ const chain = (tail: boolean, strips: number, i = 0): React.ReactNode => (
 );
 
 /**
+ * Приклеить или отклеить стикер. `instant` — без анимации, сразу лежит:
+ * так стикеры, мимо которых едем по клику в меню, не грузят поездку.
+ */
+export function stick(sticker: HTMLElement, on: boolean, instant = false) {
+  if (!on) {
+    sticker.removeAttribute("data-stuck");
+    sticker.removeAttribute("data-instant");
+    return;
+  }
+  sticker.toggleAttribute("data-instant", instant);
+  sticker.setAttribute("data-stuck", "");
+}
+
+/**
  * Стикер, который «приклеивается»: падает сверху, ложится и прижимается
  * к стене, края раскатываются от середины. Механика — в `sticker.css`.
  *
@@ -111,7 +125,7 @@ export function Sticker({ src, ratio, auto = true, delay = 0, className }: Stick
             trigger: sticker,
             start: "top bottom-=33.33%",
             once: true,
-            onEnter: () => sticker.setAttribute("data-stuck", ""),
+            onEnter: () => stick(sticker, true, skipsAnimation(sticker)),
           })
         : undefined;
 
@@ -121,7 +135,7 @@ export function Sticker({ src, ratio, auto = true, delay = 0, className }: Stick
         sticker.removeEventListener("animationend", onEnd);
         sticker.removeAttribute("data-armed");
         sticker.removeAttribute("data-settled");
-        sticker.removeAttribute("data-stuck");
+        stick(sticker, false);
       };
     });
 

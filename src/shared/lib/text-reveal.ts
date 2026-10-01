@@ -1,6 +1,7 @@
 "use client";
 
 import { gsap, SplitText } from "./gsap";
+import { typograf } from "./typograf";
 
 /** Тексты, которые проявляются по частям: `data-split="chars"` или `"lines"` */
 export const SPLIT_SELECTOR = "[data-split]";
@@ -12,11 +13,29 @@ export const SPLIT_SELECTOR = "[data-split]";
  * `/\s+/`, а под `\s` попадает и неразрывный — предлоги снова повисали на
  * концах строк. Поэтому схлопывание выключаем и делаем сами, только для
  * обычных пробелов и переводов строк из разметки.
+ *
+ * Здесь же `typograf`: тексты в разметке (`Legend`, `Kitchen`…) набраны
+ * обычными пробелами, и без него предлоги висели на концах строк — склеиваем
+ * их перед нарезкой, так что любой `data-split` получает это сам.
  */
 export const SPLIT_KEEP_NBSP = {
   reduceWhiteSpace: false,
-  prepareText: (text: string) => text.replace(/[ \t\r\n]+/g, " "),
+  prepareText: (text: string) => typograf(text.replace(/[ \t\r\n]+/g, " ")),
 };
+
+/**
+ * Прогоняет текстовые узлы внутри `el` через `typograf` — для размеченного
+ * текста, который не режем: без анимаций (`reduced-motion`) SplitText не
+ * запускается, и его `prepareText` предлоги не склеил бы.
+ */
+export function typografText(el: HTMLElement) {
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const text = node.nodeValue ?? "";
+    const fixed = typograf(text);
+    if (fixed !== text) node.nodeValue = fixed;
+  }
+}
 
 /**
  * Проявление текста как на jeskojets.com: каждая буква (заголовки) или

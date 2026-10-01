@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { CONTACTS } from "@/shared/config";
+import { typograf } from "@/shared/lib";
 import { Button } from "@/shared/ui";
 import { HeroParallax } from "./HeroParallax";
 import { HeroReveal } from "./HeroReveal";
@@ -72,7 +73,7 @@ export function Hero() {
           >
             {CONTACTS.tagline.map((line) => (
               <span key={line} className="block">
-                {line}
+                {typograf(line)}
               </span>
             ))}
           </h1>

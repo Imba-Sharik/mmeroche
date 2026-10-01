@@ -5,7 +5,8 @@ import { Equal, X } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { useState } from "react";
 import { CONTACTS, MOBILE_NAV_ITEMS, PHONE_HREF } from "@/shared/config";
-import { Button, getLenis } from "@/shared/ui";
+import { typograf } from "@/shared/lib";
+import { Button, getLenis, scrollToSection } from "@/shared/ui";
 import { SoundButton } from "./SoundButton";
 
 /** Бордовая квадратная кнопка шапки: бургер и крестик — Figma nodes 336:476, 336:448 */
@@ -43,12 +44,7 @@ export function MobileMenu() {
 
   const goTo = (id: string) => {
     onOpenChange(false);
-    const target = document.getElementById(id);
-    if (!target) return;
-
-    const lenis = getLenis();
-    if (lenis) lenis.scrollTo(target, { duration: 1.4 });
-    else target.scrollIntoView({ behavior: "smooth" });
+    scrollToSection(id);
   };
 
   return (
@@ -131,7 +127,7 @@ export function MobileMenu() {
                 </span>
               ))}
             </p>
-            <p className="text-mono-xs -mt-2 text-cream/30">{CONTACTS.metaNotice}</p>
+            <p className="text-mono-xs -mt-2 text-cream/30">{typograf(CONTACTS.metaNotice)}</p>
           </div>
         </Dialog.Content>
       </Dialog.Portal>

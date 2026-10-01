@@ -1,4 +1,5 @@
 import { CONTACTS } from "@/shared/config";
+import { typograf } from "@/shared/lib";
 import { Container, Section } from "@/shared/ui";
 
 /**
@@ -25,7 +26,7 @@ export function SiteFooter() {
         <span className="font-accent font-light">创意料理</span>
         <span className="whitespace-pre-wrap opacity-50">{CONTACTS.requisites}</span>
         {/* Оговорка к звёздочке у Instagram в «Контактах» */}
-        <p className="basis-full opacity-30">{CONTACTS.metaNotice}</p>
+        <p className="basis-full opacity-30">{typograf(CONTACTS.metaNotice)}</p>
       </Container>
     </Section>
   );

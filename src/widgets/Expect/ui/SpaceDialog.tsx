@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { useCallback, useRef } from "react";
+import { typograf } from "@/shared/lib";
 import { getLenis } from "@/shared/ui";
 import type { ExpectCard } from "../model/cards";
 
@@ -95,7 +96,7 @@ export function SpaceDialog({ card }: { card: ExpectCard }) {
                 <Dialog.Title className="text-display-md text-cream">{card.title}</Dialog.Title>
                 <div className="text-mono-sm flex flex-col gap-4 leading-[1.4] text-dop">
                   {card.details.map((paragraph) => (
-                    <p key={paragraph.slice(0, 32)}>{paragraph}</p>
+                    <p key={paragraph.slice(0, 32)}>{typograf(paragraph)}</p>
                   ))}
                 </div>
               </div>

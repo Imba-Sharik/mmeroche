@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGsapLayout } from "@/shared/lib";
+import { finishIfPassing, gsap, useGsapLayout } from "@/shared/lib";
 import { cn } from "@/shared/lib/utils";
 
 interface CountUpProps {
@@ -50,7 +50,7 @@ export function CountUp({ value, delay = 0, className }: CountUpProps) {
           counter.textContent = format(state.n);
         },
         // Как обычно у счётчиков: стартует, как только число показалось на экране
-        scrollTrigger: { trigger: counter, start: "top 85%", once: true },
+        scrollTrigger: { trigger: counter, start: "top 85%", once: true, onEnter: finishIfPassing },
       });
 
       return () => {

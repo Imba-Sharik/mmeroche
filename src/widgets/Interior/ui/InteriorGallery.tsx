@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
+import { gsap, ScrollTrigger, skipsAnimation, useGsapLayout } from "@/shared/lib";
 import { cn } from "@/shared/lib/utils";
-import { CUTOUT_DELAY, Sticker, WineGlow } from "@/shared/ui";
+import { CUTOUT_DELAY, stick, Sticker, WineGlow } from "@/shared/ui";
 import {
   INTERIOR_CANVAS,
   INTERIOR_GLOW,
@@ -177,12 +177,12 @@ export function InteriorGallery({ layout, className }: { layout: Layout; classNa
       /** Кто ждёт раскрытия кадра: кадр → стикеры и вырезки на нём */
       const riders = new Map<Element, HTMLElement[]>();
       const fades = new Map<Element, Element[]>();
-      const stick = (sticker: HTMLElement, on: boolean) =>
-        on ? sticker.setAttribute("data-stuck", "") : sticker.removeAttribute("data-stuck");
-      const fade = (img: Element, on: boolean) =>
-        on
-          ? gsap.to(img, { autoAlpha: 1, ...FADE, delay: CUTOUT_DELAY })
-          : gsap.to(img, { autoAlpha: 0, ...CLIP });
+      /** `instant` — едем мимо по клику в меню: сразу в конечное состояние */
+      const fade = (img: Element, on: boolean, instant = false) => {
+        if (instant) gsap.set(img, { autoAlpha: on ? 1 : 0, overwrite: "auto" });
+        else if (on) gsap.to(img, { autoAlpha: 1, ...FADE, delay: CUTOUT_DELAY });
+        else gsap.to(img, { autoAlpha: 0, ...CLIP });
+      };
 
       cutouts.forEach((frame) => {
         const img = frame.querySelector(".js-interior-img");
@@ -198,8 +198,8 @@ export function InteriorGallery({ layout, className }: { layout: Layout; classNa
         ScrollTrigger.create({
           trigger: frame,
           start: "clamp(top+=20% bottom)",
-          onEnter: () => fade(img, true),
-          onLeaveBack: () => fade(img, false),
+          onEnter: () => fade(img, true, skipsAnimation(frame)),
+          onLeaveBack: () => fade(img, false, skipsAnimation(frame)),
         });
       });
 
@@ -217,8 +217,10 @@ export function InteriorGallery({ layout, className }: { layout: Layout; classNa
         ScrollTrigger.create({
           trigger: frame,
           start: "clamp(top+=20% bottom)",
-          onEnter: () =>
-            (pending = gsap.delayedCall(CLIP.duration * STICK_AT, () => stick(sticker, true))),
+          onEnter: () => {
+            if (skipsAnimation(frame)) stick(sticker, true, true);
+            else pending = gsap.delayedCall(CLIP.duration * STICK_AT, () => stick(sticker, true));
+          },
           onLeaveBack: () => {
             pending?.kill();
             stick(sticker, false);
@@ -235,18 +237,26 @@ export function InteriorGallery({ layout, className }: { layout: Layout; classNa
 
         let pending: gsap.core.Tween | undefined;
         const open = () => {
-          cutoutsOnTop.forEach((cutout) => fade(cutout, true));
-          gsap.to(img, { clipPath: OPEN, ...CLIP });
+          const instant = skipsAnimation(frame);
           pending?.kill();
+          cutoutsOnTop.forEach((cutout) => fade(cutout, true, instant));
+          if (instant) {
+            gsap.set(img, { clipPath: OPEN, overwrite: "auto" });
+            onTop.forEach((sticker) => stick(sticker, true, true));
+            return;
+          }
+          gsap.to(img, { clipPath: OPEN, ...CLIP });
           pending = gsap.delayedCall(CLIP.duration * STICK_AT, () =>
             onTop.forEach((sticker) => stick(sticker, true)),
           );
         };
         const close = (clipPath: string) => {
+          const instant = skipsAnimation(frame);
           pending?.kill();
           onTop.forEach((sticker) => stick(sticker, false));
-          cutoutsOnTop.forEach((cutout) => fade(cutout, false));
-          gsap.to(img, { clipPath, ...CLIP });
+          cutoutsOnTop.forEach((cutout) => fade(cutout, false, instant));
+          if (instant) gsap.set(img, { clipPath, overwrite: "auto" });
+          else gsap.to(img, { clipPath, ...CLIP });
         };
 
         gsap.set(img, { clipPath: from });

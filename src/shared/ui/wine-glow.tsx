@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGsapLayout } from "@/shared/lib";
+import { finishIfPassing, gsap, useGsapLayout } from "@/shared/lib";
 import { cn } from "@/shared/lib/utils";
 
 interface WineGlowProps {
@@ -47,7 +47,12 @@ export function WineGlow({ x, y, size = 376, className }: WineGlowProps) {
         scale: 0.7,
         duration: 2,
         ease: "power2.out",
-        scrollTrigger: { trigger: light, start: "top bottom-=20%", once: true },
+        scrollTrigger: {
+          trigger: light,
+          start: "top bottom-=20%",
+          once: true,
+          onEnter: finishIfPassing,
+        },
       });
     });
 

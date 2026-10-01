@@ -6,8 +6,9 @@ import { cn } from "@/shared/lib/utils";
  * (Hero), 222:2030 / 222:2034 («Кухня»), 222:2150 («Контакты»).
  * Скругление одно на все — 8px (`rounded-lg`).
  */
+/** Иконка не ужимается: в тесной кнопке flex сплющивал стрелку в точку */
 const button = cva(
-  "text-mono-sm inline-flex items-center justify-center gap-2.5 rounded-lg whitespace-nowrap transition-opacity hover:opacity-80",
+  "text-mono-sm inline-flex items-center justify-center gap-2.5 rounded-lg whitespace-nowrap transition-opacity hover:opacity-80 [&_svg]:shrink-0",
   {
     variants: {
       variant: {

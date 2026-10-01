@@ -422,3 +422,17 @@
     transform: translate(0) rotate(0);
   }
 }
+
+/*
+ * Проехали мимо по клику в меню (`stick(..., instant)`): стикер сразу лежит
+ * плоской копией, без анимации — и на десктопе, и на сенсорных.
+ */
+.sticker[data-instant],
+.sticker[data-instant] .sticker__flat {
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+.sticker[data-instant] .sticker__container {
+  display: none !important;
+}

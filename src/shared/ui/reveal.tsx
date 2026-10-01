@@ -1,7 +1,15 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, revealText, SPLIT_SELECTOR, useGsapLayout, type SplitText } from "@/shared/lib";
+import {
+  finishIfPassing,
+  gsap,
+  revealText,
+  SPLIT_SELECTOR,
+  useGsapLayout,
+  type SplitText,
+  typografText,
+} from "@/shared/lib";
 
 /** Тайминг с референса fromanother.love */
 const REVEAL = { duration: 1.4, ease: "power3.out" } as const;
@@ -61,6 +69,9 @@ export function Reveal({ children, stagger = 0.05, delay = 0 }: RevealProps) {
     const trigger = targets[0];
     if (!trigger) return;
 
+    // Висячие предлоги склеиваем и там, где текст не режется (без анимаций)
+    root.querySelectorAll<HTMLElement>(SPLIT_SELECTOR).forEach(typografText);
+
     const media = gsap.matchMedia();
 
     media.add("(prefers-reduced-motion: no-preference)", () => {
@@ -69,7 +80,13 @@ export function Reveal({ children, stagger = 0.05, delay = 0 }: RevealProps) {
       collect(targets).forEach((el, i) => {
         const vars = {
           delay: delay + i * stagger,
-          scrollTrigger: { trigger, start: "top bottom-=33.33%", once: true },
+          // Проехали мимо по клику в меню — сразу проявлено (`finishIfPassing`)
+          scrollTrigger: {
+            trigger,
+            start: "top bottom-=33.33%",
+            once: true,
+            onEnter: finishIfPassing,
+          },
         };
 
         if (el.matches(SPLIT_SELECTOR)) splits.push(revealText(el, vars));
