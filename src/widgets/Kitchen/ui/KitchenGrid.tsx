@@ -158,13 +158,13 @@ export function KitchenGrid() {
       на десктопе. Там эта обёртка — `contents`, и лента снова flex-ребёнок
       строки рядом с колонкой текста.
     */
-    // data-lenis-prevent-touch: касания над лентой Lenis не ведёт, иначе он
-    // тянул бы страницу по вертикали заодно с `lockSwipeAxis` — снова наискосок.
     // `touch-action: pan-y` — сам браузер ведёт только страницу, вбок ленту
     // двигает `lockSwipeAxis`; `lg:contents` на десктопе это свойство снимает.
+    // Без `data-lenis-prevent-touch`: `lenis.css` вешает на него
+    // `overscroll-behavior: contain`, и лента не отдавала странице вертикаль —
+    // палец на клетке залипал. Касания Lenis и так не ведёт (нет `syncTouch`).
     <div
       ref={scrollerRef}
-      data-lenis-prevent-touch
       className="-mx-4 [touch-action:pan-y_pinch-zoom] snap-x snap-mandatory scroll-px-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-4 sm:-mx-5 sm:scroll-px-5 sm:px-5 [scrollbar-width:none] lg:contents"
     >
       {/* z-10: по задумке лента проезжает поверх текстовой колонки, а не под ней */}

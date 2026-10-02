@@ -69,17 +69,16 @@ export function DishPanel({ dish, className }: DishPanelProps) {
         телефоне заголовок встаёт в три строки, и текст наезжал на «Хочу».
         Низ описания затухает, чтобы было видно, что текст продолжается; под
         затуханием отступ в строку — последнюю можно докрутить до чистого фона.
-        Колесо делят описание и страница — `keepWheelInside`; касания над
-        описанием Lenis не ведёт (`data-lenis-prevent-touch`), их листает браузер.
-        `overscroll-contain` только на десктопе: на телефоне палец, докрутив
-        текст, должен дальше листать страницу, а не упираться.
+        Колесо делят описание и страница — `keepWheelInside`. `overscroll-contain`
+        только на десктопе: на телефоне палец, докрутив текст, должен дальше
+        листать страницу, а не упираться. По той же причине без
+        `data-lenis-prevent-touch` — `lenis.css` ставит ему `contain` всегда.
       */}
       <div className="absolute inset-x-4 top-6 bottom-28 flex flex-col gap-3 text-cream lg:inset-x-8 lg:top-8 lg:gap-4">
         <h3 className="js-dish-lines text-display-sm shrink-0 leading-[1.2] lg:leading-none">
           {typograf(dish.title)}
         </h3>
         <div
-          data-lenis-prevent-touch
           onWheel={keepWheelInside}
           className="min-h-0 overflow-y-auto lg:overscroll-contain [mask-image:linear-gradient(to_bottom,#000_calc(100%-1.5em),transparent)] [scrollbar-width:none]"
         >
