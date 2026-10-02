@@ -15,8 +15,12 @@ const FLING = 220;
  *   `snap` на это время снят, иначе браузер прищёлкивал бы ленту к клетке на
  *   каждом кадре. На отпускании доводим до клетки с учётом скорости броска
  *   и возвращаем `snap`, когда лента доехала;
- * - вниз — страница едет нативно, а ленту на время жеста замораживаем
- *   (`overflow-x: hidden`), чтобы она не ползла вбок заодно.
+ * - вниз — страница едет нативно, лента стоит: у неё `touch-action: pan-y`
+ *   (`KitchenGrid`), браузер сам её вбок не тянет.
+ *
+ * Раньше на вертикальный жест ленте ставили `overflow-x: hidden` прямо
+ * посреди касания. В DevTools это работало, а на телефоне браузер обрывал
+ * уже начатую прокрутку страницы — палец на клетке «залипал».
  *
  * Возвращает функцию снятия обработчиков.
  */
@@ -61,7 +65,6 @@ export function lockSwipeAxis(scroller: HTMLElement): () => void {
       if (Math.hypot(dx, dy) < DECIDE) return;
       axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
       if (axis === "x") scroller.style.scrollSnapType = "none";
-      else scroller.style.overflowX = "hidden";
     }
 
     if (axis !== "x") return;
@@ -87,7 +90,6 @@ export function lockSwipeAxis(scroller: HTMLElement): () => void {
       window.setTimeout(restoreSnap, 700);
     }
 
-    if (axis === "y") scroller.style.overflowX = "";
     axis = null;
   };
 
@@ -103,6 +105,5 @@ export function lockSwipeAxis(scroller: HTMLElement): () => void {
     scroller.removeEventListener("touchcancel", onEnd);
     scroller.removeEventListener("scrollend", restoreSnap);
     scroller.style.scrollSnapType = "";
-    scroller.style.overflowX = "";
   };
 }

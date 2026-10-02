@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowDown } from "lucide-react";
+import { Download } from "lucide-react";
 import { ButtonLink, Container, CUTOUT_DELAY, Reveal, Section, WineGlow } from "@/shared/ui";
 import { CountUp } from "./CountUp";
 
@@ -90,7 +90,7 @@ export function Events() {
             className="w-full sm:w-auto"
           >
             Скачать презентацию
-            <ArrowDown className="size-4" strokeWidth={1.5} />
+            <Download className="size-4" strokeWidth={1.5} />
           </ButtonLink>
         </Reveal>
       </Container>

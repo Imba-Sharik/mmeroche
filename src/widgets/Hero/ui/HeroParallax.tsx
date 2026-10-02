@@ -7,7 +7,8 @@ import { gsap, useGsapLayout } from "@/shared/lib";
 const LAG = 0.35;
 
 /**
- * Параллакс фото первого экрана на мобильном (уже `lg`): пока Hero уходит
+ * Параллакс фото первого экрана (сначала был только на мобильном, клиент
+ * попросил и на десктопе): пока Hero уходит
  * вверх, снимок сдвигается вниз на долю хода и едет медленнее контента.
  * Растягивать фото не нужно: щель над ним остаётся выше экрана, а низ
  * срезает `overflow` секции. Затемнения лежат снаружи и стоят на месте.
@@ -22,7 +23,7 @@ export function HeroParallax({ children }: { children: React.ReactNode }) {
 
     const media = gsap.matchMedia();
 
-    media.add("(max-width: 1023.98px) and (prefers-reduced-motion: no-preference)", () => {
+    media.add("(prefers-reduced-motion: no-preference)", () => {
       gsap.to(root, {
         y: () => section.offsetHeight * LAG,
         ease: "none",

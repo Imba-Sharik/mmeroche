@@ -39,8 +39,14 @@ export function Kitchen() {
         сам. На мобильном тап по клетке у края фокусировал её, и браузер,
         показывая её, сдвигал вбок всю обёртку — заголовок и кнопки уезжали
         вместе с лентой.
+
+        На экранах шире 1920 страница стоит колонкой по центру, и лента
+        обрывалась по её краю посреди экрана. Поэтому обёртка выходит за
+        колонку на `--kitchen-bleed` с каждой стороны — до краёв окна (считает
+        `KitchenGrid`). Текст стоит на месте: `pl-container` центрирует его
+        от ширины обёртки, а её центр тот же.
       */}
-      <div className="relative overflow-clip">
+      <div className="relative mx-[calc(var(--kitchen-bleed,0px)*-1)] overflow-clip">
         <div className="flex flex-col gap-10 px-4 sm:px-5 lg:flex-row lg:items-start lg:gap-30 lg:pr-0 lg:pl-container">
           <Reveal>
             <div className="js-kitchen-title lg:w-127.5 lg:shrink-0">

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Reveal, Section, SectionHeading, WineGlow } from "@/shared/ui";
+import { Parallax, Reveal, Section, SectionHeading, WineGlow } from "@/shared/ui";
 
 /** Уходы фото в чёрный по краям — Figma node 222:2022 */
 const PHOTO_GRADIENTS = [
@@ -39,15 +39,17 @@ export function Legend() {
             </div>
           </div>
 
-          {/* Портрет хозяйки — Figma node 222:2022, 870×625 */}
+          {/* Портрет хозяйки — Figma node 222:2022, 870×625. Фото с параллаксом, уходы в чёрный стоят */}
           <div className="relative aspect-870/625 w-full overflow-hidden rounded-lg lg:flex-1">
-            <Image
-              src="/images/legend/photo.webp"
-              alt="Мадам Роче"
-              fill
-              sizes="(max-width: 1024px) 100vw, 870px"
-              className="object-cover"
-            />
+            <Parallax>
+              <Image
+                src="/images/legend/photo.webp"
+                alt="Мадам Роче"
+                fill
+                sizes="(max-width: 1024px) 100vw, 870px"
+                className="object-cover"
+              />
+            </Parallax>
             <div
               aria-hidden
               className="absolute inset-0"

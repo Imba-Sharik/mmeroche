@@ -71,6 +71,8 @@ export function DishPanel({ dish, className }: DishPanelProps) {
         затуханием отступ в строку — последнюю можно докрутить до чистого фона.
         Колесо делят описание и страница — `keepWheelInside`; касания над
         описанием Lenis не ведёт (`data-lenis-prevent-touch`), их листает браузер.
+        `overscroll-contain` только на десктопе: на телефоне палец, докрутив
+        текст, должен дальше листать страницу, а не упираться.
       */}
       <div className="absolute inset-x-4 top-6 bottom-28 flex flex-col gap-3 text-cream lg:inset-x-8 lg:top-8 lg:gap-4">
         <h3 className="js-dish-lines text-display-sm shrink-0 leading-[1.2] lg:leading-none">
@@ -79,7 +81,7 @@ export function DishPanel({ dish, className }: DishPanelProps) {
         <div
           data-lenis-prevent-touch
           onWheel={keepWheelInside}
-          className="min-h-0 overflow-y-auto overscroll-contain [mask-image:linear-gradient(to_bottom,#000_calc(100%-1.5em),transparent)] [scrollbar-width:none]"
+          className="min-h-0 overflow-y-auto lg:overscroll-contain [mask-image:linear-gradient(to_bottom,#000_calc(100%-1.5em),transparent)] [scrollbar-width:none]"
         >
           <p className="js-dish-lines text-mono-sm pb-[1.5em] leading-[1.4] text-dop lg:leading-[1.2]">
             {typograf(dish.description)}

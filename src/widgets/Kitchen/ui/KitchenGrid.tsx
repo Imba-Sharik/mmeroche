@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
 import { Reveal } from "@/shared/ui";
 import { DishTile } from "./DishTile";
@@ -15,6 +15,30 @@ export function KitchenGrid() {
   const trackRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const motion = useCardMotion();
+
+  /*
+   * На сколько обёртка ленты выходит за колонку страницы (1920) с каждой
+   * стороны, чтобы лента обрезалась по краям окна, а не колонки. Считаем от
+   * `clientWidth` корня — без полосы прокрутки, иначе `100vw` сдвинул бы
+   * текст на полполосы. Layout-эффект и до твина ниже: пин меряет ленту уже
+   * с этим полем.
+   */
+  useLayoutEffect(() => {
+    const section = scrollerRef.current?.closest("section");
+    if (!section) return;
+
+    const sync = () => {
+      const bleed = Math.max(0, (document.documentElement.clientWidth - section.clientWidth) / 2);
+      section.style.setProperty("--kitchen-bleed", `${bleed}px`);
+    };
+
+    sync();
+    window.addEventListener("resize", sync);
+    return () => {
+      window.removeEventListener("resize", sync);
+      section.style.removeProperty("--kitchen-bleed");
+    };
+  }, []);
 
   // Мобильная лента: один жест — одна ось, см. `lockSwipeAxis`
   useEffect(() => {
@@ -135,11 +159,13 @@ export function KitchenGrid() {
       строки рядом с колонкой текста.
     */
     // data-lenis-prevent-touch: касания над лентой Lenis не ведёт, иначе он
-    // тянул бы страницу по вертикали заодно с `lockSwipeAxis` — снова наискосок
+    // тянул бы страницу по вертикали заодно с `lockSwipeAxis` — снова наискосок.
+    // `touch-action: pan-y` — сам браузер ведёт только страницу, вбок ленту
+    // двигает `lockSwipeAxis`; `lg:contents` на десктопе это свойство снимает.
     <div
       ref={scrollerRef}
       data-lenis-prevent-touch
-      className="-mx-4 snap-x snap-mandatory scroll-px-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-4 sm:-mx-5 sm:scroll-px-5 sm:px-5 [scrollbar-width:none] lg:contents"
+      className="-mx-4 [touch-action:pan-y_pinch-zoom] snap-x snap-mandatory scroll-px-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-4 sm:-mx-5 sm:scroll-px-5 sm:px-5 [scrollbar-width:none] lg:contents"
     >
       {/* z-10: по задумке лента проезжает поверх текстовой колонки, а не под ней */}
       <div
