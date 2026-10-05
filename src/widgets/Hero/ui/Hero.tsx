@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-import { CONTACTS } from "@/shared/config";
+import { CONTACTS, linkTarget } from "@/shared/config";
 import { typograf } from "@/shared/lib";
-import { Button } from "@/shared/ui";
+import { ButtonLink } from "@/shared/ui";
 import { HeroParallax } from "./HeroParallax";
 import { HeroReveal } from "./HeroReveal";
 import { ScrollCue } from "./ScrollCue";
@@ -94,21 +94,23 @@ export function Hero() {
 
           {/* На мобильном кнопки 192×41 одна под другой, текст 14px — Figma node 336:137 */}
           <div className="js-hero-reveal mt-6 flex flex-col items-center justify-center gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4">
-            {/* TODO: навесить переход, когда появится страница меню */}
-            <Button
+            <ButtonLink
+              href={CONTACTS.menuUrl}
+              {...linkTarget(CONTACTS.menuUrl)}
               variant="cream"
               size="lg"
               className="text-mono-sm h-10.25 w-48 sm:text-mono-md sm:h-11.5 sm:w-52.5"
             >
               Посмотреть меню
-            </Button>
-            {/* TODO: открывать форму брони, когда появится features/booking */}
-            <Button
+            </ButtonLink>
+            <ButtonLink
+              href={CONTACTS.bookingUrl}
+              {...linkTarget(CONTACTS.bookingUrl)}
               size="lg"
               className="text-mono-sm h-10.25 w-48 sm:text-mono-md sm:h-11.5 sm:w-52.5"
             >
               Забронировать стол
-            </Button>
+            </ButtonLink>
           </div>
         </div>
 

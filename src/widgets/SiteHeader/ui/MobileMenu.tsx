@@ -4,9 +4,9 @@ import Image from "next/image";
 import { Equal, X } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { useRef, useState } from "react";
-import { CONTACTS, MOBILE_NAV_ITEMS, PHONE_HREF } from "@/shared/config";
+import { CONTACTS, linkTarget, MOBILE_NAV_ITEMS, PHONE_HREF } from "@/shared/config";
 import { typograf } from "@/shared/lib";
-import { Button, getLenis, scrollToSection } from "@/shared/ui";
+import { ButtonLink, getLenis, scrollToSection } from "@/shared/ui";
 import { SoundButton } from "./SoundButton";
 
 /** Бордовая квадратная кнопка шапки: бургер и крестик — Figma nodes 336:476, 336:448 */
@@ -124,16 +124,24 @@ export function MobileMenu() {
               <a href={PHONE_HREF}>{CONTACTS.phone}</a>
             </InfoBlock>
 
-            {/* TODO: открывать форму брони, когда появится features/booking */}
-            <Button size="lg" className="w-full">
+            <ButtonLink
+              href={CONTACTS.bookingUrl}
+              {...linkTarget(CONTACTS.bookingUrl)}
+              size="lg"
+              className="w-full"
+            >
               Забронировать стол
-            </Button>
+            </ButtonLink>
 
             <p className="text-mono-xs text-cream/50">
               {CONTACTS.links.map((link, index) => (
                 <span key={link.label}>
                   {index > 0 && " · "}
-                  <a href={link.href} className="transition-colors hover:text-cream">
+                  <a
+                    href={link.href}
+                    {...linkTarget(link.href)}
+                    className="transition-colors hover:text-cream"
+                  >
                     {link.label}
                   </a>
                 </span>

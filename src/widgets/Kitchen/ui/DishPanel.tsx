@@ -3,7 +3,8 @@
 import Image from "next/image";
 import type { WheelEvent } from "react";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/shared/ui";
+import { CONTACTS, linkTarget } from "@/shared/config";
+import { ButtonLink } from "@/shared/ui";
 import { typograf } from "@/shared/lib";
 import { cn } from "@/shared/lib/utils";
 import type { Dish } from "../model/dishes";
@@ -88,17 +89,17 @@ export function DishPanel({ dish, className }: DishPanelProps) {
         </div>
       </div>
 
-      {/* TODO: вести на блюдо в меню, когда появится страница */}
+      {/* Меню — один PDF, поэтому «Хочу» открывает его целиком, а не блюдо */}
       {/*
         Появление анимируем на обёртке, а не на кнопке: у `Button` свой
         `transition-opacity` для наведения, и он догонял каждый кадр GSAP —
         кнопка проявлялась рывками.
       */}
       <div className="js-dish-cta absolute bottom-6 left-4 lg:bottom-8 lg:left-8">
-        <Button variant="outline">
+        <ButtonLink href={CONTACTS.menuUrl} {...linkTarget(CONTACTS.menuUrl)} variant="outline">
           Хочу
           <ArrowRight className="size-4" strokeWidth={1.5} />
-        </Button>
+        </ButtonLink>
       </div>
 
       {/*

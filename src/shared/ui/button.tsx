@@ -6,9 +6,12 @@ import { cn } from "@/shared/lib/utils";
  * (Hero), 222:2030 / 222:2034 («Кухня»), 222:2150 («Контакты»).
  * Скругление одно на все — 8px (`rounded-lg`).
  */
-/** Иконка не ужимается: в тесной кнопке flex сплющивал стрелку в точку */
+/**
+ * Иконка не ужимается: в тесной кнопке flex сплющивал стрелку в точку.
+ * `cursor-pointer` явно — Tailwind v4 оставляет у `<button>` обычную стрелку.
+ */
 const button = cva(
-  "text-mono-sm inline-flex items-center justify-center gap-2.5 rounded-lg whitespace-nowrap transition-opacity hover:opacity-80 [&_svg]:shrink-0",
+  "text-mono-sm inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-lg whitespace-nowrap transition-opacity hover:opacity-80 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -17,7 +20,9 @@ const button = cva(
         route: "bg-wine-light text-cream",
         /** Главная кнопка первого экрана: кремовая заливка, бордовый текст */
         cream: "bg-cream text-wine",
-        outline: "border-[0.5px] border-ink-muted text-cream",
+        /** Прозрачность на тонкой рамке почти не видна — на наведении проступает заливка и рамка */
+        outline:
+          "border-[0.5px] border-ink-muted text-cream transition-colors hover:border-cream hover:bg-cream/10 hover:opacity-100",
         ghost: "text-cream",
       },
       size: {

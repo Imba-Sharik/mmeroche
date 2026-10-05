@@ -45,7 +45,10 @@ export function Expect() {
           */}
           <Reveal>
             {EXPECT_CARDS.map((card) => (
-              <article key={card.id} className="relative flex h-full flex-col items-center gap-6">
+              <article
+                key={card.id}
+                className="group relative flex h-full flex-col items-center gap-6"
+              >
                 {/*
                   На мобильном карточки столбиком, и маска сидит на углу фото
                   «Лаборатории» — Figma node 336:245: тот же кадр 130×155 и
@@ -73,7 +76,7 @@ export function Expect() {
                     alt={card.alt}
                     fill
                     sizes="(max-width: 768px) 100vw, 466px"
-                    className="object-cover"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     style={{ objectPosition: card.imagePosition }}
                   />
                 </div>
@@ -88,7 +91,7 @@ export function Expect() {
                   </p>
                 </div>
 
-                {/* «Подробнее» открывает модалку с полным описанием пространства */}
+                {/* «Подробнее» открывает модалку — кликом по ней или по всей карточке */}
                 <SpaceDialog card={card} />
               </article>
             ))}

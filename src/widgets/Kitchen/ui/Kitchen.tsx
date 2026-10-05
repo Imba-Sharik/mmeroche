@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
+import { CONTACTS, linkTarget } from "@/shared/config";
 import {
-  Button,
+  ButtonLink,
   ProgressiveBlur,
   Reveal,
   Section,
@@ -69,21 +70,26 @@ export function Kitchen() {
                     </p>
                   </div>
 
-                  {/* TODO: навесить переходы, когда появятся страницы меню и бара */}
                   {/* На мобильном кнопки делят ширину поровну — Figma node 336:180 */}
                   <div className="flex flex-wrap items-center gap-3 lg:gap-4">
-                    <Button className="flex-1 px-3 lg:w-40 lg:flex-none lg:px-5.5">
+                    <ButtonLink
+                      href={CONTACTS.menuUrl}
+                      {...linkTarget(CONTACTS.menuUrl)}
+                      className="flex-1 px-3 lg:w-40 lg:flex-none lg:px-5.5"
+                    >
                       Меню кухни
                       <ArrowRight className="size-4" strokeWidth={1.5} />
-                    </Button>
+                    </ButtonLink>
                     {/* Поля уже, чем у соседней: текст длиннее, а ширина та же 160 — Figma node 222:2034 */}
-                    <Button
+                    <ButtonLink
+                      href={CONTACTS.barUrl}
+                      {...linkTarget(CONTACTS.barUrl)}
                       variant="outline"
                       className="flex-1 px-3 lg:w-40 lg:flex-none lg:px-[16.5px]"
                     >
                       Барная карта
                       <ArrowRight className="size-4" strokeWidth={1.5} />
-                    </Button>
+                    </ButtonLink>
                   </div>
                 </div>
               </div>

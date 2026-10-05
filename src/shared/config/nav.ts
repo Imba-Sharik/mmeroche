@@ -34,15 +34,19 @@ export const CONTACTS = {
   address: "УЛ.КОЖЕВНИЧЕСКАЯ, 16 СТР.4",
   addressLines: ["Москва", "Кожевническая ул., 16, стр. 4"],
   hours: ["Пн–Вс  14:00–00:00"],
+  /** Один номер на весь сайт — шапка, меню, «Контакты» (в макете в шапке стоял другой) */
   phone: "+7 (495) 019-01-11",
-  /** Телефон брони в шапке — Figma node 222:1994 */
-  bookingPhone: "+7 905 403 20 20",
+  /** Бронь столов — внешний сервис Hostme, как на прежнем сайте */
+  bookingUrl: "https://tables.hostmeapp.com/reserve/36826",
+  /** Меню кухни и барная карта — PDF от клиента в `public/`, открываются во вкладке */
+  menuUrl: "/madame-roche-menu.pdf",
+  barUrl: "/madame-roche-bar.pdf",
   /** TODO: заменить на ссылку с точными координатами, когда подтвердят точку на карте */
   routeUrl: "https://yandex.ru/maps/?text=Москва, Кожевническая улица, 16с4",
-  /** TODO: реальные ссылки на соцсети и домен */
+  /** TODO: ссылки на Telegram и домен */
   links: [
     // Звёздочка отсылает к `metaNotice` — ставим его везде, где есть эта ссылка
-    { label: "Instagram*", href: "#" },
+    { label: "Instagram*", href: "https://www.instagram.com/madame.roche.rest" },
     { label: "Telegram", href: "#" },
     { label: "mmeroche.ru", href: "#" },
   ],
@@ -63,4 +67,9 @@ export const CONTACTS = {
 const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 
 export const PHONE_HREF = telHref(CONTACTS.phone);
-export const BOOKING_PHONE_HREF = telHref(CONTACTS.bookingPhone);
+
+/** Внешние ссылки и PDF открываем в новой вкладке, заглушки `#` — нет */
+export const linkTarget = (href: string) =>
+  href.startsWith("http") || href.endsWith(".pdf")
+    ? ({ target: "_blank", rel: "noreferrer noopener" } as const)
+    : {};

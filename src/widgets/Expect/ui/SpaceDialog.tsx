@@ -55,13 +55,17 @@ function toggleLenis(open: boolean) {
  * текст прокручивается внутри панели и затухает книзу градиентом к фону
  * (в мобильном макете — Rectangle 92). Прокрутке текста Lenis не мешает —
  * у блока `data-lenis-prevent`.
+ *
+ * Открывается кликом по всей карточке, а не только по «Подробнее»: невидимый
+ * `::after` кнопки растянут на карточку (у неё `relative`). Наведение на
+ * карточку — это наведение на кнопку, поэтому «Подробнее» краснеет и тогда.
  */
 export function SpaceDialog({ card }: { card: ExpectCard }) {
   const { scrollerRef, fadeRef } = useFadeWhileMoreBelow();
 
   return (
     <Dialog.Root onOpenChange={toggleLenis}>
-      <Dialog.Trigger className="text-mono-sm mt-auto flex cursor-pointer items-center gap-1 p-2.5 text-cream transition-colors hover:text-wine">
+      <Dialog.Trigger className="text-mono-sm mt-auto flex cursor-pointer items-center gap-1 p-2.5 text-cream transition-colors after:absolute after:inset-0 hover:text-wine">
         Подробнее
         <ArrowUpRight className="size-4 shrink-0" strokeWidth={1.2} />
       </Dialog.Trigger>

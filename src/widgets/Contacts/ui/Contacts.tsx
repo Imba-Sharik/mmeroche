@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { CONTACTS, PHONE_HREF } from "@/shared/config";
+import { CONTACTS, linkTarget, PHONE_HREF } from "@/shared/config";
 import { ButtonLink, Container, CUTOUT_DELAY, Reveal, Section, WineGlow } from "@/shared/ui";
 import { ContactsMap } from "./ContactsMap";
 
@@ -63,7 +63,11 @@ export function Contacts() {
                 {CONTACTS.links.map((link, index) => (
                   <span key={link.label}>
                     {index > 0 && "  ·  "}
-                    <a href={link.href} className="transition-opacity hover:opacity-70">
+                    <a
+                      href={link.href}
+                      {...linkTarget(link.href)}
+                      className="transition-opacity hover:opacity-70"
+                    >
                       {link.label}
                     </a>
                   </span>

@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { BOOKING_PHONE_HREF, CONTACTS, NAV_ITEMS } from "@/shared/config";
+import { CONTACTS, linkTarget, NAV_ITEMS, PHONE_HREF } from "@/shared/config";
 import { gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
-import { Button, ButtonLink, ProgressiveBlur, scrollToSection } from "@/shared/ui";
+import { ButtonLink, ProgressiveBlur, scrollToSection } from "@/shared/ui";
 import { MobileMenu } from "./MobileMenu";
 import { SoundButton } from "./SoundButton";
 
@@ -23,7 +23,8 @@ const SWAP = 0.12;
  * экран (`MobileMenu`). Мобильная раскладка — всё, что уже `lg`: на планшете
  * десктопной навигации тоже негде встать.
  *
- * Шапка спускается сразу, на загрузке, и дальше висит наверху.
+ * Шапка спускается сразу, на загрузке. После первого экрана при прокрутке
+ * вниз уходит, вверх — возвращается.
  *
  * Лого переезжает из первого экрана в шапку по мере прокрутки: кремовая копия
  * в шапке стартует ровно поверх красной из Hero, ужимается до своего места и
@@ -94,6 +95,29 @@ export function SiteHeader() {
         onLeaveBack: () => apply(0),
         invalidateOnRefresh: true,
       });
+    });
+
+    /*
+     * Вниз шапка уходит, вверх возвращается. Прячем только после переезда
+     * лого — иначе оно летело бы в уезжающую шапку; на первом экране она
+     * стоит всегда.
+     */
+    let hidden = false;
+    ScrollTrigger.create({
+      start: 0,
+      end: "max",
+      onUpdate: (self) => {
+        const hide = self.direction === 1 && self.scroll() > range() + header.offsetHeight;
+        if (hide === hidden) return;
+        hidden = hide;
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        gsap.to(header, {
+          yPercent: hide ? -100 : 0,
+          duration: reduced ? 0 : 0.5,
+          ease: "power3.out",
+          overwrite: "auto",
+        });
+      },
     });
 
     /* Без анимаций лого просто появляется в конце того же отрезка */
@@ -179,14 +203,15 @@ export function SiteHeader() {
         </div>
 
         <div className="pointer-events-auto relative ml-auto hidden items-center gap-4 lg:flex">
-          <ButtonLink href={BOOKING_PHONE_HREF} variant="ghost" size="sm">
-            {CONTACTS.bookingPhone}
+          <ButtonLink href={PHONE_HREF} variant="ghost" size="sm">
+            {CONTACTS.phone}
           </ButtonLink>
 
           <SoundButton />
 
-          {/* TODO: открывать форму брони, когда появится features/booking */}
-          <Button size="sm">Забронировать стол</Button>
+          <ButtonLink href={CONTACTS.bookingUrl} {...linkTarget(CONTACTS.bookingUrl)} size="sm">
+            Забронировать стол
+          </ButtonLink>
         </div>
       </div>
     </header>

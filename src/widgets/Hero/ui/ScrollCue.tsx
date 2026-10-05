@@ -9,7 +9,7 @@ export function ScrollCue() {
     <button
       type="button"
       onClick={() => scrollToSection("legend")}
-      className="text-mono-xs flex items-center gap-1 px-5.5 py-3 text-dop transition-colors hover:text-cream"
+      className="text-mono-xs flex cursor-pointer items-center gap-1 px-5.5 py-3 text-dop transition-colors hover:text-cream"
     >
       <ArrowDown className="size-4" strokeWidth={1} />
       ЛИСТАТЬ
