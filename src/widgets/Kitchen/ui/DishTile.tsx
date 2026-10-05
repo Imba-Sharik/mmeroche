@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { useRef, type PointerEvent, type RefObject } from "react";
+import { useRef, type MouseEvent, type PointerEvent, type RefObject } from "react";
 import { gsap, SPLIT_KEEP_NBSP, SplitText, useGsapLayout } from "@/shared/lib";
 import { cn } from "@/shared/lib/utils";
 import { DishPanel } from "./DishPanel";
@@ -85,6 +85,21 @@ function trackPointer(event: PointerEvent<HTMLDivElement>) {
   tile.style.setProperty("--x", `${event.clientX - rect.left}px`);
   tile.style.setProperty("--y", `${event.clientY - rect.top}px`);
 }
+
+/**
+ * Клик мышью не фокусирует клетку. Карточка держится открытой и по фокусу —
+ * ради клавиатуры и тапа на телефоне, — а щелчок мышью ставил фокус, и
+ * карточка не закрывалась, пока не кликнешь мимо: открытыми оставались
+ * две. Фокус ставит `mousedown`, но он же приходит и после тапа, поэтому
+ * гасим его, только если перед ним был `pointerdown` именно от мыши.
+ */
+let lastPointer = "";
+const rememberPointer = (event: PointerEvent) => {
+  lastPointer = event.pointerType;
+};
+const skipMouseFocus = (event: MouseEvent) => {
+  if (lastPointer === "mouse") event.preventDefault();
+};
 
 /**
  * Скруглённый прямоугольник маской: два креста из сплошных полос и круг
@@ -237,6 +252,8 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
       <div
         ref={tileRef}
         tabIndex={0}
+        onPointerDown={rememberPointer}
+        onMouseDown={skipMouseFocus}
         className="group relative h-full snap-start rounded-xl lg:h-auto lg:aspect-460/320 outline-none perspective-distant focus-visible:ring-1 focus-visible:ring-ink-muted"
       >
         <div
@@ -258,6 +275,8 @@ export function DishTile({ dish, motion }: { dish: Dish; motion: CardMotion }) {
     <div
       ref={tileRef}
       tabIndex={0}
+      onPointerDown={rememberPointer}
+      onMouseDown={skipMouseFocus}
       onPointerEnter={trackPointer}
       onPointerLeave={trackPointer}
       className="group relative h-full snap-start rounded-xl lg:h-auto lg:aspect-460/320 outline-none focus-visible:ring-1 focus-visible:ring-ink-muted"
