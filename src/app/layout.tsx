@@ -4,6 +4,7 @@ import { getSiteUrl } from "@/shared/config";
 import { ThemeProvider, SmoothScroll } from "@/shared/ui";
 import { SiteHeader } from "@/widgets/SiteHeader";
 import { SiteFooter } from "@/widgets/SiteFooter";
+import { ScrollTop } from "@/widgets/ScrollTop";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -65,6 +66,7 @@ export default function RootLayout({
               <SiteFooter />
             </div>
           </div>
+          <ScrollTop />
           <Toaster position="bottom-center" />
         </ThemeProvider>
       </body>
