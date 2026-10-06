@@ -172,7 +172,7 @@ export function SiteHeader() {
                 event.preventDefault();
                 scrollToSection(item.id);
               }}
-              className="transition-colors hover:text-wine"
+              className="whitespace-nowrap transition-colors hover:text-wine"
             >
               {item.label}
             </a>
