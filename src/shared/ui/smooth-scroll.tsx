@@ -29,7 +29,13 @@ const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) *
  */
 export function scrollToSection(id: string) {
   const target = document.getElementById(id);
-  if (!target) return;
+  // Секций нет только на страницах документов: меню ведёт на главную, «наверх» — в начало
+  if (!target) {
+    if (id !== "hero") window.location.assign(`/#${id}`);
+    else if (lenis) lenis.scrollTo(0);
+    else window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
 
   if (!lenis) {
     target.scrollIntoView({ behavior: "smooth" });

@@ -32,6 +32,13 @@ export function SiteFooter() {
             <span key={item}>{item}</span>
           ))}
         </span>
+        {/*
+          Обычная ссылка, а не `next/link`: шапка считает переезд лого один раз
+          на загрузке и при переходе без перезагрузки осталась бы с главной.
+        */}
+        <a href="/personal-data" className="opacity-50 transition-opacity hover:opacity-100">
+          Обработка персональных данных
+        </a>
         {/* Оговорка к звёздочке у Instagram в «Контактах» */}
         <p className="opacity-30 lg:basis-full">{typograf(CONTACTS.metaNotice)}</p>
       </Container>

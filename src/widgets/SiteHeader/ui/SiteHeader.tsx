@@ -55,7 +55,11 @@ export function SiteHeader() {
 
     const hero = document.getElementById("hero");
     const heroLogo = document.querySelector<HTMLElement>(".js-hero-logo");
-    if (!hero || !heroLogo) return () => media.revert();
+    // Страницы документов без Hero: лого переезжать неоткуда, оно сразу в шапке
+    if (!hero || !heroLogo) {
+      gsap.set(logo, { opacity: 1 });
+      return () => media.revert();
+    }
 
     /** Сколько надо прокрутить, чтобы лого Hero доехало под шапку */
     const range = () =>
