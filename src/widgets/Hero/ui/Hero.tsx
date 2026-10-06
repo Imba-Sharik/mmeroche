@@ -16,17 +16,24 @@ export function Hero() {
     >
       {/* Снимок зала под затемнением — Figma node 222:1969 (Hero/scrim) */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        {/* Двигается только снимок: затемнения стоят, чтобы низ секции уходил в чёрный */}
-        <HeroParallax>
-          <Image
-            src="/images/hero/scrim.png"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-[55%_50%]"
-          />
-        </HeroParallax>
+        {/*
+          Двигается только снимок: затемнения стоят, чтобы низ секции уходил в чёрный.
+          Обрезка на 2px выше низа: снимок едет своим слоем, и при дробной высоте
+          экрана его край округлялся ниже затемнения — над разделителем тянулась
+          светлая строка пикселей. Низ градиента и так чистый `noir`.
+        */}
+        <div className="absolute inset-x-0 top-0 bottom-0.5 overflow-hidden">
+          <HeroParallax>
+            <Image
+              src="/images/hero/scrim.png"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-[55%_50%]"
+            />
+          </HeroParallax>
+        </div>
         <div className="absolute inset-0 bg-noir/30" />
         <div className="absolute inset-0 bg-linear-to-b from-transparent from-45% to-noir" />
       </div>
