@@ -12,7 +12,7 @@
 | Путь | `/home/deploy/mmeroche` |
 | PM2 | `mmeroche-front`, порт **3002** (3000 — Substance, 3001 — Недвижка) |
 | Доступ по IP | http://93.189.231.232:8082 |
-| Домен | TODO — ждём от клиента |
+| Домен | https://mmeroche.ru (+ www), SSL Let's Encrypt, certbot продлевает сам |
 | Env | `/home/deploy/mmeroche/.env.local` |
 
 ## Первая установка
@@ -101,14 +101,14 @@ su - deploy
 /home/deploy/mmeroche/deploy.sh
 ```
 
-## Когда появится домен
+## Домен
 
-1. A-запись домена → 93.189.231.232.
-2. В конфиг nginx — `server_name <домен>;` на `listen 80`, затем
-   `certbot --nginx -d <домен>`.
-3. `NEXT_PUBLIC_SITE_URL=https://<домен>` в `.env.local`, `./deploy.sh`.
-4. Ссылку на домен — в `CONTACTS.links` (`shared/config/nav.ts`).
-5. Ключ Яндекс.Карт («мадамроше» в кабинете developer.tech.yandex.ru) —
-   вернуть ограничение по HTTP Referer: `localhost` и домен. Пока сайт на IP,
-   ограничения сняты: IP в Referer Яндекс не принимает, а с одним `localhost`
-   на сервере вместо карты показывается снимок.
+- A-записи `mmeroche.ru` и `www` → 93.189.231.232.
+- Nginx: тот же `/etc/nginx/sites-enabled/mmeroche` — `listen 80` и `8082`,
+  блок 443 и редирект на HTTPS дописал `certbot --nginx`. Сертификат —
+  `/etc/letsencrypt/live/mmeroche.ru/`.
+- `NEXT_PUBLIC_SITE_URL=https://mmeroche.ru` в `.env.local`.
+- TODO: ключ Яндекс.Карт («мадамроше» в кабинете developer.tech.yandex.ru) —
+  вернуть ограничение по HTTP Referer: `localhost`, `mmeroche.ru`,
+  `www.mmeroche.ru`. Пока ограничений нет: на IP Referer не работает (IP туда
+  Яндекс не принимает), а с одним `localhost` на сервере вместо карты снимок.

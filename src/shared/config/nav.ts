@@ -43,12 +43,11 @@ export const CONTACTS = {
   barUrl: "/madame-roche-bar.pdf",
   /** TODO: заменить на ссылку с точными координатами, когда подтвердят точку на карте */
   routeUrl: "https://yandex.ru/maps/?text=Москва, Кожевническая улица, 16с4",
-  /** TODO: ссылка на домен */
   links: [
     // Звёздочка отсылает к `metaNotice` — ставим его везде, где есть эта ссылка
     { label: "Instagram*", href: "https://www.instagram.com/madame.roche.rest" },
     { label: "Telegram", href: "https://t.me/madameroche" },
-    { label: "mmeroche.ru", href: "#" },
+    { label: "mmeroche.ru", href: "https://mmeroche.ru" },
   ],
   /** Подпись в подвале: «MADAME ROCHE · PART OF PLACEBO/25», ссылка только на вторую часть */
   legal: "MADAME ROCHE",
