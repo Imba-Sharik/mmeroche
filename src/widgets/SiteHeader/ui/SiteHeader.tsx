@@ -143,7 +143,7 @@ export function SiteHeader() {
 
   return (
     <header ref={ref} className="pointer-events-none fixed inset-x-0 top-0 z-50">
-      <div className="relative mx-auto flex w-full max-w-480 items-center justify-between p-4 lg:px-[max(var(--container-inset),calc((100%-var(--container-max))/2))] lg:pt-5 lg:pb-10">
+      <div className="@container relative mx-auto flex w-full max-w-480 items-center justify-between p-4 lg:px-[max(var(--container-inset),calc((100%-var(--container-max))/2))] lg:pt-5 lg:pb-10">
         {/*
           Фон шапки: сперва прогрессивное размытие (см. `ProgressiveBlur`), поверх —
           линейный градиент чёрного. В Figma это заливка ноды, `#000000` сверху
@@ -160,10 +160,23 @@ export function SiteHeader() {
         </div>
 
         {/*
-          Шесть пунктов по макету — 571px при 14px и гэпе 28. На 1024–1280 это
-          налезает на лого по центру, поэтому до xl шрифт 12 и гэп поуже.
+          Шесть пунктов по макету — 568px при 14px и гэпе 28, и они обязаны
+          уместиться в левую половину шапки до лого (50cqw − 80px: полширины
+          лого 54 и зазор). Шрифт и гэп считаем от ширины самой шапки, а не
+          брейкпоинтами: те в rem, и при уменьшенном шрифте браузера крупное
+          меню включалось на узком окне и наезжало на лого.
+
+          30.6 — ширина подписей в em: 51 знак PT Mono по 0.6em. Поменяются
+          пункты — пересчитать. Сначала ужимается гэп (28 → 11), потом шрифт
+          (14 → 11): на 1024 выходит 11.7px.
         */}
-        <nav className="text-mono-xs pointer-events-auto relative hidden items-center gap-3 text-cream lg:flex xl:text-mono-sm xl:gap-5 2xl:gap-7">
+        <nav
+          className="text-mono-xs pointer-events-auto relative hidden items-center text-cream lg:flex"
+          style={{
+            fontSize: "clamp(11px, calc((50cqw - 135px) / 30.6), 14px)",
+            gap: "clamp(11px, calc((50cqw - 508px) / 5), 28px)",
+          }}
+        >
           {NAV_ITEMS.map((item) => (
             <a
               key={item.id}
@@ -226,7 +239,11 @@ export function SiteHeader() {
         </div>
 
         <div className="pointer-events-auto relative ml-auto hidden items-center gap-4 lg:flex">
-          <ButtonLink href={PHONE_HREF} variant="ghost" size="sm">
+          {/*
+            Правая группа тоже должна влезть в полшапки: с телефоном это ~450px,
+            то есть шапка от 1060. Уже — телефон прячем, он есть в «Контактах».
+          */}
+          <ButtonLink href={PHONE_HREF} variant="ghost" size="sm" className="@max-[1060px]:hidden">
             {CONTACTS.phone}
           </ButtonLink>
 
