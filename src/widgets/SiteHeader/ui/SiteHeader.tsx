@@ -39,7 +39,7 @@ const SWAP = 0.12;
 export function SiteHeader() {
   const ref = useRef<HTMLElement>(null);
   const slotRef = useRef<HTMLDivElement>(null);
-  const logoRef = useRef<HTMLSpanElement>(null);
+  const logoRef = useRef<HTMLAnchorElement>(null);
 
   useGsapLayout(() => {
     const header = ref.current;
@@ -190,16 +190,31 @@ export function SiteHeader() {
           ref={slotRef}
           className="absolute top-4 left-1/2 w-[95px] -translate-x-1/2 lg:top-3.5 lg:w-27"
         >
-          <span ref={logoRef} className="block opacity-0">
+          {/*
+            На главной — плавно наверх, со страниц документов — на главную.
+            Обычная ссылка, а не `next/link`: переезд лого считается на загрузке.
+          */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- нужна полная перезагрузка */}
+          <a
+            ref={logoRef}
+            href="/"
+            aria-label="Madame Roche — на главную"
+            onClick={(event) => {
+              if (!document.getElementById("hero")) return;
+              event.preventDefault();
+              scrollToSection("hero");
+            }}
+            className="pointer-events-auto block opacity-0"
+          >
             <Image
               src="/images/common/roche-header.svg"
-              alt="Madame Roche"
+              alt=""
               width={108}
               height={73}
               unoptimized
               className="h-auto w-full"
             />
-          </span>
+          </a>
         </div>
 
         <div className="pointer-events-auto relative lg:hidden">
