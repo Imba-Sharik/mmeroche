@@ -18,66 +18,78 @@ export function Contacts() {
 
       <Container className="flex flex-col gap-10">
         <Reveal>
-          <h2 data-split="chars" className="text-display-xl text-cream">Найти особняк</h2>
+          {/*
+            Заголовок — в левой колонке, а не над рядом: так карта справа
+            тянется на всю высоту колонки и встаёт верхом вровень с ним.
+          */}
+          <div className="flex flex-col gap-12 lg:flex-row lg:justify-between">
+            <div className="flex w-full flex-col gap-10 lg:w-105">
+              <h2 data-split="chars" className="text-display-xl text-cream lg:whitespace-nowrap">
+                Найти особняк
+              </h2>
 
-          <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex w-full flex-col gap-7 lg:w-105">
-              {BLOCKS.map((block) => (
-                <div key={block.label} className="flex flex-col gap-2">
-                  <p className="text-mono-xs text-dop opacity-50">{block.label}</p>
-                  {/*
+              <div className="flex flex-col gap-7">
+                {BLOCKS.map((block) => (
+                  <div key={block.label} className="flex flex-col gap-2">
+                    <p className="text-mono-xs text-dop opacity-50">{block.label}</p>
+                    {/*
                     `pre-wrap`, а не `pre`: переводы строк и двойные пробелы
                     в графике держим, но длинной строке даём перенестись — на
                     узком экране адрес распирал страницу вширь.
                   */}
-                  <p className="text-mono-md leading-[1.4] whitespace-pre-wrap text-cream lg:text-mono-base">
-                    {block.lines.join("\n")}
+                    <p className="text-mono-md leading-[1.4] whitespace-pre-wrap text-cream lg:text-mono-base">
+                      {block.lines.join("\n")}
+                    </p>
+                  </div>
+                ))}
+
+                <div className="flex flex-col gap-2">
+                  <p className="text-mono-xs text-dop opacity-50">ТЕЛЕФОН</p>
+                  <p className="text-mono-md leading-[1.4] text-cream lg:text-mono-base">
+                    <a href={PHONE_HREF} className="transition-colors hover:text-white">
+                      {CONTACTS.phone}
+                    </a>
                   </p>
                 </div>
-              ))}
 
-              <div className="flex flex-col gap-2">
-                <p className="text-mono-xs text-dop opacity-50">ТЕЛЕФОН</p>
-                <p className="text-mono-md leading-[1.4] text-cream lg:text-mono-base">
-                  <a href={PHONE_HREF} className="transition-colors hover:text-white">
-                    {CONTACTS.phone}
-                  </a>
+                <div className="flex flex-wrap items-center gap-3">
+                  <ButtonLink
+                    href={CONTACTS.routeUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    variant="route"
+                  >
+                    Построить маршрут
+                  </ButtonLink>
+                  <ButtonLink href={PHONE_HREF} variant="outline">
+                    Позвонить
+                  </ButtonLink>
+                </div>
+
+                <p className="text-mono-xs text-cream opacity-50">
+                  {CONTACTS.links.map((link, index) => (
+                    <span key={link.label}>
+                      {index > 0 && "  ·  "}
+                      <a
+                        href={link.href}
+                        {...linkTarget(link.href)}
+                        className="transition-opacity hover:opacity-70"
+                      >
+                        {link.label}
+                      </a>
+                    </span>
+                  ))}
                 </p>
               </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                <ButtonLink
-                  href={CONTACTS.routeUrl}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  variant="route"
-                >
-                  Построить маршрут
-                </ButtonLink>
-                <ButtonLink href={PHONE_HREF} variant="outline">
-                  Позвонить
-                </ButtonLink>
-              </div>
-
-              <p className="text-mono-xs text-cream opacity-50">
-                {CONTACTS.links.map((link, index) => (
-                  <span key={link.label}>
-                    {index > 0 && "  ·  "}
-                    <a
-                      href={link.href}
-                      {...linkTarget(link.href)}
-                      className="transition-opacity hover:opacity-70"
-                    >
-                      {link.label}
-                    </a>
-                  </span>
-                ))}
-              </p>
             </div>
 
             <div className="relative w-full lg:w-207">
-              {/* Карта — Figma node 222:2155, 828×352; на мобильном 328×352 (336:316) */}
-              <div className="relative aspect-328/352 w-full overflow-hidden rounded-lg lg:aspect-828/352">
+              {/*
+                Карта — Figma node 222:2155, 828×352; на мобильном 328×352 (336:316).
+                На десктопе высота не по макету, а по левой колонке — от заголовка
+                до ссылок.
+              */}
+              <div className="relative aspect-328/352 w-full overflow-hidden rounded-lg lg:aspect-auto lg:h-full">
                 <ContactsMap />
               </div>
 

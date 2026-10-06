@@ -26,6 +26,13 @@ export interface YMapInstance {
   destroy(): void;
 }
 
+/** Стилизация векторной схемы; правило без `tags` действует на всю карту */
+export type YMapCustomization = {
+  tags?: { any?: string[]; all?: string[]; none?: string[] };
+  elements?: string;
+  stylers: { saturation?: number; lightness?: number; color?: string }[];
+}[];
+
 export interface YMapsApi {
   ready: Promise<void>;
   YMap: new (
@@ -36,7 +43,10 @@ export interface YMapsApi {
       zoomRange?: { min: number; max: number };
     },
   ) => YMapInstance;
-  YMapDefaultSchemeLayer: new (props: { theme?: "light" | "dark" }) => YMapEntity;
+  YMapDefaultSchemeLayer: new (props: {
+    theme?: "light" | "dark";
+    customization?: YMapCustomization;
+  }) => YMapEntity;
   YMapDefaultFeaturesLayer: new (props: Record<string, never>) => YMapEntity;
   YMapMarker: new (
     props: { coordinates: LngLat; zIndex?: number },

@@ -39,7 +39,14 @@ export function ContactsMap() {
         });
         mapRef.current = map;
 
-        map.addChild(new YMapDefaultSchemeLayer({ theme: "dark" }));
+        // Тёмная схема Яндекса синеватая — гасим цвет целиком, остаётся чёрно-серая.
+        // Метка — наш HTML поверх, её это не трогает
+        map.addChild(
+          new YMapDefaultSchemeLayer({
+            theme: "dark",
+            customization: [{ stylers: [{ saturation: -1 }] }],
+          }),
+        );
         map.addChild(new YMapDefaultFeaturesLayer({}));
 
         // Метка ведёт в Яндекс.Карты — туда же, куда кнопка «Построить маршрут»
