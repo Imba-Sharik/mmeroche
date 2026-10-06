@@ -100,7 +100,7 @@ export function MobileMenu() {
                   event.preventDefault();
                   goTo(item.id);
                 }}
-                className="transition-colors hover:text-wine"
+                className="transition-colors hover:text-white"
               >
                 {item.label}
               </a>

@@ -86,7 +86,7 @@ export function Hero() {
             href={CONTACTS.routeUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="js-hero-reveal text-mono-sm mt-6 inline-flex items-center gap-1.5 p-2.5 whitespace-nowrap sm:text-mono-md text-center text-cream transition-colors hover:text-wine"
+            className="js-hero-reveal text-mono-sm mt-6 inline-flex items-center gap-1.5 p-2.5 whitespace-nowrap sm:text-mono-md text-center text-cream transition-colors hover:text-white"
           >
             {CONTACTS.address}
             <ArrowUpRight className="size-5 shrink-0" strokeWidth={1.2} />

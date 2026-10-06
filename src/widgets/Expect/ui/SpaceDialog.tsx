@@ -65,7 +65,7 @@ export function SpaceDialog({ card }: { card: ExpectCard }) {
 
   return (
     <Dialog.Root onOpenChange={toggleLenis}>
-      <Dialog.Trigger className="text-mono-sm mt-auto flex cursor-pointer items-center gap-1 p-2.5 text-cream transition-colors after:absolute after:inset-0 hover:text-wine">
+      <Dialog.Trigger className="text-mono-sm mt-auto flex cursor-pointer items-center gap-1 p-2.5 text-cream transition-colors after:absolute after:inset-0 hover:text-white">
         Подробнее
         <ArrowUpRight className="size-4 shrink-0" strokeWidth={1.2} />
       </Dialog.Trigger>

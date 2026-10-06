@@ -103,7 +103,7 @@ export function ContactsMap() {
           type="button"
           onClick={() => zoomBy(1)}
           aria-label="Приблизить"
-          className="flex size-9 items-center justify-center text-cream transition-colors hover:text-wine"
+          className="flex size-9 items-center justify-center text-cream transition-colors hover:text-white"
         >
           <Plus className="size-4" strokeWidth={1.5} />
         </button>
@@ -112,7 +112,7 @@ export function ContactsMap() {
           type="button"
           onClick={() => zoomBy(-1)}
           aria-label="Отдалить"
-          className="flex size-9 items-center justify-center text-cream transition-colors hover:text-wine"
+          className="flex size-9 items-center justify-center text-cream transition-colors hover:text-white"
         >
           <Minus className="size-4" strokeWidth={1.5} />
         </button>

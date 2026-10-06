@@ -39,7 +39,7 @@ export function Contacts() {
               <div className="flex flex-col gap-2">
                 <p className="text-mono-xs text-dop opacity-50">ТЕЛЕФОН</p>
                 <p className="text-mono-md leading-[1.4] text-cream lg:text-mono-base">
-                  <a href={PHONE_HREF} className="transition-colors hover:text-wine">
+                  <a href={PHONE_HREF} className="transition-colors hover:text-white">
                     {CONTACTS.phone}
                   </a>
                 </p>

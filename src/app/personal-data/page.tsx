@@ -75,7 +75,7 @@ export default function PersonalDataPage() {
               {typograf(
                 "Субъект персональных данных имеет право: получать информацию об обработке своих данных; требовать уточнения, блокирования или уничтожения данных; отозвать согласие на обработку. Для реализации указанных прав обратитесь к Оператору по телефону",
               )}{" "}
-              <a href={PHONE_HREF} className="whitespace-nowrap text-cream transition-colors hover:text-wine">
+              <a href={PHONE_HREF} className="whitespace-nowrap text-cream transition-colors hover:text-white">
                 {CONTACTS.phone}
               </a>
               .
