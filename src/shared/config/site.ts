@@ -17,3 +17,6 @@ export function getSiteUrl(): URL {
     return new URL(FALLBACK_URL);
   }
 }
+
+/** Контейнер Google Tag Manager — аналитика клиента, теги настраиваются в самом GTM */
+export const GTM_ID = "GTM-M86HCNWM";

@@ -36,8 +36,8 @@ export const CONTACTS = {
   hours: ["Пн–Вс  14:00–00:00"],
   /** Один номер на весь сайт — шапка, меню, «Контакты» (в макете в шапке стоял другой) */
   phone: "+7 (495) 019-01-11",
-  /** Бронь столов — внешний сервис Hostme, как на прежнем сайте */
-  bookingUrl: "https://tables.hostmeapp.com/reserve/36826",
+  /** Бронь столов — Telegram @madamerochebooking (раньше был Hostme) */
+  bookingUrl: "https://t.me/madamerochebooking",
   /** Меню кухни и барная карта — PDF от клиента в `public/`, открываются во вкладке */
   menuUrl: "/madame-roche-menu.pdf",
   barUrl: "/madame-roche-bar.pdf",

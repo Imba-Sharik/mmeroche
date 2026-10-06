@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { display, ui, accent } from "@/shared/fonts";
-import { getSiteUrl } from "@/shared/config";
+import { getSiteUrl, GTM_ID } from "@/shared/config";
 import { ThemeProvider, SmoothScroll } from "@/shared/ui";
 import { SiteHeader } from "@/widgets/SiteHeader";
 import { SiteFooter } from "@/widgets/SiteFooter";
@@ -16,15 +16,28 @@ export const metadata: Metadata = {
   },
   description: "Mmeroche",
   applicationName: "Mmeroche",
+  /**
+   * Иконки из `public/`: SVG — во вкладку, PNG 512 — для поисковиков (сниппет
+   * Яндекса и Google), домашнего экрана iOS и превью ссылок в мессенджерах.
+   */
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/snippet.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: { url: "/snippet.png", sizes: "512x512" },
+  },
   openGraph: {
     type: "website",
     locale: "ru_RU",
     siteName: "Mmeroche",
     title: "Mmeroche",
     description: "Mmeroche",
+    images: [{ url: "/snippet.png", width: 512, height: 512 }],
   },
   twitter: {
-    card: "summary_large_image",
+    // Картинка квадратная — большая карточка обрезала бы её
+    card: "summary",
     title: "Mmeroche",
     description: "Mmeroche",
   },
@@ -37,7 +50,32 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" suppressHydrationWarning>
+      <head>
+        {/*
+          Google Tag Manager — по инструкции GTM: скрипт как можно выше в <head>,
+          обычным тегом, а не `next/script`, чтобы стоял в HTML с первого байта.
+        */}
+        {/* eslint-disable-next-line @next/next/next-script-for-ga -- нужен по инструкции GTM, в <head> */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`,
+          }}
+        />
+      </head>
       <body className={`${display.variable} ${ui.variable} ${accent.variable} antialiased`}>
+        {/* GTM для браузеров без JS — сразу после открывающего <body> */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
