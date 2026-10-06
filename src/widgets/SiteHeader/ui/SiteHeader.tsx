@@ -115,8 +115,12 @@ export function SiteHeader() {
         if (hide === hidden) return;
         hidden = hide;
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        // Лого с наклоном выступает ниже шапки (на мобильном 16 + 64px):
+        // уезжаем до его нижнего края, иначе кончик торчит над страницей
+        const top = header.getBoundingClientRect().top;
+        const away = Math.max(header.offsetHeight, logo.getBoundingClientRect().bottom - top) + 2;
         gsap.to(header, {
-          yPercent: hide ? -100 : 0,
+          y: hide ? -away : 0,
           duration: reduced ? 0 : 0.5,
           ease: "power3.out",
           overwrite: "auto",
