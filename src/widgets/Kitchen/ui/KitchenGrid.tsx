@@ -117,20 +117,25 @@ export function KitchenGrid() {
       };
 
       /**
-       * Секция замирает, как только упёрлась в верх экрана, и держится ровно
-       * столько, сколько нужно ленте, чтобы доехать. Пин вешаем на саму секцию:
-       * у неё нет предков с `overflow`, иначе `position: fixed` от ScrollTrigger
-       * обрезался бы.
+       * Секция замирает, когда лента встала по центру экрана, и держится ровно
+       * столько, сколько нужно ленте, чтобы доехать. Раньше замирала, упёршись
+       * верхом в экран, — но над лентой 200px отступа секции, и на ноутбуке
+       * (экран ~760) нижний ряд клеток так и ехал обрезанным. Высота ленты
+       * сама ужимается под экран (см. `lg:w-` ниже), так что по центру она
+       * влезает целиком.
+       *
+       * Пин вешаем на саму секцию: у неё нет предков с `overflow`, иначе
+       * `position: fixed` от ScrollTrigger обрезался бы.
        */
       gsap.to(track, {
         x: () => -distance(),
         ease: "none",
         onUpdate: fadeText,
         scrollTrigger: {
-          trigger: section,
-          start: "top top",
+          trigger: track,
+          start: "center center",
           end: () => `+=${distance()}`,
-          pin: true,
+          pin: section,
           scrub: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -170,7 +175,7 @@ export function KitchenGrid() {
       {/* z-10: по задумке лента проезжает поверх текстовой колонки, а не под ней */}
       <div
         ref={trackRef}
-        className="relative z-10 grid w-max auto-cols-[min(80vw,400px)] grid-flow-col grid-rows-[420px] gap-3 lg:w-607 lg:shrink-0 lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-5 lg:grid-rows-none lg:gap-8"
+        className="relative z-10 grid w-max auto-cols-[min(80vw,400px)] grid-flow-col grid-rows-[420px] gap-3 lg:w-[min(607*var(--spacing),calc((100svh-128px)*115/32+128px))] lg:shrink-0 lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-5 lg:grid-rows-none lg:gap-8"
       >
         <Reveal>
           {DISHES.map((dish) => (

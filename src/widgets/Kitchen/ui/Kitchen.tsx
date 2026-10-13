@@ -100,11 +100,16 @@ export function Kitchen() {
           <KitchenGrid />
         </div>
 
-        {/* Поверх ленты (у неё z-10), только там, где она едет вбок */}
+        {/*
+          Поверх ленты (у неё z-10), только там, где она едет вбок. Слева —
+          не шире поля до текста (та же формула, что у `pl-container`, от
+          ширины обёртки): уже 1920 поле узкое, и полоса 160px размывала
+          заголовок и абзацы (так было на ноутбуке с окном ~1440).
+        */}
         <ProgressiveBlur
           side="left"
           steps={EDGE_BLUR}
-          className="absolute inset-y-0 left-0 z-20 hidden w-40 lg:block"
+          className="absolute inset-y-0 left-0 z-20 hidden w-[min(10rem,max(var(--container-inset),calc((100%-var(--container-max))/2)))] lg:block"
         />
         <ProgressiveBlur
           side="right"
