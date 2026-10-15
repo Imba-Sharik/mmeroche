@@ -143,7 +143,13 @@ export function SiteHeader() {
 
   return (
     <header ref={ref} className="pointer-events-none fixed inset-x-0 top-0 z-50">
-      <div className="@container relative mx-auto flex w-full max-w-480 items-center justify-between p-4 lg:px-[max(var(--container-inset),calc((100%-var(--container-max))/2))] lg:pt-5 lg:pb-10">
+      {/*
+        Поле считаем от ширины полосы (не шире 1920 = `max-w-480`), а не от
+        `100%`: шапка `fixed`, и проценты в padding берутся от окна. На мониторе
+        2560 поле выходило 538px, на меню оставалось 844 — оно ужималось
+        и сбивалось к центру, телефон пропадал.
+      */}
+      <div className="@container relative mx-auto flex w-full max-w-480 items-center justify-between p-4 lg:px-[max(var(--container-inset),calc((min(100%,120rem)-var(--container-max))/2))] lg:pt-5 lg:pb-10">
         {/*
           Фон шапки: сперва прогрессивное размытие (см. `ProgressiveBlur`), поверх —
           линейный градиент чёрного. В Figma это заливка ноды, `#000000` сверху
