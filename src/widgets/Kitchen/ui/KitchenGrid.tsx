@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger, useGsapLayout } from "@/shared/lib";
 import { Reveal } from "@/shared/ui";
 import { DishTile } from "./DishTile";
@@ -15,30 +15,6 @@ export function KitchenGrid() {
   const trackRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const motion = useCardMotion();
-
-  /*
-   * На сколько обёртка ленты выходит за колонку страницы (1920) с каждой
-   * стороны, чтобы лента обрезалась по краям окна, а не колонки. Считаем от
-   * `clientWidth` корня — без полосы прокрутки, иначе `100vw` сдвинул бы
-   * текст на полполосы. Layout-эффект и до твина ниже: пин меряет ленту уже
-   * с этим полем.
-   */
-  useLayoutEffect(() => {
-    const section = scrollerRef.current?.closest("section");
-    if (!section) return;
-
-    const sync = () => {
-      const bleed = Math.max(0, (document.documentElement.clientWidth - section.clientWidth) / 2);
-      section.style.setProperty("--kitchen-bleed", `${bleed}px`);
-    };
-
-    sync();
-    window.addEventListener("resize", sync);
-    return () => {
-      window.removeEventListener("resize", sync);
-      section.style.removeProperty("--kitchen-bleed");
-    };
-  }, []);
 
   // Мобильная лента: один жест — одна ось, см. `lockSwipeAxis`
   useEffect(() => {

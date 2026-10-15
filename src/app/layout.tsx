@@ -99,7 +99,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             свечения по-прежнему заходят на соседние секции.
           */}
           <div className="overflow-x-clip">
-            <div className="relative mx-auto min-h-screen w-full max-w-480">
+            <div className="relative min-h-screen w-full">
               {children}
               <SiteFooter />
             </div>
